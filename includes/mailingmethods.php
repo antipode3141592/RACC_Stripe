@@ -32,7 +32,8 @@ function racc_mailer($donor_first_name,$fund_total,$fund_community,$fund_educati
 	}
 }
 
-function racc_mailer2($donor_id,$success){
+//use $donor_id to query database for e-mail details and then e-mail them
+function racc_mailer2($donor_id,$success="no"){
 	global $stripe_options;
 	global $wpdb;
 
