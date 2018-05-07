@@ -183,24 +183,44 @@ function change_frequency(donationradio){
 function breakdown_total(){
 	var artscard = document.getElementById("artscardvalidation");
 	var fund_total = document.getElementById("fund_total");
+	var temp_total = fund_total.value;
 	var fund_community = document.getElementById("fund_community");
 	var fund_education = document.getElementById("fund_education");
 	var period_total = document.getElementById("period_total");
-	var periods =  document.getElementById("payperiodinputs");
+	var periods =  document.getElementById("payperiodinputs").value;
+	var temp_periods = periods;
 	var artscardqualify = document.getElementById("artscardqualify");	
 	try{
-		var tot = parseFloat(fund_total.value)/parseFloat(periods.value);
+		var regex = /[0-9]|\./;
+  
+		if (!regex.test(temp_total)){
+			// console.log(temp_total);
+			temp_total = 1.0;
+		} else if (temp_total < 1.0){
+			temp_total = 1.0;
+		}
+		if (!regex.test(temp_periods)){
+			console.log(temp_periods);
+			temp_periods = 1;
+		} else if (temp_periods < 1) {
+			temp_periods = 1
+		}
+		periods = temp_periods;
+		var tot = parseFloat(temp_total)/parseFloat(temp_periods);
 		period_total.value = tot.toFixed(2);
 		
 		//preserve ratio of funds
 		var ratio = parseFloat(parseFloat(fund_community.value)/parseFloat(parseFloat(fund_community.value) + parseFloat(fund_education.value)));	//% community, do not round
 		console.log("ratio: " + ratio.toFixed(2));
-		fund_community.value = parseFloat(parseFloat(fund_total.value) * parseFloat(ratio)).toFixed(2);
-		fund_education.value = parseFloat(parseFloat(fund_total.value) * (1.00 - parseFloat(ratio))).toFixed(2);
-		fund_total.value = parseFloat(fund_total.value).toFixed(2);	//format decimal points on input
+		fund_community.value = parseFloat(parseFloat(temp_total) * parseFloat(ratio)).toFixed(2);
+		fund_education.value = parseFloat(parseFloat(temp_total) * (1.00 - parseFloat(ratio))).toFixed(2);
+		fund_total.value = parseFloat(temp_total).toFixed(2);	//format decimal points on input
+
+		fund_community.setAttribute('max',parseFloat(temp_total).toFixed(2));
+		fund_education.setAttribute('max',parseFloat(temp_total).toFixed(2));
 		// fund_community.value = parseFloat(fund_total.value).toFixed(2);
 		// fund_education.value = 0.00;
-		if(fund_total.value >= 60.0)
+		if(temp_total >= 60.0)
 		{
 			jQuery('#artscardvalidation').show();
 			// artscard.style.display = "block";
@@ -219,16 +239,38 @@ function breakdown_total(){
 
 jQuery(document).ready(function($){
 	$('#fund_community').change(function(){
-		// console.log(($('#fund_total').val() - $(this).val()).toFixed(2));
-		$('#fund_education').val(($('#fund_total').val() - $(this).val()).toFixed(2));
-		$('#fund_community').val(parseFloat($('#fund_community').val()).toFixed(2));
+		var temp = 0.0;
+		var regex = /[0-9]|\./;
+  
+		if (!regex.test($(this).val())){
+			temp = 0.0;
+		} else if (parseFloat($(this).val()) > parseFloat($(this).attr('max'))){
+			temp = parseFloat($(this).attr('max'));
+		} else if (parseFloat($(this).val()) < 0) {
+			temp = 0.0
+		} else {
+			temp = $(this).val();
+		}
+		$('#fund_education').val(($('#fund_total').val() - temp).toFixed(2));
+		$('#fund_community').val(parseFloat(temp).toFixed(2));
 	});
 });
 
 jQuery(document).ready(function($){
 	$('#fund_education').change(function(){
-		// console.log(($('#fund_total').val() - $(this).val()).toFixed(2));
-		$('#fund_community').val(($('#fund_total').val() - $(this).val()).toFixed(2));
-		$('#fund_education').val(parseFloat($('#fund_education').val()).toFixed(2));
+		var temp = 0.0;
+		var regex = /[0-9]|\./;
+  
+		if (!regex.test($(this).val())){
+			temp = 0.0;
+		} else if (parseFloat($(this).val()) > parseFloat($(this).attr('max'))){
+			temp = parseFloat($(this).attr('max'));
+		} else if (parseFloat($(this).val()) < 0.0) {
+			temp = 0.0
+		} else {
+			temp = $(this).val();
+		}
+		$('#fund_community').val(($('#fund_total').val() - temp).toFixed(2));
+		$('#fund_education').val(parseFloat(temp).toFixed(2));
 	});
 });
