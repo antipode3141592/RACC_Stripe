@@ -37,53 +37,18 @@ function racc_stripe_listener($atts, $content = null){
 				$event = \Stripe\Event::retrieve($event_id);
 				$customer = \Stripe\Customer::retrieve($event->data->object->customer);
 				$customer_wp_id = $customer->metadata->id_token;
-				// error_log($customer_wp_id);
-				// $results = $wpdb->get_results(
-				// 	$wpdb->prepare('CALL sp_getemaildata(%s)',$customer_wp_id));
-				// if ($results){
-				// 	/*ob_start();
-				// 	var_dump($results);
-				// 	$result = ob_get_clean();
-				// 	error_log($result);*/
 
-				// 	$email = $results[0]->Email;
-				// 	$fund_total = $results[0]->PledgeTotal;
-				// 	$fund_community = $results[0]->Community;
-				// 	$fund_education = $results[0]->Education;
-				// 	$donorfirstname = $results[0]->first_name;
-				// 	$donorlastname = $results[0]->last_name;
-				// 	$artscardname = $results[0]->ArtsCardName;
-				// 	$paytype = $results[0]->paytype;
-				// 	$anon = $results[0]->anon;
-				// }
 				// successful payment, both one time and recurring payments
 				if($event->type == 'charge.succeeded') {
-					// $amount = floatval($event->data->object->amount)/100.0;
-					// $subject = '[TEST]Payment Receipt - '. $paytype.' - Success!';
-
-					// $message = "Thank you, ".$donorfirstname. ", you have successfully made a payment of $". number_format($amount,2,'.',',')."!\n\n";
-					// $message .= "Community: $" . number_format($fund_community,2,'.',',') . "\n";
-					// $message .= "Education: $" . number_format($fund_education,2,'.',',') . "\n";
 					$result = racc_mailer2($customer_wp_id,"yes");	
 				}
 				// failed payment
 				elseif($event->type == 'charge.failed') {
-					// $subject = 'Failed Payment';
-					// $message = "We have failed to process your payment!";
 					$result = racc_mailer2($customer_wp_id,"no");
 				}
 				else{
 					error_log("No handler for this event type: " . $event->type);
-					// $subject = "No error handler for this event";
-					// $message = "Your JSON-fu is weak!";
 				}
-				// // send the e-mail
-				// if ($customer->email){
-				// 	wp_mail($customer->email, $subject, $message);
-				// }else{
-				// 	error_log("no e-mail address found!");
-				// 	// wp_mail("skirkpatrick@racc.org", $subject, $message);
-				// }
 			} catch(\Stripe\Error\Card $e) {
 				//decline error
 				$body = $e->getJsonBody();

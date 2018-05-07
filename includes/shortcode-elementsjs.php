@@ -7,7 +7,8 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		'organization' => 'None',	//default None for organization name
 		'payperiods' => '26',		//default 26 for payperiods in a year
 		'optionalperiods' => 'no',	//'yes' or 'no', 'yes' allows donor to specify 
-		'payroll' => 'yes'			//'yes' allows selection of workplace giving option and disables cc-recur, 'no' disables workplace giving option and enables cc-recur
+		'payroll' => 'yes',			//'yes' allows selection of workplace giving option and disables cc-recur, 'no' disables workplace giving option and enables cc-recur
+		'dg' =>'yes'
 	), $atts ) );
 
 	//TODO: add $_POST calls to grab starting data, for cases where user 
@@ -161,6 +162,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		<input type="hidden" id="sc_payperiods" value="<?php _e($payperiods);?>"/>
 		<input type="hidden" name="sc_optionalperiods" id="sc_optionalperiods" value="<?php _e($optionalperiods);?>"/>
 		<input type="hidden" name="sc_payroll" id="sc_payroll" value="<?php _e($payroll);?>"/>
+		<input type="hidden" name="sc_dg" id="sc_dg" value="<?php _e($dg);?>"/>
 		<input type="hidden" name="artscardqualify" id="artscardqualify" value="yes"/>
 		<input type="hidden" name="action" value="stripe"/>
 		<input type="hidden" name="stripe_nonce" value="<?php _e(wp_create_nonce('stripe-nonce')); ?>"/>
