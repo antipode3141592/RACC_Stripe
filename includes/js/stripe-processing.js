@@ -84,10 +84,22 @@ jQuery(document).ready(function($){
 		if($('#giftartscard').prop("checked")){
 			// console.log('show gift address div');
 			$('#artscard_address_input').show();
+			$('#artscard_name').attr('required','required');
+			$('#artscard_email').attr('required','required');
+			$('#artscard_address_1').attr('required','required');
+			$('#artscard_city').attr('required','required');
+			$('#artscard_state').attr('required','required');
+			$('#artscard_zip').attr('required','required');
 		}else
 		{
 			// console.log('hide gift address div');
 			$('#artscard_address_input').hide();
+			$('#artscard_name').attr('required',false);
+			$('#artscard_email').attr('required',false);
+			$('#artscard_address_1').attr('required',false);
+			$('#artscard_city').attr('required',false);
+			$('#artscard_state').attr('required',false);
+			$('#artscard_zip').attr('required',false);
 		}
 		return false;
 	});
