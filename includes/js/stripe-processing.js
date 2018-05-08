@@ -135,14 +135,16 @@ jQuery(document).ready(function($){
 //toggle visibility on infopopup class objects
 jQuery(document).ready(function($){
 	$('.infopopup').click(function(e){
-		jQuery(this).children('.popupcontent').toggleClass('show');
+		if($(this).children('.popupcontent').hasClass('show')){
+			$('.infopopup').children('.popupcontent').removeClass('show');	//'close' all popups
+		} else {
+			$('.infopopup').children('.popupcontent').removeClass('show');	//'close' all popups
+			$(this).children('.popupcontent').addClass('show');
+		}
 		e.stopPropagation();	//stop the click event from bubbling to the page event
-	});
-});
-
-jQuery(document).ready(function($){
-	$('html').click(function(e){
-		$('.infopopup').children('.popupcontent').removeClass('show');
+		$('html').one("click",function(f){	//create one-time event handler that closes popups
+				$('.infopopup').children('.popupcontent').removeClass('show');
+		});	
 	});
 });
 
