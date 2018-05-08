@@ -38,18 +38,18 @@ window.addEventListener("DOMContentLoaded", function(event){
 					e.preventDefault();
 					stripe.createToken(card).then(stripeResponseHandler);
 				}else{
-					var isValid = true;
-					jQuery('input:required').each(function(){
-						if (jQuery(this).val() === ''){
-							isValid = false;
-						}
-					});
-					if (isValid){
+					// var isValid = true;
+					// jQuery('input:required').each(function(){
+					// 	if (jQuery(this).val() === ''){
+					// 		isValid = false;
+					// 	}
+					// });
+					// if (isValid){
 						document.getElementById('stripe-payment-form-singlepage').submit();
-					} else{
-						e.preventDefault();
-						jQuery('.payment-error').html('Please fill out all required fields!');
-					}
+					// } else{
+					// 	e.preventDefault();
+					// 	jQuery('.payment-error').html('Please fill out all required fields!');
+					// }
 				}
 			});
 		}catch(err){
