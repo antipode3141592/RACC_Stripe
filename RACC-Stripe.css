@@ -266,6 +266,10 @@ button#confirmation_button:hover {
 	
 }
 
+input.invalid{
+	border: 3px solid red !important;
+}
+
 .infopopup {
 	position: relative;
     display: inline-block;

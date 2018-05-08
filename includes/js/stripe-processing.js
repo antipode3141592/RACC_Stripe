@@ -1,4 +1,5 @@
-//shows confirmation div, populates values for user review
+// validate required input fields exist
+// shows confirmation div, populates values for user review
 jQuery(document).ready(function($){
 	$('#confirmation_button').click(function(event)
 	{	
@@ -6,8 +7,10 @@ jQuery(document).ready(function($){
 		$('#confirmation_button').attr("disabled", "disabled");	//disable button to prevent all the clicks	
 		var isValid = true;
 		$('input:required').each(function(){
+			$(this).removeClass('invalid');
 			if ($(this).val() === ''){
 				isValid = false;
+				$(this).addClass('invalid');
 			}
 		});
 		if (isValid){
