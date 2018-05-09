@@ -72,9 +72,9 @@ function racc_stripe_process_payment() {
 			$wpdb->prepare("CALL sp_addcontactinfo(%s,%s,%s)", "email-artscard", $artscard_email, $new_donor_id));
 		}
 		$rows_inserted = $wpdb->query(
-			$wpdb->prepare("CALL sp_addallocation(%s,%s,%s,%s,%s,%s)", $new_donor_id,"community", number_format($fund_community,2,'.',''), number_format($fund_total,2,'.',''),$donation_frequency, number_format($period_total,2,'.','')));
+			$wpdb->prepare("CALL sp_addallocation(%s,%s,%s,%s,%s,%s,%s)", $new_donor_id,"community", number_format($fund_community,2,'.',''), number_format($fund_total,2,'.',''),$donation_frequency, number_format($period_total,2,'.',''),number_format($payperiods,0,'','')));
 		$rows_inserted = $wpdb->query(
-			$wpdb->prepare("CALL sp_addallocation(%s,%s,%s,%s,%s,%s)", $new_donor_id,"education", number_format($fund_education,2,'.',''), number_format($fund_total,2,'.',''),$donation_frequency, number_format($period_total,2,'.','')));	
+			$wpdb->prepare("CALL sp_addallocation(%s,%s,%s,%s,%s,%s,%s)", $new_donor_id,"education", number_format($fund_education,2,'.',''), number_format($fund_total,2,'.',''),$donation_frequency, number_format($period_total,2,'.',''),number_format($payperiods,0,'','')));	
 		}catch(Exception $e){
 			error_log("process-payment, database calls error: " + $e->getMessage());
 		}

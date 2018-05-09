@@ -22,17 +22,17 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 			<h2>Donor Information</h2>
 			<div class="form-row" id="donor_names_div">
 				<span id="first_name_section">
-					<label for="donor_first_name">First Name</label>
+					<label for="donor_first_name">First Name *</label>
 					<input type="text" size="40" name="donor_first_name" id="donor_first_name" autocomplete="given-name" required/>
 				</span>
 				<span id="last_name_section">	
-					<label for="donor_last_name">Last Name</label>
+					<label for="donor_last_name">Last Name *</label>
 					<input type="text" size="40" name="donor_last_name" id="donor_last_name" autocomplete="family-name" required/>
 				</span>
 			</div>
 			<div class="form-row" id="email_and_phone_div">	
 				<span id="donor_email_section">
-					<label for="donor_email">E-Mail</label>
+					<label for="donor_email">E-Mail *</label>
 					<input type="email" size="40" class="email" name="donor_email" id="donor_email" autocomplete="email" required/>
 				</span>
 				<span id="donor_phone_section">
@@ -41,22 +41,22 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 				</span>
 			</div>
 			<div class="form-row" id="donor_addresses_div">	
-					<label for="donor_address_1">Mailing Address</label>
-					<input type="text" size="50" name="donor_address_1" id="donor_address_1" autocomplete="address-line1" />
+					<label for="donor_address_1">Mailing Address *</label>
+					<input type="text" size="50" name="donor_address_1" id="donor_address_1" autocomplete="address-line1" required/>
 					<input type="text" size="50" name="donor_address_2" id="donor_address_2" autocomplete="address-line2" />
 			</div>
 			<div class="form-row" id="donor_addresses_citystatezip_div">
 				<span id="city-section">
-					<label for="donor_city">City</label> 
-					<input type="text" size="50" name="donor_city" id="donor_city" autocomplete="address-level2" />
+					<label for="donor_city">City *</label> 
+					<input type="text" size="50" name="donor_city" id="donor_city" autocomplete="address-level2" required/>
 				</span>
 				<span id="state-section">
-					<label for="donor_state">State</label>
-					<input type="text" size="2" name="donor_state" id="donor_state" autocomplete="address-level1" />
+					<label for="donor_state">State *</label>
+					<input type="text" size="2" name="donor_state" id="donor_state" autocomplete="address-level1" required/>
 				</span>
 				<span id="zip-section">
-					<label for="donor_zip">Zip</label>
-					<input type="text" size="10" name="donor_zip" id="donor_zip" autocomplete="postal-code" />
+					<label for="donor_zip">Zip *</label>
+					<input type="text" size="10" name="donor_zip" id="donor_zip" autocomplete="postal-code" required/>
 				</span>
 			</div>
 			<div class="form-row" id="donor_anon_div">
@@ -124,29 +124,29 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		<div id="artscard_address_input" style="display: none">
 			<h3>Arts Card Recepient</h3>
 			<div class="form-row" id="artscard_name_div">
-				<label for="artscard_name">Name</label>
+				<label for="artscard_name">Name *</label>
 				<input type="text" size="50" name="artscard_name" id="artscard_name" autocomplete="section-gift name" />
 			</div>
 			<div class="form-row" id="artscard_email_div">
-				<label for="artscard_email">E-Mail</label>
+				<label for="artscard_email">E-Mail *</label>
 				<input type="email" size="40" class="email" name="artscard_email" id="artscard_email" autocomplete="section-gift email" />
 			</div>
 			<div class="form-row" id="artscard_address_div">	
-				<label for="artscard_address_1">Mailing Address</label>
+				<label for="artscard_address_1">Mailing Address *</label>
 				<input type="text" size="50" name="artscard_address_1" id="artscard_address_1" autocomplete="section-gift address-line1" />
 				<input type="text" size="50" name="artscard_address_2" id="artscard_address_2" autocomplete="section-gift address-line2" />
 			</div>
 			<div class="form-row" id="artscard_citystatezip_div">
 				<span id="artscard_city_section">
-					<label for="artscard_city">City</label> 
+					<label for="artscard_city">City *</label> 
 					<input type="text" size="50" name="artscard_city" id="artscard_city" autocomplete="section-gift address-level2" />
 				</span>
 				<span id="artscard_state_section">
-					<label for="artscard_state">State</label>
+					<label for="artscard_state">State *</label>
 					<input type="text" size="2" name="artscard_state" id="artscard_state" autocomplete="section-gift address-level1" />
 				</span>
 				<span id="artscard_zip_section">
-					<label for="artscard_zip">Zip</label>
+					<label for="artscard_zip">Zip *</label>
 					<input type="text" size="10" name="artscard_zip" id="artscard_zip" autocomplete="section-gift postal-code" />
 				</span>
 			</div>

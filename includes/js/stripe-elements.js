@@ -18,10 +18,9 @@ window.addEventListener("DOMContentLoaded", function(event){
 	var form = document.getElementById('stripe-payment-form-singlepage');
 	if (form){
 		try{
-			var stripe = Stripe('pk_test_uWWAtAgCx02zLJ4dTmXopRn8');
+			var stripe = Stripe(stripe_vars.publishable_key);
 			var elements = stripe.elements();
 			var card = elements.create('card',{hidePostalCode: true});
-			// var elements = stripe.elements();
 			card.mount('#card-element');
 			card.addEventListener('change', function(event) {
   				if (event.error) {
@@ -30,10 +29,8 @@ window.addEventListener("DOMContentLoaded", function(event){
 				    jQuery('.payment-error').html('');
 				}
 			});
-			// document.getElementById('stripe-payment-form-singlepage').addEventListener('submit',function(e){
 			document.getElementById('stripe-submit').addEventListener('click',function(e){
-				
-				document.getElementById('stripe-submit').setAttribute("disabled", "disabled");
+				document.getElementById('stripe-submit').setAttribute("disabled", "disabled");	//disable button to prevent multiple clicks
 				if ((jQuery('input[name="donation_frequency"]:checked').val() == "cc-once") || (jQuery('input[name="donation_frequency"]:checked').val() == "cc-recur")){
 					e.preventDefault();
 					stripe.createToken(card).then(stripeResponseHandler);

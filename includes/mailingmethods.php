@@ -53,6 +53,7 @@ function racc_mailer2($donor_id,$success="no"){
 			$artscardqualify = $results[0]->ArtsCard;
 			$giftartscard = $results[0]->GiftArtsCard;
 			$period_total = $results[0]->PeriodTotal;
+			$period_count = $results[0]->period_count;
 		}
 		if ($giftartscard == 1){
 			$results = $wpdb->get_results(
@@ -70,7 +71,7 @@ function racc_mailer2($donor_id,$success="no"){
 				break;
 			case "workplace":
 				$message.="\n\nYour monthtly payroll deduction of $".number_format(floatval($period_total),2)
-					." will begin July 2018. We will mail to you an official acknowledgement and tax receipt in the next few days.";
+					." will begin in July 2018 and continue for ". number_format($period_count,0,'','') ." pay periods. We will mail to you an official acknowledgement and tax receipt in the next few days.";
 				break;
 			case "cc-once":
 				if($success == "yes"){
