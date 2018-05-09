@@ -199,4 +199,5 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 	return ob_get_clean();
 }
 add_shortcode('payment_form_elementsjs', 'racc_stripe_payment_form_elementsjs');
+
 ?>
