@@ -15,6 +15,7 @@ function racc_load_stripe_scripts() {
 	wp_enqueue_script('stripe', 'https://js.stripe.com/v3/');
 	wp_enqueue_script('stripe-processing', STRIPE_BASE_URL . '/includes/js/stripe-processing.js');
 	wp_enqueue_script('stripe-elements', STRIPE_BASE_URL . '/includes/js/stripe-elements.js');
+	wp_enqueue_script('selector', STRIPE_BASE_URL . '/includes/js/selector.js');
 	wp_localize_script('stripe-processing', 'stripe_vars', array(
 			'publishable_key' => $publishable,
 		)
@@ -23,6 +24,11 @@ function racc_load_stripe_scripts() {
 			'publishable_key' => $publishable,
 		)
 	);
+	wp_localize_script('selector', 'jsonlocation',array(
+			'base_url' => STRIPE_BASE_URL,
+		)
+	);
+
 	//register styles
 	wp_register_style('RACC-Stripe-css', STRIPE_BASE_URL . '/RACC-Stripe.css');
     wp_enqueue_style('RACC-Stripe-css');

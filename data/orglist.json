@@ -1,0 +1,42 @@
+[
+	{
+		"organization": "Portland Center Stage at The Armory",
+		"address":"http://wfadev.pairsite.com/pcs/",
+		"payperiods": "26",
+		"optionalperiods":"yes",
+		"payroll":"yes",
+		"dg":"no"
+	},
+	{
+		"organization": "Portland Opera Association",
+		"address":"http://wfadev.pairsite.com/poa",
+		"payperiods": "14",
+		"optionalperiods":"no",
+		"payroll":"yes",
+		"dg":"no"
+	},
+	{
+	"organization": "Bag & Baggage Productions",
+	"address":"http://wfadev.pairsite.com/bbp",
+	"payperiods": "1",
+	"optionalperiods":"no",
+	"payroll":"no",
+	"dg":"no"
+	},
+	{
+	"organization": "Broadway Rose Theatre Company",
+	"address":"http://wfadev.pairsite.com/brtc",
+	"payperiods": "24",
+	"optionalperiods":"yes",
+	"payroll":"yes",
+	"dg":"no"
+	},
+	{
+	"organization": "Chamber Music Northwest",
+	"address":"http://wfadev.pairsite.com/cmnw",
+	"payperiods": "1",
+	"optionalperiods":"no",
+	"payroll":"no",
+	"dg":"no"
+	}
+]
