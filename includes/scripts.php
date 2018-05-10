@@ -16,6 +16,7 @@ function racc_load_stripe_scripts() {
 	wp_enqueue_script('stripe-processing', STRIPE_BASE_URL . '/includes/js/stripe-processing.js');
 	wp_enqueue_script('stripe-elements', STRIPE_BASE_URL . '/includes/js/stripe-elements.js');
 	wp_enqueue_script('selector', STRIPE_BASE_URL . '/includes/js/selector.js');
+	wp_enqueue_script('results', STRIPE_BASE_URL . '/includes/js/results.js');
 	wp_localize_script('stripe-processing', 'stripe_vars', array(
 			'publishable_key' => $publishable,
 		)

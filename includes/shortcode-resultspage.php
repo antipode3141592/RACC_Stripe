@@ -1,5 +1,4 @@
 <?php
-
 //creates result page
 function racc_stripe_resultpage($atts, $content = null){
 	$success = isset($_GET['success']) ? $_GET['success'] : 'no';
@@ -36,59 +35,61 @@ function racc_stripe_resultpage($atts, $content = null){
 	if($success == 'yes')
 	{
 		?>
-		<h1>Thank You!</h1>
-		<h2>Thank you for trying our test site! When the site opens for pledging on May 22, this will be a more detailed Thank You/Pledge Summary page that donors may print for their records.</h2>
-		<div id="results_intro_paragraph">
-			<p><?php _e(nl2br("Thank you, ".$donor_first_name.", for your pledge of $" . number_format($fund_total,2)
-				."!\nArts Community Fund: $".number_format($fund_community,2)
-				."\nArts Education Fund: $".number_format($fund_education,2))) ?>
-			</p>
-		</div>
-		<div id="results_main_body"><p><?php 
-			switch($donation_frequency){
-			case "check":
-				$message="\nPlease mail your check by June 30,2018:\nWork for Art\n411 NW Park Avenue\nSuite 101"
-					."\nPortland, OR 97209\n\nWe will mail to you an official acknowledgement and tax receipt in the next few days.";
-				break;
-			case "workplace":
-				$message="\nYour payroll deduction of $".number_format(floatval($period_total),2)
-					." per period will begin July 2018. We will mail to you an official acknowledgement and tax receipt in the next few days.";
-				break;
-			case "cc-once":
-				$message="\nSuccessful one-time credit card payment, thanks!"
-				."We will mail to you an official acknowledgement and tax receipt in the next few days.";
-				break;
-			case "cc-recur":
-				$message="\nSuccessful monthly recurring credit card payment for $".number_format(floatval($period_total),2).", thank you!"
-				." We will mail to you an official acknowledgement and tax receipt in the next few days.";
-		}		
-		_e(nl2br($message)); 
-		?></p></div>
-		<div id="results_artscard">
-			<?php if(($artscardqualify == "yes")&&($giftartscard == "no")){
+		<div id="resultscontent">
+			<h1>Thank You!</h1>
+			<h2>Thank you for trying our test site! When the site opens for pledging on May 22, this will be a more detailed Thank You/Pledge Summary page that donors may print for their records.</h2>
+			<div id="results_intro_paragraph">
+				<p><?php _e(nl2br("Thank you, ".$donor_first_name.", for your pledge of $" . number_format($fund_total,2)
+					."!\nArts Community Fund: $".number_format($fund_community,2)
+					."\nArts Education Fund: $".number_format($fund_education,2))) ?>
+				</p>
+			</div>
+			<div id="results_main_body"><p><?php 
+				switch($donation_frequency){
+				case "check":
+					$message="\nPlease mail your check by June 30,2018:\nWork for Art\n411 NW Park Avenue\nSuite 101"
+						."\nPortland, OR 97209\n\nWe will mail to you an official acknowledgement and tax receipt in the next few days.";
+					break;
+				case "workplace":
+					$message="\nYour payroll deduction of $".number_format(floatval($period_total),2)
+						." per period will begin July 2018. We will mail to you an official acknowledgement and tax receipt in the next few days.";
+					break;
+				case "cc-once":
+					$message="\nSuccessful one-time credit card payment, thanks!"
+					."We will mail to you an official acknowledgement and tax receipt in the next few days.";
+					break;
+				case "cc-recur":
+					$message="\nSuccessful monthly recurring credit card payment for $".number_format(floatval($period_total),2).", thank you!"
+					." We will mail to you an official acknowledgement and tax receipt in the next few days.";
+			}		
+			_e(nl2br($message)); 
+			?></p></div>
+			<div id="results_artscard">
+				<?php if(($artscardqualify == "yes")&&($giftartscard == "no")){
+					?>
+					<p><?php _e(nl2br("Your gift qualifies you for the Arts Card and it will be mailed to you with your acknowledgement letter."));?></p>
+					<?php
+				}elseif(($artscardqualify == "yes")&&($giftartscard == "yes")){
+					?>
+					<p><?php _e(nl2br("Your gift qualifies you for the Arts Card. You have chosen to gift it to ".strip_tags($artscard_name).". We will mail them their Arts Card soon with a note that it's a gift from you."));?></p>
+					<?php
+				}
 				?>
-				<p><?php _e(nl2br("Your gift qualifies you for the Arts Card and it will be mailed to you with your acknowledgement letter."));?></p>
-				<?php
-			}elseif(($artscardqualify == "yes")&&($giftartscard == "yes")){
+			</div>
+			<div id="results_anon">
+				<?php 
+				if($anon == "yes"){
+					?>
+					<p>Your gift is marked as anonymous: your name will not be used in any publications.</p><?php
+				}
 				?>
-				<p><?php _e(nl2br("Your gift qualifies you for the Arts Card. You have chosen to gift it to ".strip_tags($artscard_name).". We will mail them their Arts Card soon with a note that it's a gift from you."));?></p>
-				<?php
-			}
-			?>
-		</div>
-		<div id="results_anon">
-			<?php 
-			if($anon == "yes"){
-				?>
-				<p>Your gift is marked as anonymous: your name will not be used in any publications.</p><?php
-			}
-			?>
-		</div>
-		<div id="results_signature_lines">
-			<br>
-			<p>With gratitude,<br>
-				Your Work for Art Team<br>
-				503-823-2969</p>
+			</div>
+			<div id="results_signature_lines">
+				<br>
+				<p>With gratitude,<br>
+					Your Work for Art Team<br>
+					503-823-2969</p>
+			</div>
 		</div>
 		<?php
 	}else{
@@ -101,7 +102,8 @@ function racc_stripe_resultpage($atts, $content = null){
 	}
 	?>
 	<div id="printerdiv">
-		<a href="javascript:window.print()">Print!</a>
+		<!-- <a href="javascript:window.print()">Print!</a> -->
+		<button type="button" id="printpreviewbutton">Print Preview</button>
 	</div>
 	<?php
 	return ob_get_clean();
