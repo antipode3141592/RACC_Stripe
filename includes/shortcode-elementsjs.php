@@ -158,7 +158,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 			</div>
 		</div>
 		<div class="payment-error" id="payment_error_div"></div>
-		<input type="hidden" id="sc_organization" value="<?php _e($organization);?>"/>
+		<input type="hidden" name="sc_organization" id="sc_organization" value="<?php _e($organization);?>"/>
 		<input type="hidden" id="sc_payperiods" value="<?php _e($payperiods);?>"/>
 		<input type="hidden" name="sc_optionalperiods" id="sc_optionalperiods" value="<?php _e($optionalperiods);?>"/>
 		<input type="hidden" name="sc_payroll" id="sc_payroll" value="<?php _e($payroll);?>"/>
