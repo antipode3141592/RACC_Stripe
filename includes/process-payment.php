@@ -21,6 +21,7 @@ function racc_stripe_process_payment() {
 		$artscardqualify = isset($_POST['artscardqualify']) ? $_POST['artscardqualify'] : 'no';
 
 		//donor information
+		$organization = isset($_POST['sc_organization']) ? sanitize_text_field($_POST['sc_organization']) : null;
 		$donor_first_name = isset($_POST['donor_first_name']) ? sanitize_text_field($_POST['donor_first_name']) : null;
 		$donor_middle_name = isset($_POST['donor_middle_name']) ? sanitize_text_field($_POST['donor_middle_name']) : null;
 		$donor_last_name = isset($_POST['donor_last_name']) ? sanitize_text_field($_POST['donor_last_name']) : null;
@@ -55,7 +56,7 @@ function racc_stripe_process_payment() {
 			$db_giftartscard = 1;
 		}else {$db_giftartscard = 0;}
 		$rows_inserted = $wpdb->query(
-			$wpdb->prepare("CALL sp_adddonor(%s,%s,%s,%s,%s,%s,%s)", $donor_first_name, $donor_middle_name, $donor_last_name, $new_donor_id, $anon,$db_artscard, $db_giftartscard));
+			$wpdb->prepare("CALL sp_adddonor(%s,%s,%s,%s,%s,%s,%s,%s)", $donor_first_name, $donor_middle_name, $donor_last_name, $new_donor_id, $anon,$db_artscard, $db_giftartscard, $organization));
 		$rows_inserted = $wpdb->query(
 			$wpdb->prepare("CALL sp_addcontactinfo(%s,%s,%s)", "email", $donor_email, $new_donor_id));
 		if($donor_phone != null){

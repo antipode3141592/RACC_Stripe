@@ -38,5 +38,13 @@
 	"optionalperiods":"no",
 	"payroll":"no",
 	"dg":"no"
+	},
+	{
+	"organization": "PHAME Academy",
+	"address":"http://wfadev.pairsite.com/phame",
+	"payperiods": "1",
+	"optionalperiods":"no",
+	"payroll":"no",
+	"dg":"no"
 	}
 ]

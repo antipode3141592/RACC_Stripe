@@ -40,7 +40,7 @@ if(is_admin()) {
 	include(STRIPE_BASE_DIR . '/includes/scripts.php');
 	include(STRIPE_BASE_DIR . '/includes/process-payment.php');	
 	include(STRIPE_BASE_DIR . '/includes/mailingmethods.php');	
-	include(STRIPE_BASE_DIR . '/includes/resultspage.php');
+	include(STRIPE_BASE_DIR . '/includes/shortcode-resultspage.php');
 	include(STRIPE_BASE_DIR . '/includes/webhooklistener.php');
 	include(STRIPE_BASE_DIR . '/includes/shortcode-elementsjs.php');
 	include(STRIPE_BASE_DIR . '/includes/shortcode-selector.php');
