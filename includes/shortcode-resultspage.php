@@ -35,9 +35,9 @@ function racc_stripe_resultpage($atts, $content = null){
 	if($success == 'yes')
 	{
 		?>
+		<h2>Thank you for trying our test site! When the site opens for pledging on May 22, this will be a more detailed Thank You/Pledge Summary page that donors may print for their records.</h2>
 		<div id="resultscontent">
 			<h1>Thank You!</h1>
-			<h2>Thank you for trying our test site! When the site opens for pledging on May 22, this will be a more detailed Thank You/Pledge Summary page that donors may print for their records.</h2>
 			<div id="results_intro_paragraph">
 				<p><?php _e(nl2br("Thank you, ".$donor_first_name.", for your pledge of $" . number_format($fund_total,2)
 					."!\nArts Community Fund: $".number_format($fund_community,2)
@@ -102,7 +102,6 @@ function racc_stripe_resultpage($atts, $content = null){
 	}
 	?>
 	<div id="printerdiv">
-		<!-- <a href="javascript:window.print()">Print!</a> -->
 		<button type="button" id="printpreviewbutton">Print Preview</button>
 	</div>
 	<?php
