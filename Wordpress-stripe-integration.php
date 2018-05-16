@@ -46,5 +46,6 @@ if(is_admin()) {
 	include(STRIPE_BASE_DIR . '/includes/shortcode-selector.php');
 	include(STRIPE_BASE_DIR . '/includes/shortcode-dbdownload.php');
 	include(STRIPE_BASE_DIR . '/includes/dbdownload.php');
+	include(STRIPE_BASE_DIR . '/includes/shortcode-orgpicker.php');
 }
 

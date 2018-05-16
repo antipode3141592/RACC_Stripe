@@ -8,7 +8,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		'payperiods' => '26',		//default 26 for payperiods in a year
 		'optionalperiods' => 'no',	//'yes' or 'no', 'yes' allows donor to specify 
 		'payroll' => 'yes',			//'yes' allows selection of workplace giving option and disables cc-recur, 'no' disables workplace giving option and enables cc-recur
-		'dg' =>'yes'
+		'dg' =>'no'
 	), $atts ) );
 
 	//TODO: add $_POST calls to grab starting data, for cases where user 
@@ -76,7 +76,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 				<div>
 					<input type="radio" id="donationradio2" name="donation_frequency" value="cc-recur" onclick="change_frequency(this);"/><label for="donationradio2">Recurring Gift - Credit/Debit Card</label>
 					<div class="infopopup">i
-						<div class="popupcontent">We will send you a new pledge acknowledgement every year and Arts Card (if applicable) every year.</div>
+						<div class="popupcontent">We will send you a new pledge acknowledgement and Arts Card (if applicable) every year.</div>
 					</div>
 				</div>
 				<div>
@@ -99,12 +99,27 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 						<div id="fund_community_description" class="popupcontent">Supports tri-county-based arts and culture organizations that receive RACC General Operating Support (GOS) and Project Grant funding for a wide array of services, programs, exhibits, events, and performances.</div>
 					</div>
 					<input type="number" name="fund_community" id="fund_community" class="racc_fund" value='30.00' step="0.01" min='0' autocomplete="off"/>
+					<label for="fund_community_lock">Lock</label>
+					<input type="checkbox" name="fund_community_lock" id="fund_community_lock"/>
 
 					<label for="fund_education" id="fund_education_label">Arts Education Fund</label>
 					<div class="infopopup">i
 						<div id="fund_education_description" class="popupcontent">Distributed to 40+ arts and culture organizations (many GOS groups) that provide substantial arts education opportunities for students and teachers throughout our region.</div>
 					</div>
 					<input type="number" name="fund_education" id="fund_education" class="racc_fund" value='30.00' step="0.01" min="0" autocomplete="off"/>
+					<label for="fund_education_lock">Lock</label>
+					<input type="checkbox" name="fund_education_lock" id="fund_education_lock"/>
+
+					<div id="dg_fields">
+						<label for="fund_designated" id="fund_designated_label">Designated Fund</label>
+						<div class="infopopup">i
+							<div id="fund_designated_description" class="popupcontent">You may designate a portion or all of your gift toward a specific Arts and Culture 501(c)(3) organization.</div>
+						</div>
+						<input type="text" name="fund_designated_name" id="fund_designated_name" value="" maxlength="100"/>
+						<input type="number" name="fund_designated" id="fund_designated" class="racc_fund" value='0.00' step="0.01" min="0" autocomplete="off"/>
+						<label for="fund_designated_lock">Lock</label>
+						<input type="checkbox" name="fund_designated_lock" id="fund_designated_lock"/>
+					</div>
 					
 					<div id="payperiod_container" style="display: none">
 						<label for="payperiodinputs" id="periodinput_label" style="display: none">Pay Periods</label>
@@ -116,7 +131,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 			</div>
 		</div>
 		<div id="artscardvalidation">
-			<h2>In appreciation of your pledge of $60 or more, we'll be mailing you the Arts Card!</h2>
+			<h2>In appreciation of your pledge of $60 or more, we'll be mailing you The Arts Card!</h2>
 			<div id="artscard_image"></div>
 			<label for="giftartscard">I prefer to gift my Arts Card</label>
 			<input type="checkbox" name="giftartscard" id="giftartscard" value="yes"/>
@@ -171,7 +186,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		<div name="confirmation_popup" id="confirmation_popup" style="display: none">
 			<div id="confirmation_popup_content">
 			<h2>Confirmation</h2>
-			<p>Please confirm the details below before submitting your pledge.</p>
+			<p>Please review the details below before confirming your pledge.</p>
 			<div id="confirm_name"></div>
 			<div id="confirm_donor_address"></div>
 			<div id="confirm_artscard"></div>

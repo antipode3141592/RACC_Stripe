@@ -12,7 +12,7 @@ function racc_db_download() {
 			$filename = 'racc_db';
 		    $date = date("YmdHis");
 		    $output = fopen('php://output', 'w');
-		    fputcsv( $output, array('timestamp', 'donor_id', 'first_name', 'last_name', 'anon', 'artscard', 'giftartscard', 'organization', 'email', 'community', 'education', 'pledgetotal', 'paytype', 'periodtotal', 'address1', 'address2', 'city', 'state', 'zipcode', 'artscard_name', 'artscard_add1', 'artscard_add2', 'artscard_city', 'artscard_state', 'artscard_zip'));
+		    fputcsv( $output, array('timestamp', 'donor_id', 'first_name', 'last_name', 'anon', 'artscard', 'giftartscard', 'organization', 'email', 'community', 'education', 'designated', 'designated name', 'pledgetotal', 'paytype', 'periodtotal', 'address1', 'address2', 'city', 'state', 'zipcode', 'artscard_name', 'artscard_add1', 'artscard_add2', 'artscard_city', 'artscard_state', 'artscard_zip'));
 		    foreach ($results as $value) {
 		        $modified_values = array(
 		                        $value->timestamp,
@@ -25,7 +25,9 @@ function racc_db_download() {
 		                        $value->organization,	
 		                        $value->email,	
 		                        $value->community_fund,	
-		                        $value->education_fund,	
+		                        $value->education_fund,
+		                        $value->designated_fund,
+		                        $value->designated_name,	
 		                        $value->pledgetotal,	
 		                        $value->paytype,	
 		                        $value->periodtotal,	

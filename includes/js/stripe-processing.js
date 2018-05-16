@@ -40,6 +40,7 @@ jQuery(document).ready(function($){
 			$('#confirm_email').html($('#donor_email').val());
 			$('#confirm_fund_community').html('Arts Community Fund: $'+ parseFloat($('#fund_community').val()).toFixed(2));
 			$('#confirm_fund_education').html('Arts Education Fund: $'+ parseFloat($('#fund_education').val()).toFixed(2));
+			$('#confirm_fund_designated').html('Designated Fund (' + $('#fund_designated_name').val() + ': $'+ parseFloat($('#fund_designated').val()).toFixed(2));
 			$('#confirm_fund_total').html('Annual Pledge: $'+ parseFloat($('#fund_total').val()).toFixed(2));
 			switch($('input[name="donation_frequency"]:checked').val())
 			{
@@ -59,7 +60,7 @@ jQuery(document).ready(function($){
 					break;
 				case "check":
 					$('#confirm_payroll_deduction').hide();
-					$('#confirm_paymethod').html('Giving Method: Please mail your check to Work for Art by June 2018.');
+					$('#confirm_paymethod').html('Giving Method: <b>Please mail your check to Work for Art by June 2018</b>.');
 					break;
 			}
 		} else{
@@ -215,6 +216,8 @@ function breakdown_total(){
 	var temp_total = fund_total.value;
 	var fund_community = document.getElementById("fund_community");
 	var fund_education = document.getElementById("fund_education");
+	var fund_designated = document.getElementById("fund_designated");
+
 	var period_total = document.getElementById("period_total");
 	var periods =  document.getElementById("payperiodinputs").value;
 	var temp_periods = periods;
@@ -229,7 +232,7 @@ function breakdown_total(){
 			temp_total = 1.0;
 		}
 		if (!regex.test(temp_periods)){
-			console.log(temp_periods);
+			// console.log(temp_periods);
 			temp_periods = 1;
 		} else if (temp_periods < 1) {
 			temp_periods = 1
@@ -240,13 +243,16 @@ function breakdown_total(){
 		
 		//preserve ratio of funds
 		var ratio = parseFloat(parseFloat(fund_community.value)/parseFloat(parseFloat(fund_community.value) + parseFloat(fund_education.value)));	//% community, do not round
-		console.log("ratio: " + ratio.toFixed(2));
+		// console.log("ratio: " + ratio.toFixed(2));
 		fund_community.value = parseFloat(parseFloat(temp_total) * parseFloat(ratio)).toFixed(2);
 		fund_education.value = parseFloat(parseFloat(temp_total) * (1.00 - parseFloat(ratio))).toFixed(2);
+
+
 		fund_total.value = parseFloat(temp_total).toFixed(2);	//format decimal points on input
 
 		fund_community.setAttribute('max',parseFloat(temp_total).toFixed(2));
 		fund_education.setAttribute('max',parseFloat(temp_total).toFixed(2));
+		fund_designated.setAttribute('max',parseFloat(temp_total).toFixed(2));
 		// fund_community.value = parseFloat(fund_total.value).toFixed(2);
 		// fund_education.value = 0.00;
 		if(temp_total >= 60.0)
@@ -266,40 +272,155 @@ function breakdown_total(){
 	}
 }
 
+
+//'lock' functions that set readonly for associated number inputs
+jQuery(document).ready(function($){
+	$("#fund_community_lock").change(function(){
+		if(this.checked){
+			$("#fund_community").prop('readonly',true);
+		} else {
+			$("#fund_community").prop('readonly',false);
+		}
+	});
+});
+
+jQuery(document).ready(function($){
+	$("#fund_education_lock").change(function(){
+		if(this.checked){
+			$("#fund_education").prop('readonly',true);
+		} else {
+			$("#fund_education").prop('readonly',false);
+		}
+	});
+});
+
+jQuery(document).ready(function($){
+	$("#fund_designated_lock").change(function(){
+		if(this.checked){
+			$("#fund_designated").prop('readonly',true);
+		} else {
+			$("#fund_designated").prop('readonly',false);
+		}
+	});
+});
+
+
+//value change functions for allocation inputs
 jQuery(document).ready(function($){
 	$('#fund_community').change(function(){
-		var temp = 0.0;
-		var regex = /[0-9]|\./;
-  
-		if (!regex.test($(this).val())){
-			temp = 0.0;
-		} else if (parseFloat($(this).val()) > parseFloat($(this).attr('max'))){
-			temp = parseFloat($(this).attr('max'));
-		} else if (parseFloat($(this).val()) < 0) {
-			temp = 0.0
+  		if(!$("#fund_community_lock").checked){		//first check to see if locked, proceed if unlocked
+  			var temp = 0.0;
+			var regex = /[0-9]|\./;
+			if (!regex.test($(this).val())){
+				temp = 0.0;
+			} else if (parseFloat($(this).val()) > parseFloat($(this).attr('max'))){
+				temp = parseFloat($(this).attr('max'));
+			} else if (parseFloat($(this).val()) < 0) {
+				temp = 0.0
+			} else {
+				temp = $(this).val();
+			}
+			var tot = parseFloat($('#fund_total').val());
+			var fund_ed = parseFloat($('#fund_education').val());
+			var fund_dg = parseFloat($('#fund_designated').val());
+			if ($("#fund_education_lock").is(':checked')){
+				//don't change education, change designated
+				console.log("fund_community.change(), education locked!");
+				$('#fund_designated').val((tot - temp - fund_ed).toFixed(2));
+			} else if ($("#fund_designated_lock").is(':checked')){
+				//don't change designated, change education
+				console.log("fund_community.change(), designated locked!");
+				$('#fund_education').val((tot - temp - fund_dg).toFixed(2));
+			} else {
+				//change designated and education
+				console.log("fund_community.change(), no locks!");
+				var fund_ed_prop = fund_ed/(fund_ed + fund_dg);
+				$('#fund_designated').val(((tot - temp) * (1.0 - fund_ed_prop)).toFixed(2));
+				$('#fund_education').val(((tot - temp) * fund_ed_prop).toFixed(2));
+			}
+			$('#fund_community').val(parseFloat(temp).toFixed(2));
 		} else {
-			temp = $(this).val();
+			//action for locked
 		}
-		$('#fund_education').val(($('#fund_total').val() - temp).toFixed(2));
-		$('#fund_community').val(parseFloat(temp).toFixed(2));
+
 	});
 });
 
 jQuery(document).ready(function($){
 	$('#fund_education').change(function(){
-		var temp = 0.0;
-		var regex = /[0-9]|\./;
-  
-		if (!regex.test($(this).val())){
-			temp = 0.0;
-		} else if (parseFloat($(this).val()) > parseFloat($(this).attr('max'))){
-			temp = parseFloat($(this).attr('max'));
-		} else if (parseFloat($(this).val()) < 0.0) {
-			temp = 0.0
+		if(!$("#fund_education_lock").checked){
+			var temp = 0.0;
+			var regex = /[0-9]|\./;	  
+			if (!regex.test($(this).val())){
+				temp = 0.0;
+			} else if (parseFloat($(this).val()) > parseFloat($(this).attr('max'))){
+				temp = parseFloat($(this).attr('max'));
+			} else if (parseFloat($(this).val()) < 0.0) {
+				temp = 0.0
+			} else {
+				temp = $(this).val();
+			}
+			var tot = parseFloat($('#fund_total').val());
+			var fund_com = parseFloat($('#fund_community').val());
+			var fund_dg = parseFloat($('#fund_designated').val());
+			if ($("#fund_community_lock").is(':checked')){
+				//change designated
+				console.log("fund_education.change(), community locked!");
+				$('#fund_designated').val((tot - temp - fund_com).toFixed(2));
+			} else if ($("#fund_designated_lock").is(':checked')){
+				//change community
+				console.log("fund_education.change(), designated locked!");
+				$('#fund_community').val((tot - temp - fund_dg).toFixed(2));
+			} else {
+				//change designated and community
+				var fund_com_prop = fund_com/(fund_com + fund_dg);
+				console.log("fund_education.change(), no locks!");
+				$('#fund_designated').val(((tot - temp) * (1.0 - fund_com_prop)).toFixed(2));
+				$('#fund_community').val(((tot - temp) * fund_com_prop).toFixed(2));
+			}
+			$('#fund_education').val(parseFloat(temp).toFixed(2));
 		} else {
-			temp = $(this).val();
+			//action for locked
 		}
-		$('#fund_community').val(($('#fund_total').val() - temp).toFixed(2));
-		$('#fund_education').val(parseFloat(temp).toFixed(2));
+	});
+});
+
+jQuery(document).ready(function($){
+	$('#fund_designated').change(function(){
+		if(!$("#fund_designated_lock").checked){
+			var temp = 0.0;
+			var regex = /[0-9]|\./;
+	  
+			if (!regex.test($(this).val())){
+				temp = 0.0;
+			} else if (parseFloat($(this).val()) > parseFloat($(this).attr('max'))){
+				temp = parseFloat($(this).attr('max'));
+			} else if (parseFloat($(this).val()) < 0.0) {
+				temp = 0.0
+			} else {
+				temp = $(this).val();
+			}
+			var tot = parseFloat($('#fund_total').val());
+			var fund_com = parseFloat($('#fund_community').val());
+			var fund_ed = parseFloat($('#fund_education').val());
+			if ($("#fund_community_lock").is(':checked')){
+				//change education
+				console.log("fund_designated.change(), community locked!");
+				$('#fund_education').val((tot - temp - fund_com).toFixed(2));
+			} else if ($("#fund_education_lock").is(':checked')){
+				//change community
+				console.log("fund_designated.change(), education locked!");
+				$('#fund_community').val((tot - temp - fund_ed).toFixed(2));
+			} else {
+				//nothing checked
+				console.log("fund_designated.change(), no locks!");
+				var fund_com_prop = fund_com/(fund_com + fund_ed);
+				$('#fund_education').val(((tot - temp) * (1.0 - fund_com_prop)).toFixed(2));
+				$('#fund_community').val(((tot - temp) * fund_com_prop).toFixed(2));
+			}
+			$('#fund_designated').val(parseFloat(temp).toFixed(2));
+		} else {
+			//action for locked
+		}
 	});
 });
