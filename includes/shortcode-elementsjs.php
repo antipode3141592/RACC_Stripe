@@ -8,7 +8,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		'payperiods' => '26',		//default 26 for payperiods in a year
 		'optionalperiods' => 'no',	//'yes' or 'no', 'yes' allows donor to specify 
 		'payroll' => 'yes',			//'yes' allows selection of workplace giving option and disables cc-recur, 'no' disables workplace giving option and enables cc-recur
-		'dg' =>'yes'
+		'dg' =>'no'
 	), $atts ) );
 
 	//TODO: add $_POST calls to grab starting data, for cases where user 
@@ -23,40 +23,40 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 			<div class="form-row" id="donor_names_div">
 				<span id="first_name_section">
 					<label for="donor_first_name">First Name *</label>
-					<input type="text" size="40" name="donor_first_name" id="donor_first_name" autocomplete="given-name" required/>
+					<input type="text" size="40" maxlength="40" name="donor_first_name" id="donor_first_name" autocomplete="given-name" required/>
 				</span>
 				<span id="last_name_section">	
 					<label for="donor_last_name">Last Name *</label>
-					<input type="text" size="40" name="donor_last_name" id="donor_last_name" autocomplete="family-name" required/>
+					<input type="text" size="40" maxlength="40" name="donor_last_name" id="donor_last_name" autocomplete="family-name" required/>
 				</span>
 			</div>
 			<div class="form-row" id="email_and_phone_div">	
 				<span id="donor_email_section">
 					<label for="donor_email">E-Mail *</label>
-					<input type="email" size="40" class="email" name="donor_email" id="donor_email" autocomplete="email" required/>
+					<input type="email" size="40" maxlength="40" class="email" name="donor_email" id="donor_email" autocomplete="email" required/>
 				</span>
 				<span id="donor_phone_section">
 					<label for="donor_phone">Phone</label>
-					<input type="text" size="15" name="donor_phone" autocomplete="tel-national" id="donor_phone"/>
+					<input type="text" size="15" maxlength="40" name="donor_phone" autocomplete="tel-national" id="donor_phone"/>
 				</span>
 			</div>
 			<div class="form-row" id="donor_addresses_div">	
 					<label for="donor_address_1">Mailing Address *</label>
-					<input type="text" size="50" name="donor_address_1" id="donor_address_1" autocomplete="address-line1" required/>
-					<input type="text" size="50" name="donor_address_2" id="donor_address_2" autocomplete="address-line2" />
+					<input type="text" size="50" maxlength="50" name="donor_address_1" id="donor_address_1" autocomplete="address-line1" required/>
+					<input type="text" size="50" maxlength="50" name="donor_address_2" id="donor_address_2" autocomplete="address-line2" />
 			</div>
 			<div class="form-row" id="donor_addresses_citystatezip_div">
 				<span id="city-section">
 					<label for="donor_city">City *</label> 
-					<input type="text" size="50" name="donor_city" id="donor_city" autocomplete="address-level2" required/>
+					<input type="text" size="50" maxlength="50" name="donor_city" id="donor_city" autocomplete="address-level2" required/>
 				</span>
 				<span id="state-section">
 					<label for="donor_state">State *</label>
-					<input type="text" size="2" name="donor_state" id="donor_state" autocomplete="address-level1" required/>
+					<input type="text" size="2" maxlength="2" name="donor_state" id="donor_state" autocomplete="address-level1" required/>
 				</span>
 				<span id="zip-section">
 					<label for="donor_zip">Zip *</label>
-					<input type="text" size="10" name="donor_zip" id="donor_zip" autocomplete="postal-code" required/>
+					<input type="text" size="10" maxlength="15" name="donor_zip" id="donor_zip" autocomplete="postal-code" required/>
 				</span>
 			</div>
 			<div class="form-row" id="donor_anon_div">
@@ -76,7 +76,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 				<div>
 					<input type="radio" id="donationradio2" name="donation_frequency" value="cc-recur" onclick="change_frequency(this);"/><label for="donationradio2">Recurring Gift - Credit/Debit Card</label>
 					<div class="infopopup">i
-						<div class="popupcontent">We will send you a new pledge acknowledgement every year and Arts Card (if applicable) every year.</div>
+						<div class="popupcontent">We will send you a new pledge acknowledgement and Arts Card (if applicable) every year.</div>
 					</div>
 				</div>
 				<div>
@@ -99,12 +99,27 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 						<div id="fund_community_description" class="popupcontent">Supports tri-county-based arts and culture organizations that receive RACC General Operating Support (GOS) and Project Grant funding for a wide array of services, programs, exhibits, events, and performances.</div>
 					</div>
 					<input type="number" name="fund_community" id="fund_community" class="racc_fund" value='30.00' step="0.01" min='0' autocomplete="off"/>
+					<label for="fund_community_lock">Lock</label>
+					<input type="checkbox" name="fund_community_lock" id="fund_community_lock"/>
 
 					<label for="fund_education" id="fund_education_label">Arts Education Fund</label>
 					<div class="infopopup">i
 						<div id="fund_education_description" class="popupcontent">Distributed to 40+ arts and culture organizations (many GOS groups) that provide substantial arts education opportunities for students and teachers throughout our region.</div>
 					</div>
 					<input type="number" name="fund_education" id="fund_education" class="racc_fund" value='30.00' step="0.01" min="0" autocomplete="off"/>
+					<label for="fund_education_lock">Lock</label>
+					<input type="checkbox" name="fund_education_lock" id="fund_education_lock"/>
+
+					<div id="dg_fields">
+						<label for="fund_designated" id="fund_designated_label">Designated Fund</label>
+						<div class="infopopup">i
+							<div id="fund_designated_description" class="popupcontent">You may designate a portion or all of your gift toward a specific Arts and Culture 501(c)(3) organization.</div>
+						</div>
+						<input type="text" name="fund_designated_name" id="fund_designated_name" value="" maxlength="100"/>
+						<input type="number" name="fund_designated" id="fund_designated" class="racc_fund" value='0.00' step="0.01" min="0" autocomplete="off"/>
+						<label for="fund_designated_lock">Lock</label>
+						<input type="checkbox" name="fund_designated_lock" id="fund_designated_lock"/>
+					</div>
 					
 					<div id="payperiod_container" style="display: none">
 						<label for="payperiodinputs" id="periodinput_label" style="display: none">Pay Periods</label>
@@ -116,7 +131,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 			</div>
 		</div>
 		<div id="artscardvalidation">
-			<h2>In appreciation of your pledge of $60 or more, we'll be mailing you the Arts Card!</h2>
+			<h2>In appreciation of your pledge of $60 or more, we'll be mailing you The Arts Card!</h2>
 			<div id="artscard_image"></div>
 			<label for="giftartscard">I prefer to gift my Arts Card</label>
 			<input type="checkbox" name="giftartscard" id="giftartscard" value="yes"/>
@@ -125,29 +140,29 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 			<h3>Arts Card Recepient</h3>
 			<div class="form-row" id="artscard_name_div">
 				<label for="artscard_name">Name *</label>
-				<input type="text" size="50" name="artscard_name" id="artscard_name" autocomplete="section-gift name" />
+				<input type="text" size="50" maxlength="50" name="artscard_name" id="artscard_name" autocomplete="section-gift name" />
 			</div>
 			<div class="form-row" id="artscard_email_div">
 				<label for="artscard_email">E-Mail *</label>
-				<input type="email" size="40" class="email" name="artscard_email" id="artscard_email" autocomplete="section-gift email" />
+				<input type="email" size="40" maxlength="40" class="email" name="artscard_email" id="artscard_email" autocomplete="section-gift email" />
 			</div>
 			<div class="form-row" id="artscard_address_div">	
 				<label for="artscard_address_1">Mailing Address *</label>
-				<input type="text" size="50" name="artscard_address_1" id="artscard_address_1" autocomplete="section-gift address-line1" />
-				<input type="text" size="50" name="artscard_address_2" id="artscard_address_2" autocomplete="section-gift address-line2" />
+				<input type="text" size="50" maxlength="50" name="artscard_address_1" id="artscard_address_1" autocomplete="section-gift address-line1" />
+				<input type="text" size="50" maxlength="50" name="artscard_address_2" id="artscard_address_2" autocomplete="section-gift address-line2" />
 			</div>
 			<div class="form-row" id="artscard_citystatezip_div">
 				<span id="artscard_city_section">
 					<label for="artscard_city">City *</label> 
-					<input type="text" size="50" name="artscard_city" id="artscard_city" autocomplete="section-gift address-level2" />
+					<input type="text" size="50" maxlength="50" name="artscard_city" id="artscard_city" autocomplete="section-gift address-level2" />
 				</span>
 				<span id="artscard_state_section">
 					<label for="artscard_state">State *</label>
-					<input type="text" size="2" name="artscard_state" id="artscard_state" autocomplete="section-gift address-level1" />
+					<input type="text" size="2" maxlength="2" name="artscard_state" id="artscard_state" autocomplete="section-gift address-level1" />
 				</span>
 				<span id="artscard_zip_section">
 					<label for="artscard_zip">Zip *</label>
-					<input type="text" size="10" name="artscard_zip" id="artscard_zip" autocomplete="section-gift postal-code" />
+					<input type="text" size="10" maxlength="15" name="artscard_zip" id="artscard_zip" autocomplete="section-gift postal-code" />
 				</span>
 			</div>
 		</div>
@@ -171,7 +186,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		<div name="confirmation_popup" id="confirmation_popup" style="display: none">
 			<div id="confirmation_popup_content">
 			<h2>Confirmation</h2>
-			<p>Please confirm the details below before submitting your pledge.</p>
+			<p>Please review the details below before confirming your pledge.</p>
 			<div id="confirm_name"></div>
 			<div id="confirm_donor_address"></div>
 			<div id="confirm_artscard"></div>

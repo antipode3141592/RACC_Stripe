@@ -41,18 +41,18 @@ function racc_mailer2($donor_id,$success="no"){
 		$results = $wpdb->get_results(
 			$wpdb->prepare('CALL sp_getemaildata(%s)',$donor_id));
 		if ($results){
-			$email = $results[0]->Email;
-			$fund_total = $results[0]->PledgeTotal;
-			$fund_community = $results[0]->Community;
-			$fund_education = $results[0]->Education;
+			$email = $results[0]->email;
+			$fund_total = $results[0]->pledgetotal;
+			$fund_community = $results[0]->community;
+			$fund_education = $results[0]->education;
 			$donor_first_name = $results[0]->first_name;
 			$donorlastname = $results[0]->last_name;
 			// $artscard_name = $results[0]->ArtsCardName;
 			$donation_frequency = $results[0]->paytype;
 			$anon = $results[0]->anon;
-			$artscardqualify = $results[0]->ArtsCard;
-			$giftartscard = $results[0]->GiftArtsCard;
-			$period_total = $results[0]->PeriodTotal;
+			$artscardqualify = $results[0]->artscard;
+			$giftartscard = $results[0]->giftartscard;
+			$period_total = $results[0]->periodtotal;
 			$period_count = $results[0]->period_count;
 		}
 		if ($giftartscard == 1){
