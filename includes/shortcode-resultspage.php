@@ -45,8 +45,10 @@ function racc_stripe_resultpage($atts, $content = null){
 			<div id="results_intro_paragraph">
 				<p><?php _e(nl2br("Thank you, ".$donor_first_name.", for your pledge of $" . number_format($fund_total,2)
 					."!\nArts Community Fund: $".number_format($fund_community,2)
-					."\nArts Education Fund: $".number_format($fund_education,2)
-					."\nArts Designated Fund (". $fund_designated_name ."): $".number_format($fund_designated,2))) ?>
+					."\nArts Education Fund: $".number_format($fund_education,2)));
+					if ($fund_designated > 0.0){
+						_e(nl2br("\nArts Designated Fund (". $fund_designated_name ."): $".number_format($fund_designated,2))); 
+					}?>
 				</p>
 				<p><?php _e(nl2br("\n\nA receipt will be e-mailed to you at ". $donor_email)) ."." ?>
 				</p>
@@ -110,7 +112,7 @@ function racc_stripe_resultpage($atts, $content = null){
 	}
 	?>
 	<div id="printerdiv">
-		<button type="button" id="printpreviewbutton">Print Preview</button>
+		<button type="button" id="printpreviewbutton">Print Friendly</button>
 	</div>
 	<?php
 	return ob_get_clean();

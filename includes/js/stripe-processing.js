@@ -40,7 +40,9 @@ jQuery(document).ready(function($){
 			$('#confirm_email').html($('#donor_email').val());
 			$('#confirm_fund_community').html('Arts Community Fund: $'+ parseFloat($('#fund_community').val()).toFixed(2));
 			$('#confirm_fund_education').html('Arts Education Fund: $'+ parseFloat($('#fund_education').val()).toFixed(2));
-			$('#confirm_fund_designated').html('Designated Fund (' + $('#fund_designated_name').val() + ': $'+ parseFloat($('#fund_designated').val()).toFixed(2));
+			if ($('#sc_dg').val() == 'yes'){
+				$('#confirm_fund_designated').html('Designated Fund (' + $('#fund_designated_name').val() + ': $'+ parseFloat($('#fund_designated').val()).toFixed(2));
+			}
 			$('#confirm_fund_total').html('Annual Pledge: $'+ parseFloat($('#fund_total').val()).toFixed(2));
 			switch($('input[name="donation_frequency"]:checked').val())
 			{
@@ -94,44 +96,74 @@ jQuery(document).ready(function($){
 
 //show/hide address input div for gifting arts card (show when checked)
 jQuery(document).ready(function($){
-	$('#giftartscard').change(function(event)
-	{
+	$('#giftartscard').change(function(){
+		artscardhide();
 		// console.log('clicked the giftartscard box');
-		if($('#giftartscard').prop("checked")){
-			// console.log('show gift address div');
-			$('#artscard_address_input').show();
-			$('#artscard_name').attr('required','required');
-			$('#artscard_email').attr('required','required');
-			$('#artscard_address_1').attr('required','required');
-			$('#artscard_city').attr('required','required');
-			$('#artscard_state').attr('required','required');
-			$('#artscard_zip').attr('required','required');
-		}else
-		{
-			// console.log('hide gift address div');
-			$('#artscard_address_input').hide();
-			$('#artscard_name').attr('required',false);
-			$('#artscard_email').attr('required',false);
-			$('#artscard_address_1').attr('required',false);
-			$('#artscard_city').attr('required',false);
-			$('#artscard_state').attr('required',false);
-			$('#artscard_zip').attr('required',false);
-		}
-		return false;
+		// if($('#giftartscard').prop("checked")){
+		// 	// console.log('show gift address div');
+		// 	$('#artscard_address_input').show();
+		// 	$('#artscard_name').attr('required','required');
+		// 	$('#artscard_email').attr('required','required');
+		// 	$('#artscard_address_1').attr('required','required');
+		// 	$('#artscard_city').attr('required','required');
+		// 	$('#artscard_state').attr('required','required');
+		// 	$('#artscard_zip').attr('required','required');
+		// }else
+		// {
+		// 	// console.log('hide gift address div');
+		// 	$('#artscard_address_input').hide();
+		// 	$('#artscard_name').attr('required',false);
+		// 	$('#artscard_email').attr('required',false);
+		// 	$('#artscard_address_1').attr('required',false);
+		// 	$('#artscard_city').attr('required',false);
+		// 	$('#artscard_state').attr('required',false);
+		// 	$('#artscard_zip').attr('required',false);
+		// }
+		// return false;
 	});
 });
 
+function artscardhide(){
+	if(jQuery('#giftartscard').prop("checked")){
+			// console.log('show gift address div');
+			jQuery('#artscard_address_input').show();
+			jQuery('#artscard_name').attr('required','required');
+			jQuery('#artscard_email').attr('required','required');
+			jQuery('#artscard_address_1').attr('required','required');
+			jQuery('#artscard_city').attr('required','required');
+			jQuery('#artscard_state').attr('required','required');
+			jQuery('#artscard_zip').attr('required','required');
+		}else
+		{
+			// console.log('hide gift address div');
+			jQuery('#artscard_address_input').hide();
+			jQuery('#artscard_name').attr('required',false);
+			jQuery('#artscard_email').attr('required',false);
+			jQuery('#artscard_address_1').attr('required',false);
+			jQuery('#artscard_city').attr('required',false);
+			jQuery('#artscard_state').attr('required',false);
+			jQuery('#artscard_zip').attr('required',false);
+		}
+		return false;
+}
+
 //show/hide payroll deduction fields on pageshow (just after on 'load')
 jQuery(document).ready(function($){
-	$(window).on("pageshow",function(){
-		
+	$(window).on("pageshow",function(){		
 		if($('#sc_payroll').val() == 'no'){
 			$('#workplace_div').hide();
 			jQuery('#donationradio3').click();
-		}else{
-				
+		}else{		
 			$('#workplace_div').show();
 			jQuery('#donationradio1').click();
+		}
+		if($('#sc_dg').val() == 'no'){
+			$('#dg_fields').hide();
+			$('label[for=fund_community_lock').hide();
+			$('label[for=fund_education_lock').hide();
+		}else{
+			$('#dg_fields').show();
+			$('.input_lock').show();
 		}
 	});
 });
@@ -213,18 +245,19 @@ function change_frequency(donationradio){
 function breakdown_total(){
 	var artscard = document.getElementById("artscardvalidation");
 	var fund_total = document.getElementById("fund_total");
-	var temp_total = fund_total.value;
+	var temp_total = parseFloat(fund_total.value);
 	var fund_community = document.getElementById("fund_community");
 	var fund_education = document.getElementById("fund_education");
 	var fund_designated = document.getElementById("fund_designated");
-
+	var com_lock = document.getElementById("fund_community_lock");
+	var ed_lock = document.getElementById("fund_education_lock");
+	var dg_lock = document.getElementById("fund_designated_lock");
 	var period_total = document.getElementById("period_total");
 	var periods =  document.getElementById("payperiodinputs").value;
 	var temp_periods = periods;
 	var artscardqualify = document.getElementById("artscardqualify");	
 	try{
 		var regex = /[0-9]|\./;
-  
 		if (!regex.test(temp_total)){
 			// console.log(temp_total);
 			temp_total = 1.0;
@@ -238,31 +271,41 @@ function breakdown_total(){
 			temp_periods = 1
 		}
 		periods = temp_periods;
-		var tot = parseFloat(temp_total)/parseFloat(temp_periods);
+		var tot = temp_total/parseFloat(temp_periods);
 		period_total.value = tot.toFixed(2);
 		
 		//preserve ratio of funds
-		var ratio = parseFloat(parseFloat(fund_community.value)/parseFloat(parseFloat(fund_community.value) + parseFloat(fund_education.value)));	//% community, do not round
-		// console.log("ratio: " + ratio.toFixed(2));
-		fund_community.value = parseFloat(parseFloat(temp_total) * parseFloat(ratio)).toFixed(2);
-		fund_education.value = parseFloat(parseFloat(temp_total) * (1.00 - parseFloat(ratio))).toFixed(2);
+		var com_ratio = parseFloat(parseFloat(fund_community.value)/parseFloat(parseFloat(fund_community.value) + parseFloat(fund_education.value) + parseFloat(fund_designated.value)));	//% community, do not round
+		var ed_ratio = parseFloat(parseFloat(fund_education.value)/parseFloat(parseFloat(fund_community.value) + parseFloat(fund_education.value) + parseFloat(fund_designated.value)));	//% community, do not round
+		var dg_ratio = 1.0 - com_ratio - ed_ratio;
+		
+		//unlock allocations and then scale current values
+		com_lock.checked = false;
+		ed_lock.checked = false;
+		dg_lock.checked = false;
+		com_lock.setAttribute('readonly',false);
+		ed_lock.setAttribute('readonly',false);
+		dg_lock.setAttribute('readonly',false);
 
+		fund_community.value = parseFloat(temp_total * com_ratio).toFixed(2);
+		fund_education.value = parseFloat(temp_total * ed_ratio).toFixed(2);
+		fund_designated.value = parseFloat(temp_total * dg_ratio).toFixed(2);
 
-		fund_total.value = parseFloat(temp_total).toFixed(2);	//format decimal points on input
+		fund_total.value = temp_total.toFixed(2);	//format decimal points on input
 
-		fund_community.setAttribute('max',parseFloat(temp_total).toFixed(2));
-		fund_education.setAttribute('max',parseFloat(temp_total).toFixed(2));
-		fund_designated.setAttribute('max',parseFloat(temp_total).toFixed(2));
+		fund_community.setAttribute('max',temp_total.toFixed(2));
+		fund_education.setAttribute('max',temp_total.toFixed(2));
+		fund_designated.setAttribute('max',temp_total.toFixed(2));
 		// fund_community.value = parseFloat(fund_total.value).toFixed(2);
 		// fund_education.value = 0.00;
 		if(temp_total >= 60.0)
 		{
 			jQuery('#artscardvalidation').show();
-			// artscard.style.display = "block";
 			artscardqualify.setAttribute('value','yes');
 		}else{
+			document.getElementById('giftartscard').checked = false;
 			jQuery('#artscardvalidation').hide();
-			// artscard.style.display = "none";
+			artscardhide();
 			artscardqualify.setAttribute('value','no');
 		}
 		// change_fund();
@@ -305,6 +348,13 @@ jQuery(document).ready(function($){
 });
 
 
+// //value change functions for text inputs
+// jQuery(document).ready(function($){
+// 	$(".input_text").change(function(){
+// 		this.val(str.replace("",this.val()));
+// 	});
+// });
+
 //value change functions for allocation inputs
 jQuery(document).ready(function($){
 	$('#fund_community').change(function(){
@@ -318,7 +368,7 @@ jQuery(document).ready(function($){
 			} else if (parseFloat($(this).val()) < 0) {
 				temp = 0.0
 			} else {
-				temp = $(this).val();
+				temp = parseFloat($(this).val());
 			}
 			var tot = parseFloat($('#fund_total').val());
 			var fund_ed = parseFloat($('#fund_education').val());
@@ -338,7 +388,7 @@ jQuery(document).ready(function($){
 				$('#fund_designated').val(((tot - temp) * (1.0 - fund_ed_prop)).toFixed(2));
 				$('#fund_education').val(((tot - temp) * fund_ed_prop).toFixed(2));
 			}
-			$('#fund_community').val(parseFloat(temp).toFixed(2));
+			$('#fund_community').val(temp.toFixed(2));
 		} else {
 			//action for locked
 		}

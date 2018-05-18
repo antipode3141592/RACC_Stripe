@@ -1,50 +1,380 @@
 [
 	{
 		"organization": "Portland Center Stage at The Armory",
-		"address":"http://wfadev.pairsite.com/pcs/",
 		"payperiods": "26",
 		"optionalperiods":"yes",
 		"payroll":"yes",
 		"dg":"no"
 	},
 	{
-		"organization": "Portland Opera Association",
-		"address":"http://wfadev.pairsite.com/poa",
+		"organization": "Portland Opera",
 		"payperiods": "14",
 		"optionalperiods":"no",
 		"payroll":"yes",
 		"dg":"no"
 	},
 	{
-	"organization": "Bag & Baggage Productions",
-	"address":"http://wfadev.pairsite.com/bbp",
-	"payperiods": "1",
-	"optionalperiods":"no",
-	"payroll":"no",
-	"dg":"no"
+		"organization": "Bag&Baggage Productions",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
 	},
 	{
-	"organization": "Broadway Rose Theatre Company",
-	"address":"http://wfadev.pairsite.com/brtc",
-	"payperiods": "24",
-	"optionalperiods":"yes",
-	"payroll":"yes",
-	"dg":"no"
+		"organization": "Broadway Rose Theatre Company",
+		"payperiods": "24",
+		"optionalperiods":"yes",
+		"payroll":"yes",
+		"dg":"no"
 	},
 	{
-	"organization": "Chamber Music Northwest",
-	"address":"http://wfadev.pairsite.com/cmnw",
-	"payperiods": "1",
-	"optionalperiods":"no",
-	"payroll":"no",
-	"dg":"no"
+		"organization": "Chamber Music Northwest",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
 	},
 	{
-	"organization": "PHAME Academy",
-	"address":"http://wfadev.pairsite.com/phame",
-	"payperiods": "1",
-	"optionalperiods":"no",
-	"payroll":"no",
-	"dg":"no"
+		"organization": "PHAME",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Children's Healing Art Project",
+		"payperiods": "12",
+		"optionalperiods":"yes",
+		"payroll":"yes",
+		"dg":"no"
+	},
+	{
+		"organization": "Oregon Ballet Theatre",
+		"payperiods": "24",
+		"optionalperiods":"yes",
+		"payroll":"yes",
+		"dg":"no"
+	},
+	{
+		"organization": "PICA",
+		"payperiods": "24",
+		"optionalperiods":"yes",
+		"payroll":"yes",
+		"dg":"no"
+	},
+	{
+		"organization": "Young Audiences of Oregon & SW Washington",
+		"payperiods": "24",
+		"optionalperiods":"yes",
+		"payroll":"yes",
+		"dg":"no"
+	},
+	{
+		"organization": "Artists Repertory Theatre",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Blue Sky",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "BodyVox",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Oregon BRAVO Youth Orchestras",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Cappella Romana",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "CoHo Productions",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Disjecta Contemporary Arts Center",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Echo Theater Company",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Friends of Chamber Music",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Hand2Mouth",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Hollywood Theatre",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Imago Theatre",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "IPRC",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Lakewood Center for the Arts",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Literary Arts",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Live Wire! Radio",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Metropolitan Youth Symphony",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Milagro Theatre",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "My Voice Music",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Northwest Children's Theater and School",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Northwest Dance Project",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "NW Documentary",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Oregon Children's Theatre ",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Oregon Symphony",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "PDX Jazz",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Pendulum Aerial Arts",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "PlayWrite",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Polaris Dance Theatre",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Portland Art Museum & Northwest Film Center",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Portland Baroque Orchestra",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Portland Columbia Symphony Orchestra",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Portland Gay Men's Chorus",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Portland Piano International",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Portland Playhouse",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Portland Youth Philharmonic",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Profile Theatre",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "The August Wilson Red Door Project",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "The Circus Project",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "The Portland Ballet",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Third Angle New Music",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Third Rail Repertory Theatre",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "triangle productions!",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "White Bird",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Write Around Portland",
+		"payperiods": "1",
+		"optionalperiods":"no",
+		"payroll":"no",
+		"dg":"no"
 	}
 ]
