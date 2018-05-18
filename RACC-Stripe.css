@@ -74,6 +74,27 @@ h1,h2,h3,h4,h5,h6 {
 	padding: 0 5px;
 }
 
+/* input checkbox replacement with lock images*/
+div > .input_lock {
+	display: none;
+}
+
+div > .input_lock + label {
+	background: url('data/unlock.png') no-repeat !important;
+	width: 20px;
+	height: 20px;
+	display: inline-flex;
+}
+
+div > .input_lock:checked + label {
+	background: url('data/lock.png') no-repeat !important;
+	width: 20px;
+	height: 20px;
+	display: inline-flex;
+}
+
+
+
 input[type=text], input[type=email], input[type=number] {
     border-radius: 0 3px 3px 0;
     height: 45px;
@@ -118,6 +139,8 @@ input[type=text]:focus, input[type=email]:focus, input[type=number]:focus {
 #gift_allocations > label {
 	display: block;
 	font-weight: 700;
+	padding-top: 15px;
+
 }
 
 #fund_community, #fund_education {
@@ -308,6 +331,8 @@ input.invalid{
 	font-weight: bolder;
 	color:red;
 }
+
+
 
 /*** Responsive Styles Tablet And Below ***/
 @media (max-width: 900px) {

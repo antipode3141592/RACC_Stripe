@@ -2,9 +2,34 @@
 
 function racc_org_picker($atts, $content = null){
 	ob_start();
-	if(isset($_GET['org_picker'])){
-	    $org_name = sanitize_text_field($_GET['org_picker']);
-	    _e(do_shortcode('[payment_form_elementsjs organization=' .$org_name.']'));
+	if(isset($_GET['org'])){
+	    $org_name = $_GET['org'];
+	    $pay_periods = isset($_GET['pp']) ? $_GET['pp'] : null;
+	    $optional_periods = isset($_GET['op']) ? $_GET['op'] : null;
+	    $payroll = isset($_GET['pr']) ? $_GET['pr'] : null;
+	    $dg = isset($_GET['dg']) ? $_GET['dg'] : null;
+
+	    //build shortcode
+	    $shortcode = '[payment_form_elementsjs';
+	    if($org_name){
+	    	$shortcode .= ' organization="' . $org_name . '"';
+	    }
+	    if($pay_periods){
+	    	$shortcode .= ' payperiods="' . $pay_periods. '"';
+	    }
+	    if($optional_periods){
+	    	$shortcode .= ' optionalperiods="' . $optionalperiods. '"';
+	    }
+	    if($payroll){
+	    	$shortcode .= ' payroll="' . $payroll. '"';
+	    }
+	    if($dg){
+	    	$shortcode .= ' dg="' . $dg. '"';
+	    }
+	    $shortcode .= ']';
+
+	    error_log($shortcode);
+	    _e(do_shortcode($shortcode));
 	}
 	return ob_get_clean();
 }
