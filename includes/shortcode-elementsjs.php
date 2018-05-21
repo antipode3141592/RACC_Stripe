@@ -17,7 +17,14 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 	?> 
 	<div id="racc-form-holder">
 	<form method="post" id="stripe-payment-form-singlepage" class="stripe-payment-form-elementsjs">
-		<h1>Work for Art Giving - <?php _e(strip_tags($organization))?> Campaign</h1>
+		<?php
+			if ($organization != "None"){
+				?>
+				<h1><?php _e(strip_tags($organization))?></h1>
+				<?php		
+			}
+		
+		?>
 		<div name="donor-information" id="donor-information">
 			<h2>Donor Information</h2>
 			<div class="form-row" id="donor_names_div">

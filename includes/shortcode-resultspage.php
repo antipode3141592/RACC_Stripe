@@ -42,7 +42,6 @@ function racc_stripe_resultpage($atts, $content = null){
 		}
 		?>
 		<div id="resultscontent">
-			<h1>Thank You!</h1>
 			<div id="results_intro_paragraph">
 				<p><b><?php _e("Thank you, ".$donor_first_name."!") ?> 
 				</b></p>

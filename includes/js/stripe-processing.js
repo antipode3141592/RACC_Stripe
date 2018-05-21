@@ -17,6 +17,7 @@ jQuery(document).ready(function($){
 			$('.payment-error').html('');
 			$('#confirmation_popup').show();
 			$('#confirm_name').html($('#donor_first_name').val() + ' ' + $('#donor_last_name').val());
+			$('#confirm_email').html($('#donor_email').val());
 			$('#confirm_donor_address').html($('#donor_address_1').val() + ' ' + $('#donor_address_2').val() + '<br>' 
 				+ $('#donor_city').val() + ', ' + $('#donor_state').val() + ' ' + $('#donor_zip').val() + '<br>');
 			if($('#artscardqualify').val() == 'yes'){
@@ -31,13 +32,12 @@ jQuery(document).ready(function($){
 			}
 			if ($('#giftartscard').prop("checked"))
 			{
-				$('#confirm_artscard_address').html($('#artscard_name').val() + '<br>'
+				$('#confirm_artscard_address').html('<hr>' + $('#artscard_name').val() + '<br>'
 					+ $('#artscard_address_1').val() + ' ' + $('#artscard_address_2').val() + '<br>' 
 					+ $('#artscard_city').val() + ', ' + $('#artscard_state').val() + ' ' + $('#artscard_zip').val() + '<br>');
 			}else{
 				$('#confirm_artscard_address').hide();
 			}
-			$('#confirm_email').html($('#donor_email').val());
 			$('#confirm_fund_community').html('Arts Community Fund: $'+ parseFloat($('#fund_community').val()).toFixed(2));
 			$('#confirm_fund_education').html('Arts Education Fund: $'+ parseFloat($('#fund_education').val()).toFixed(2));
 			if ($('#sc_dg').val() == 'yes'){
@@ -220,9 +220,29 @@ function change_frequency(donationradio){
 }
 
 function fund_sum(){
+	var fund_community = document.getElementById('fund_community');
+	var fund_education = document.getElementById('fund_education');
+	var fund_designated = document.getElementById('fund_designated');
+
+	if (isNaN(fund_community.value) || (fund_community.value == "") || (fund_community.value < 0.0)){
+		fund_community.value = (0.0).toFixed(2);
+	} else {
+		fund_community.value = parseFloat(fund_community.value).toFixed(2);
+	}
+	if (isNaN(fund_education.value) || (fund_education.value == "") || (fund_education.value < 0.0)){
+		fund_education.value = (0.0).toFixed(2);
+	} else {
+		fund_education.value = parseFloat(fund_education.value).toFixed(2);
+	}
+	if (isNaN(fund_designated.value) || (fund_designated.value == "") || (fund_designated.value < 0.0)){
+		fund_designated.value = (0.0).toFixed(2);
+	} else {
+		fund_designated.value = parseFloat(fund_designated.value).toFixed(2);
+	}
+
 	var sum = 0.0;
 	var funds = document.getElementsByClassName('racc_fund');
-	console.log("sum = " + sum.toFixed(2));
+	// console.log("sum = " + sum.toFixed(2));
 	var i;
 	for(i = 0; i < funds.length; i++){
 		sum += parseFloat(funds[i].value);
