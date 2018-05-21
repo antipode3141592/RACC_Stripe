@@ -10,7 +10,7 @@ function racc_load_stripe_scripts() {
 	} else {
 		$publishable = $stripe_options['live_publishable_key'];
 	}
- 
+ 	
 	wp_enqueue_script('jquery');
 	wp_enqueue_script('stripe', 'https://js.stripe.com/v3/');
 	wp_enqueue_script('stripe-processing', STRIPE_BASE_URL . '/includes/js/stripe-processing.js');
@@ -25,8 +25,9 @@ function racc_load_stripe_scripts() {
 			'publishable_key' => $publishable,
 		)
 	);
-	wp_localize_script('selector', 'jsonlocation',array(
+	wp_localize_script('selector', 'urls',array(
 			'base_url' => STRIPE_BASE_URL,
+			'site_url' => site_url()
 		)
 	);
 

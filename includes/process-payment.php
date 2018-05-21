@@ -46,7 +46,6 @@ function racc_stripe_process_payment() {
 		$artscard_state = isset($_POST['artscard_state']) ? sanitize_text_field($_POST['artscard_state']) : null;
 		$artscard_zip = isset($_POST['artscard_zip']) ? sanitize_text_field($_POST['artscard_zip']) : null;
 		$giftartscard = isset($_POST['giftartscard']) ? $_POST['giftartscard'] : 'no';
-
  		
 		$new_donor_id = date('YmdHis') . rand(1,1000000);
 		// $new_donor_id = $donor_last_name . date('YmdHis');
@@ -94,9 +93,7 @@ function racc_stripe_process_payment() {
 			//NOTE: latest Stripe API adds namespaces, so be sure to use the proper format for calling classes
 			\Stripe\Stripe::setApiKey($secret_key);
 			\Stripe\Stripe::setAppInfo("RACC_Stripe");
-			
 			//for both cc/debit cases, create a customer
-
 			$customer = \Stripe\Customer::create(array(	//NOTE: function call was Stripe_Customer in prev Stripe API
 					'source' => $token,
 					'email' => strip_tags($donor_email),
@@ -148,31 +145,15 @@ function racc_stripe_process_payment() {
 				}
 			}
 		} elseif ($donation_frequency == "workplace"){
-			// $result = racc_mailer($donor_first_name,$fund_total,$fund_community,$fund_education,$artscardqualify,$giftartscard,$anon,$artscard_name,$donor_email,$donation_frequency,$period_total);
-			$result = racc_mailer2($new_donor_id,"yes");	
-			
-
+			$result = racc_mailer($new_donor_id,"yes");	
 			$success = 'yes';
 		} elseif ($donation_frequency == "check"){
-			// $result = racc_mailer($donor_first_name,$fund_total,$fund_community,$fund_education,$artscardqualify,$giftartscard,$anon,$artscard_name,$donor_email,$donation_frequency,$period_total);
-			// $result = racc_mailer2($new_donor_id);
-			$result = racc_mailer2($new_donor_id,"yes");	
+			$result = racc_mailer($new_donor_id,"yes");	
 			$success = 'yes';
 		}
 		
 		wp_safe_redirect(esc_url_raw(add_query_arg(array(
 			'success' => $success,
-			// 'donor_first_name' => $donor_first_name,
-			// 'fund_total' => $fund_total,
-			// 'fund_community' => $fund_community,
-			// 'fund_education' => $fund_education,
-			// 'fund_designated' => $fund_designated,
-			// 'donation_frequency' => $donation_frequency,
-			// 'giftartscard' => $giftartscard,
-			// 'artscardqualify' => $artscardqualify,
-			// 'artscard_name' => $artscard_name,
-			// 'period_total' => $period_total,
-			// 'anon' => $anon,
 			'error_message' => $error_message,
 			'id' => $new_donor_id
 		), $redirect))); exit;

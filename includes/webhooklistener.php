@@ -40,11 +40,11 @@ function racc_stripe_listener($atts, $content = null){
 
 				// successful payment, both one time and recurring payments
 				if($event->type == 'charge.succeeded') {
-					$result = racc_mailer2($customer_wp_id,"yes");	
+					$result = racc_mailer($customer_wp_id,"yes");	
 				}
 				// failed payment
 				elseif($event->type == 'charge.failed') {
-					$result = racc_mailer2($customer_wp_id,"no");
+					$result = racc_mailer($customer_wp_id,"no");
 				}
 				else{
 					error_log("No handler for this event type: " . $event->type);
