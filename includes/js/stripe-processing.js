@@ -41,7 +41,7 @@ jQuery(document).ready(function($){
 			$('#confirm_fund_community').html('Arts Community Fund: $'+ parseFloat($('#fund_community').val()).toFixed(2));
 			$('#confirm_fund_education').html('Arts Education Fund: $'+ parseFloat($('#fund_education').val()).toFixed(2));
 			if ($('#sc_dg').val() == 'yes'){
-				$('#confirm_fund_designated').html('Designated Fund (' + $('#fund_designated_name').val() + ': $'+ parseFloat($('#fund_designated').val()).toFixed(2));
+				$('#confirm_fund_designated').html('Designated Fund (' + $('#fund_designated_name').val() + '): $'+ parseFloat($('#fund_designated').val()).toFixed(2));
 			}
 			$('#confirm_fund_total').html('Annual Pledge: $'+ parseFloat($('#fund_total').val()).toFixed(2));
 			switch($('input[name="donation_frequency"]:checked').val())
