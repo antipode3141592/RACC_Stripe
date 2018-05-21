@@ -19,7 +19,7 @@ jQuery(document).ready(function($) {
 		jQuery.getJSON(urls.base_url + "/data/orglist.json", function(data) {
 			jQuery.each(data, function(key,entry) {
 				if (entry.organization == jQuery('#orginput').val()){
-					var org = encodeURI(entry.organization);
+					var org = encodeURIComponent(entry.organization);
 					// org = org.replace('&','%26');
 					// org = org.replace(' ', '+');
 					var payperiods = entry.payperiods;
