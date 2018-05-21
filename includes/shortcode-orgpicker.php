@@ -1,7 +1,7 @@
 <?php
 
 function racc_org_picker($atts, $content = null){
-	ob_start();
+
 	if(isset($_GET['org'])){
 	    $org_name = $_GET['org'];
 	    $pay_periods = isset($_GET['pp']) ? $_GET['pp'] : null;
@@ -28,7 +28,8 @@ function racc_org_picker($atts, $content = null){
 	    }
 	    $shortcode .= ']';
 
-	    error_log($shortcode);
+	    // error_log($shortcode);
+	    ob_start();
 	    _e(do_shortcode($shortcode));
 	}
 	return ob_get_clean();
