@@ -1,39 +1,6 @@
 <?php
-
-function racc_mailer($donor_first_name,$fund_total,$fund_community,$fund_education,$artscardqualify,$giftartscard,$anon,$artscard_name,$donor_email,$donation_frequency,$period_total){
-	try{
-		$message = "Thank you, ".strip_tags($donor_first_name).", for your pledge of $" . number_format($fund_total,2)."!\nCommunity Fund: $".number_format($fund_community,2)."\nArts Education Fund: $".number_format($fund_education,2);
-		switch($donation_frequency){
-			case "check":
-				$message.="\n\nPlease mail your check to:\nWork for Art\n411 NW Park Avenue\nSuite 101"
-					."\nPortland, OR 97209\n(payment due by June 2018)\n\nWe will mail to you an official acknowledgement and tax receipt in the next few days.";
-				break;
-			case "workplace":
-				$message.="\n\nYour monthtly payroll deduction of $".number_format(floatval($period_total),2)
-					." will begin July 2018. We will mail to you an official acknowledgement and tax receipt in the next few days.";
-				break;
-		}
-		
-		if(($artscardqualify == "yes")&&($giftartscard == "no")){
-			$message.="\n\nYour gift qualifies you for the Arts Card and will be mailed to you with your acknowledgement letter.";
-		}elseif(($artscardqualify == "yes")&&($giftartscard == "yes")){
-			$message.="\n\nYour gift qualifies you for the Arts Card, and you have chosen to gift it to ".strip_tags($artscard_name).". We will mail them the gifted card in the next few days.";
-		}
-		if($anon == 'yes'){
-			$message.="\n\nYour gift is marked as anonymous.";
-		}
-		$message.="\n\nWith gratitude,\nYour Work for Art Team\n503-823-5849";
-		$result = wp_mail(sanitize_email($donor_email),"[TEST] Thank you for your gift to Work for Art!", $message);
-		return $result;
-	}
-	catch(Exception $e){
-		error_log("mailingmethods.php error: " + $e->getException());
-		return false;
-	}
-}
-
 //use $donor_id to query database for e-mail details and then e-mail them
-function racc_mailer2($donor_id,$success="no"){
+function racc_mailer($donor_id,$success="no"){
 	global $stripe_options;
 	global $wpdb;
 
