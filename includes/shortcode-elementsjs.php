@@ -91,20 +91,16 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 				<div id="gift_allocations">
 					<h3>Allocation</h3>
 					<p>How would you like to distribute your pledge?</p>
-					<div class="form-row">
-						<label for="fund_total" id="fund_total_label">Annual Pledge</label>
-						<input type="number" name="fund_total" id="fund_total" value='60.00' step='0.01' min='1' autocomplete="off" onchange="breakdown_total();"/>
-					</div>
 					
 					<div class="form-row">
 						<label for="fund_community" id="fund_community_label">Arts Community Fund</label>
 						<div class="infopopup">i
 							<div id="fund_community_description" class="popupcontent">Supports tri-county-based arts and culture organizations that receive RACC General Operating Support (GOS) and Project Grant funding for a wide array of services, programs, exhibits, events, and performances.</div>
 						</div>
-						<input type="number" name="fund_community" id="fund_community" class="racc_fund" value='30.00' step="0.01" min='0' autocomplete="off"/>
+						<input type="number" name="fund_community" id="fund_community" class="racc_fund" value='30.00' step="0.01" min='0' autocomplete="off" onchange="fund_sum();"/>
 						
-						<input type="checkbox" name="fund_community_lock" id="fund_community_lock" class="input_lock"/>
-						<label for="fund_community_lock"></label>
+						<!-- <input type="checkbox" name="fund_community_lock" id="fund_community_lock" class="input_lock"/>
+						<label for="fund_community_lock"></label> -->
 					</div>
 
 					<div class="form-row">
@@ -112,9 +108,9 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 						<div class="infopopup">i
 							<div id="fund_education_description" class="popupcontent">Distributed to 40+ arts and culture organizations (many GOS groups) that provide substantial arts education opportunities for students and teachers throughout our region.</div>
 						</div>
-						<input type="number" name="fund_education" id="fund_education" class="racc_fund" value='30.00' step="0.01" min="0" autocomplete="off"/>
-						<input type="checkbox" name="fund_education_lock" id="fund_education_lock" class="input_lock"/>
-						<label for="fund_education_lock"></label>
+						<input type="number" name="fund_education" id="fund_education" class="racc_fund" value='30.00' step="0.01" min="0" autocomplete="off" onchange="fund_sum();"/>
+						<!-- <input type="checkbox" name="fund_education_lock" id="fund_education_lock" class="input_lock"/>
+						<label for="fund_education_lock"></label> -->
 					</div>
 
 					<div class="form-row" id="dg_fields">
@@ -123,14 +119,19 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 							<div id="fund_designated_description" class="popupcontent">You may designate a portion or all of your gift toward a specific Arts and Culture 501(c)(3) organization.</div>
 						</div>
 						<input type="text" name="fund_designated_name" id="fund_designated_name" value="" maxlength="100"/>
-						<input type="number" name="fund_designated" id="fund_designated" class="racc_fund" value='0.00' step="0.01" min="0" autocomplete="off"/>
-						<input type="checkbox" name="fund_designated_lock" id="fund_designated_lock" class="input_lock"/>
-						<label for="fund_designated_lock"></label>
+						<input type="number" name="fund_designated" id="fund_designated" class="racc_fund" value='0.00' step="0.01" min="0" autocomplete="off" onchange="fund_sum();"/>
+						<!-- <input type="checkbox" name="fund_designated_lock" id="fund_designated_lock" class="input_lock"/>
+						<label for="fund_designated_lock"></label> -->
+					</div>
+
+					<div class="form-row" >
+						<label for="fund_total" id="fund_total_label">Annual Pledge</label>
+						<input type="number" name="fund_total" id="fund_total" value='60.00' step='0.01' min='1' autocomplete="off" readonly/>
 					</div>
 					
 					<div id="payperiod_container" style="display: none">
 						<label for="payperiodinputs" id="periodinput_label" style="display: none">Pay Periods</label>
-						<input type="number" name="payperiodinputs" id="payperiodinputs" style="display: none" value="1" step="1" min="1" autocomplete="off" onchange="breakdown_total();" readonly/>
+						<input type="number" name="payperiodinputs" id="payperiodinputs" style="display: none" value="1" step="1" min="1" autocomplete="off" readonly/>
 						<label for="period_total" id="period_total_label">Per Period Amount</label>
 						<input type="number" name="period_total" id="period_total" value='60.00' readonly/>
 					</div>
