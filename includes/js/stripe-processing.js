@@ -137,11 +137,8 @@ jQuery(document).ready(function($){
 		}
 		if($('#sc_dg').val() == 'no'){
 			$('#dg_fields').hide();
-			// $('label[for=fund_community_lock').hide();
-			// $('label[for=fund_education_lock').hide();
 		}else{
 			$('#dg_fields').show();
-			// $('.input_lock').show();
 		}
 	});
 });
@@ -159,6 +156,21 @@ jQuery(document).ready(function($){
 		$('html').one("click",function(f){	//create one-time event handler that closes popups
 				$('.infopopup').children('.popupcontent').removeClass('show');
 		});	
+	});
+});
+
+jQuery(document).ready(function($){
+	$('#payperiodinputs').change(function(){
+		var p = $('#payperiodinputs').val();
+		var max = $('#payperiodinputs').attr('max')
+		if (isNaN(p) || (p == "") || (p < 1.0)){
+			$('#payperiodinputs').val('1');
+		} else if (p >= max){
+			$('#payperiodinputs').val(parseFloat(max).toFixed(0));
+		} else {
+			$('#payperiodinputs').val(parseFloat($('#payperiodinputs').val()).toFixed(0));
+		}
+		fund_sum();
 	});
 });
 

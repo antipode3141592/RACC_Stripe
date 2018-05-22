@@ -118,7 +118,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 					<div class="form-row" id="dg_fields">
 						<label for="fund_designated" id="fund_designated_label">Designated Fund</label>
 						<div class="infopopup">i
-							<div id="fund_designated_description" class="popupcontent">You may designate part or all of your gift to any arts & culture nonprofit based in Clackamas, Multnomah, or Washington County.</div>
+							<div id="fund_designated_description" class="popupcontent">You may designate part or all of your gift to any arts &amp; culture nonprofit based in Clackamas, Multnomah, or Washington County.</div>
 						</div>
 						<input type="text" name="fund_designated_name" id="fund_designated_name" placeholder="Org Name" value="" maxlength="100"/>
 						<input type="number" name="fund_designated" id="fund_designated" class="racc_fund" value='0.00' step="0.01" min="0" autocomplete="off" onchange="fund_sum();"/>

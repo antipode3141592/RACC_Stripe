@@ -99,7 +99,7 @@ function racc_mailer($donor_id,$success="no"){
 
 		$headers[] = 'From: receipt@workforart.org';
 		$headers[] = 'Content-type: text/html';
-		$result = wp_mail(sanitize_email($donor_email),"[TEST] Thank you for your gift to Work for Art!", $message, $headers);
+		$result = wp_mail(sanitize_email($donor_email),"Thank you for your gift to Work for Art!", $message, $headers);
 		return $result;
 	}
 	catch(Exception $e){

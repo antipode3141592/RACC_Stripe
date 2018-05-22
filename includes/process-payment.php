@@ -110,7 +110,8 @@ function racc_stripe_process_payment() {
 					$plan = \Stripe\Plan::create(array(
 						'amount' => number_format(floatval($period_total)*100,0,'.',''),
 						'interval' => 'month',
-						'product' => 'prod_Bav1bXDCwcN0Kr',
+						//'product' => 'prod_Bav1bXDCwcN0Kr',
+						'product' => 'prod_CuHVCy1RGoijo1',
 						'currency' => 'usd',
 						)
 					);
