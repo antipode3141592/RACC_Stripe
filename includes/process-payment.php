@@ -94,56 +94,212 @@ function racc_stripe_process_payment() {
 			\Stripe\Stripe::setApiKey($secret_key);
 			\Stripe\Stripe::setAppInfo("RACC_Stripe");
 			//for both cc/debit cases, create a customer
-			$customer = \Stripe\Customer::create(array(	//NOTE: function call was Stripe_Customer in prev Stripe API
-					'source' => $token,
-					'email' => strip_tags($donor_email),
-					'metadata' => array(
-						'fund_community' => strip_tags($fund_community),
-						'fund_education' => strip_tags($fund_education),
-						'id_token' => strip_tags($new_donor_id))
-				)
-			);	
-			//determine if one-time or recurring
-			if ($donation_frequency == "cc-recur") {
-				//Process recurring payment
-				try {
-					$plan = \Stripe\Plan::create(array(
-						'amount' => number_format(floatval($period_total)*100,0,'.',''),
-						'interval' => 'month',
-						//'product' => 'prod_Bav1bXDCwcN0Kr',
-						'product' => 'prod_CuHVCy1RGoijo1',
-						'currency' => 'usd',
-						)
-					);
-					$subscription = \Stripe\Subscription::create(array(
-						'customer' => $customer->id,
-						'items' => array(
-							array('plan' => $plan->id))
-						)
-					);
-					$success = 'yes';
-				} catch (Exception $e) {
-					$success = 'no';
-					$error_message = $e->getMessage();
-					error_log('Stripe Recurring Payment Error: '.$e->getMessage());
-				}
-			} elseif ($donation_frequency == "cc-once") {
-				//process one-time payment
-				//attempt to charge the customer's card
-				try {
-					$charge = \Stripe\Charge::create(array(	//NOTE: function call was Stripe_Charge in prev Stripe API
-							'amount' => $amount,
+			try{
+				$customer = \Stripe\Customer::create(array(	//NOTE: function call was Stripe_Customer in prev Stripe API
+						'source' => $token,
+						'email' => strip_tags($donor_email),
+						'metadata' => array(
+							'fund_community' => strip_tags($fund_community),
+							'fund_education' => strip_tags($fund_education),
+							'id_token' => strip_tags($new_donor_id))
+					)
+				);	
+				//determine if one-time or recurring
+				if ($donation_frequency == "cc-recur") {
+					//Process recurring payment
+					try {
+						$plan = \Stripe\Plan::create(array(
+							'amount' => number_format(floatval($period_total)*100,0,'.',''),
+							'interval' => 'month',
+							//'product' => 'prod_Bav1bXDCwcN0Kr',
+							'product' => 'prod_CuHVCy1RGoijo1',
 							'currency' => 'usd',
-							'statement_descriptor' => 'Work for Art Donation',
+							)
+						);
+						$subscription = \Stripe\Subscription::create(array(
 							'customer' => $customer->id,
-						)
-					);
-					$success = 'yes';
-				} catch (Exception $e) {
-					$success = 'no';
-					$error_message = $e->getMessage();
-					error_log('Stripe One-Time Payment Error: '.$e->getMessage());
+							'items' => array(
+								array('plan' => $plan->id))
+							)
+						);
+						$success = 'yes';
+					} catch(\Stripe\Error\Card $e) {
+						//decline error
+						$success = 'no';
+						$body = $e->getJsonBody();
+						$err = $body['error'];
+		  				$error_message = $err['message'];
+		  				error_log("Error Type: " + $err['type']);
+		  				error_log("Error Message: " + $err['message']);
+					} catch (\Stripe\Error\RateLimit $e) {
+					  // Too many requests made to the API too quickly
+						$success = 'no';
+						$body = $e->getJsonBody();
+						$err = $body['error'];
+		  				$error_message = $err['message'];
+		  				error_log("Error Type: " + $err['type']);
+		  				error_log("Error Message: " + $err['message']);
+					} catch (\Stripe\Error\InvalidRequest $e) {
+					  // Invalid parameters were supplied to Stripe's API
+						$success = 'no';
+						$body = $e->getJsonBody();
+						$err = $body['error'];
+		  				$error_message = $err['message'];
+		  				error_log("Error Type: " + $err['type']);
+		  				error_log("Error Message: " + $err['message']);
+					} catch (\Stripe\Error\Authentication $e) {
+					  // Authentication with Stripe's API failed
+					  // (maybe you changed API keys recently)
+						$success = 'no';
+						$body = $e->getJsonBody();
+						$err = $body['error'];
+		  				$error_message = $err['message'];
+		  				error_log("Error Type: " + $err['type']);
+		  				error_log("Error Message: " + $err['message']);
+					} catch (\Stripe\Error\ApiConnection $e) {
+					  // Network communication with Stripe failed
+						$success = 'no';
+						$body = $e->getJsonBody();
+						$err = $body['error'];
+		  				$error_message = $err['message'];
+		  				error_log("Error Type: " + $err['type']);
+		  				error_log("Error Message: " + $err['message']);
+					} catch (\Stripe\Error\Base $e) {
+					  // Display a very generic error to the user, and maybe send
+					  // yourself an email
+						$success = 'no';
+						$body = $e->getJsonBody();
+						$err = $body['error'];
+		  				$error_message = $err['message'];
+		  				error_log("Error Type: " + $err['type']);
+		  				error_log("Error Message: " + $err['message']);
+					} catch (Exception $e) {
+						$success = 'no';
+						$error_message = $e->getMessage();
+						error_log('Stripe Recurring Payment Error: '.$e->getMessage());
+					}
+				} elseif ($donation_frequency == "cc-once") {
+					//process one-time payment
+					//attempt to charge the customer's card
+					try {
+						$charge = \Stripe\Charge::create(array(	//NOTE: function call was Stripe_Charge in prev Stripe API
+								'amount' => $amount,
+								'currency' => 'usd',
+								'statement_descriptor' => 'Work for Art Donation',
+								'customer' => $customer->id,
+							)
+						);
+						$success = 'yes';
+					} catch(\Stripe\Error\Card $e) {
+						//decline error
+						$success = 'no';
+					$body = $e->getJsonBody();
+					$err = $body['error'];
+	  				$error_message = $err['message'];
+	  				error_log("Error Type: " + $err['type']);
+	  				error_log("Error Message: " + $err['message']);
+					} catch (\Stripe\Error\RateLimit $e) {
+					  // Too many requests made to the API too quickly
+						$success = 'no';
+						$body = $e->getJsonBody();
+						$err = $body['error'];
+		  				$error_message = $err['message'];
+		  				error_log("Error Type: " + $err['type']);
+		  				error_log("Error Message: " + $err['message']);
+					} catch (\Stripe\Error\InvalidRequest $e) {
+					  // Invalid parameters were supplied to Stripe's API
+						$success = 'no';
+						$body = $e->getJsonBody();
+						$err = $body['error'];
+		  				$error_message = $err['message'];
+		  				error_log("Error Type: " + $err['type']);
+		  				error_log("Error Message: " + $err['message']);
+					} catch (\Stripe\Error\Authentication $e) {
+					  // Authentication with Stripe's API failed
+					  // (maybe you changed API keys recently)
+						$success = 'no';
+						$body = $e->getJsonBody();
+						$err = $body['error'];
+		  				$error_message = $err['message'];
+		  				error_log("Error Type: " + $err['type']);
+		  				error_log("Error Message: " + $err['message']);
+					} catch (\Stripe\Error\ApiConnection $e) {
+					  // Network communication with Stripe failed
+						$success = 'no';
+						$body = $e->getJsonBody();
+						$err = $body['error'];
+		  				$error_message = $err['message'];
+		  				error_log("Error Type: " + $err['type']);
+		  				error_log("Error Message: " + $err['message']);
+					} catch (\Stripe\Error\Base $e) {
+					  // Display a very generic error to the user, and maybe send
+					  // yourself an email
+						$success = 'no';
+						$body = $e->getJsonBody();
+						$err = $body['error'];
+		  				$error_message = $err['message'];
+		  				error_log("Error Type: " + $err['type']);
+		  				error_log("Error Message: " + $err['message']);
+					} catch (Exception $e) {
+						$success = 'no';
+						$error_message = $e->getMessage();
+						error_log('Stripe One-Time Payment Error: '.$e->getMessage());
+					}
 				}
+			} catch(\Stripe\Error\Card $e) {
+				//decline error
+				$success = 'no';
+				$body = $e->getJsonBody();
+				$err = $body['error'];
+  				$error_message = $err['message'];
+  				error_log("Error Type: " + $err['type']);
+  				error_log("Error Message: " + $err['message']);
+			} catch (\Stripe\Error\RateLimit $e) {
+			  // Too many requests made to the API too quickly
+				$success = 'no';
+				$body = $e->getJsonBody();
+				$err = $body['error'];
+  				$error_message = $err['message'];
+  				error_log("Error Type: " + $err['type']);
+  				error_log("Error Message: " + $err['message']);
+			} catch (\Stripe\Error\InvalidRequest $e) {
+			  // Invalid parameters were supplied to Stripe's API
+				$success = 'no';
+				$body = $e->getJsonBody();
+				$err = $body['error'];
+  				$error_message = $err['message'];
+  				error_log("Error Type: " + $err['type']);
+  				error_log("Error Message: " + $err['message']);
+			} catch (\Stripe\Error\Authentication $e) {
+			  // Authentication with Stripe's API failed
+			  // (maybe you changed API keys recently)
+				$success = 'no';
+				$body = $e->getJsonBody();
+				$err = $body['error'];
+  				$error_message = $err['message'];
+  				error_log("Error Type: " + $err['type']);
+  				error_log("Error Message: " + $err['message']);
+			} catch (\Stripe\Error\ApiConnection $e) {
+			  // Network communication with Stripe failed
+				$success = 'no';
+				$body = $e->getJsonBody();
+				$err = $body['error'];
+  				$error_message = $err['message'];
+  				error_log("Error Type: " + $err['type']);
+  				error_log("Error Message: " + $err['message']);
+			} catch (\Stripe\Error\Base $e) {
+			  // Display a very generic error to the user, and maybe send
+			  // yourself an email
+				$success = 'no';
+				$body = $e->getJsonBody();
+				$err = $body['error'];
+  				$error_message = $err['message'];
+  				error_log("Error Type: " + $err['type']);
+  				error_log("Error Message: " + $err['message']);
+			} catch (Exception $e) {
+				$success = 'no';
+				$error_message = $e->getMessage();
+				error_log('Stripe Customer Create Error: '.$e->getMessage());
 			}
 		} elseif ($donation_frequency == "workplace"){
 			$result = racc_mailer($new_donor_id,"yes");	
