@@ -17,7 +17,14 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 	?> 
 	<div id="racc-form-holder">
 	<form method="post" id="stripe-payment-form-singlepage" class="stripe-payment-form-elementsjs">
-		<h1>Work for Art Giving - <?php _e(strip_tags($organization))?> Campaign</h1>
+		<?php
+			if ($organization != "None"){
+				?>
+				<h1><?php _e(strip_tags($organization))?></h1>
+				<?php		
+			}
+		
+		?>
 		<div name="donor-information" id="donor-information">
 			<h2>Donor Information</h2>
 			<div class="form-row" id="donor_names_div">
@@ -98,9 +105,6 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 							<div id="fund_community_description" class="popupcontent">Supports tri-county-based arts and culture organizations that receive RACC General Operating Support (GOS) and Project Grant funding for a wide array of services, programs, exhibits, events, and performances.</div>
 						</div>
 						<input type="number" name="fund_community" id="fund_community" class="racc_fund" value='30.00' step="0.01" min='0' autocomplete="off" onchange="fund_sum();"/>
-						
-						<!-- <input type="checkbox" name="fund_community_lock" id="fund_community_lock" class="input_lock"/>
-						<label for="fund_community_lock"></label> -->
 					</div>
 
 					<div class="form-row">
@@ -109,19 +113,15 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 							<div id="fund_education_description" class="popupcontent">Distributed to 40+ arts and culture organizations (many GOS groups) that provide substantial arts education opportunities for students and teachers throughout our region.</div>
 						</div>
 						<input type="number" name="fund_education" id="fund_education" class="racc_fund" value='30.00' step="0.01" min="0" autocomplete="off" onchange="fund_sum();"/>
-						<!-- <input type="checkbox" name="fund_education_lock" id="fund_education_lock" class="input_lock"/>
-						<label for="fund_education_lock"></label> -->
 					</div>
 
 					<div class="form-row" id="dg_fields">
 						<label for="fund_designated" id="fund_designated_label">Designated Fund</label>
 						<div class="infopopup">i
-							<div id="fund_designated_description" class="popupcontent">You may designate a portion or all of your gift toward a specific Arts and Culture 501(c)(3) organization.</div>
+							<div id="fund_designated_description" class="popupcontent">You may designate part or all of your gift to any arts & culture nonprofit based in Clackamas, Multnomah, or Washington County.</div>
 						</div>
-						<input type="text" name="fund_designated_name" id="fund_designated_name" value="" maxlength="100"/>
+						<input type="text" name="fund_designated_name" id="fund_designated_name" placeholder="Org Name" value="" maxlength="100"/>
 						<input type="number" name="fund_designated" id="fund_designated" class="racc_fund" value='0.00' step="0.01" min="0" autocomplete="off" onchange="fund_sum();"/>
-						<!-- <input type="checkbox" name="fund_designated_lock" id="fund_designated_lock" class="input_lock"/>
-						<label for="fund_designated_lock"></label> -->
 					</div>
 
 					<div class="form-row" >
@@ -196,11 +196,11 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 			<h2>Confirmation</h2>
 			<p>Please review the details below before confirming your pledge.</p>
 			<div id="confirm_name"></div>
+			<div id="confirm_email"></div>
 			<div id="confirm_donor_address"></div>
 			<div id="confirm_artscard"></div>
 			<div id="confirm_artscard_image"></div>
 			<div id="confirm_artscard_address"></div>
-			<div id="confirm_email"></div>
 			<div id="confirm_fund_community"></div>
 			<div id="confirm_fund_education"></div>
 			<div id="confirm_fund_designated"></div>

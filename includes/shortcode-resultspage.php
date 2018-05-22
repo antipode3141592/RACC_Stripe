@@ -27,6 +27,7 @@ function racc_stripe_resultpage($atts, $content = null){
 		    $fund_total = $results[0]->pledgetotal;
 		    $paytype = $results[0]->paytype;
 		    $period_total = $results[0]->periodtotal;
+		    $period_count = $results[0]->period_count;
 		    $donor_address1 = $results[0]->address1;	
 		    $donor_address2 = $results[0]->address2;	
 		    $donor_city = $results[0]->city;
@@ -41,64 +42,74 @@ function racc_stripe_resultpage($atts, $content = null){
 		}
 		?>
 		<div id="resultscontent">
-			<h1>Thank You!</h1>
 			<div id="results_intro_paragraph">
-				<p><?php _e(nl2br("Thank you, ".$donor_first_name.", for your pledge of $" . number_format($fund_total,2)
-					."!\nArts Community Fund: $".number_format($fund_community,2)
-					."\nArts Education Fund: $".number_format($fund_education,2)));
-					if ($fund_designated > 0.0){
-						_e(nl2br("\nArts Designated Fund (". $fund_designated_name ."): $".number_format($fund_designated,2))); 
-					}?>
-				</p>
-				<p><?php _e(nl2br("\n\nA receipt will be e-mailed to you at ". $donor_email)) ."." ?>
-				</p>
-			</div>
-
-			<div id="results_main_body"><p><?php 
-				switch($donation_frequency){
-				case "check":
-					$message="\nPlease mail your check by June 30,2018:\nWork for Art\n411 NW Park Avenue\nSuite 101"
-						."\nPortland, OR 97209\n\nWe will mail to you an official acknowledgement and tax receipt in the next few days.";
-					break;
-				case "workplace":
-					$message="\nYour payroll deduction of $".number_format(floatval($period_total),2)
-						." per period will begin July 2018. We will mail to you an official acknowledgement and tax receipt in the next few days.";
-					break;
-				case "cc-once":
-					$message="\nSuccessful one-time credit card payment, thanks!"
-					."We will mail to you an official acknowledgement and tax receipt in the next few days.";
-					break;
-				case "cc-recur":
-					$message="\nSuccessful monthly recurring credit card payment for $".number_format(floatval($period_total),2).", thank you!"
-					." We will mail to you an official acknowledgement and tax receipt in the next few days.";
-			}		
-			_e(nl2br($message)); 
-			?></p></div>
-			<div id="results_artscard">
-				<?php if(($artscardqualify == 1)&&($giftartscard == 0)){
-					?>
-					<p><?php _e(nl2br("Your gift qualifies you for the Arts Card and it will be mailed to you with your acknowledgement letter."));?></p>
-					<?php
-				}elseif(($artscardqualify == 1)&&($giftartscard == 1)){
-					?>
-					<p><?php _e(nl2br("Your gift qualifies you for the Arts Card. You have chosen to gift it to ".strip_tags($artscard_name).". We will mail them their Arts Card soon with a note that it's a gift from you."));?></p>
-					<?php
-				}
-				?>
-			</div>
-			<div id="results_anon">
-				<?php 
-				if($anon == "yes"){
-					?>
-					<p>Your gift is marked as anonymous: we will withold your name from all publications.</p><?php
-				}
-				?>
-			</div>
-			<div id="results_signature_lines">
+				<p><b><?php _e("Thank you, ".$donor_first_name."!") ?> 
+				</b></p>
+				<p>We are so grateful for your contribution to Work for Art! Your generous support helps our funded groups bring people together through shared experiences, boost our kids’ creativity and critical thinking, spark conversation and social change, and ensure that a wide variety of performances and events are available to everyone in our community.</p>
 				<br>
-				<p>With gratitude,<br>
-					Your Work for Art Team<br>
-					503-823-2969</p>
+				<p><?php _e("A donation receipt will be e-mailed to you at ". $donor_email) ."." ?>
+				</p>
+			</div>
+			<?php
+				if($anon == 'yes'){
+					?><p>Your gift is marked as anonymous: we will withold your name from all publications.</p><?php
+				}
+				if(($artscardqualify == 1)&&($giftartscard != 1)){	//$giftartscard can be null
+					?><p>Your contribution qualifies you for The Arts Card! Watch for your new Arts Card to arrive by mail in the next couple of weeks. In the meantime, you can check out upcoming events here: <a href="https://workforart.org/artscardevents">workforart.org/artscardevents</a></p><?php
+				}elseif(($artscardqualify == 1)&&($giftartscard == 1)){
+					?><p>Your contribution qualifies you for The Arts Card! You have chosen to gift your Arts Card to <?php _e($artscard_name) ?> . We will mail them their Arts Card soon with a little note that it's a gift from you.</p><?php
+				}
+
+		$message = "<p>" . $donor_first_name . ", thanks again for bringing the power and joy of the arts into our communities through your support today.</p>";
+		$message .= "<p>Sincerely,<br>Your Work for Art Team<br>503-823-2969<br><a href='mailto:info@workforarg.org'>info@workforart.org</a>";
+		$message .= "<br><br><i>For your record-keeping, please print/save this page. We will also send you this pledge summary/tax receipt by email.</i>";
+		$message .= "<hr><br><b>Work for Art Tax Receipt and Pledge Distribution</b></p>";
+
+		$message .= "<p>Donor: " . $donor_first_name . " " . $donor_last_name;
+		$message .=	"<br>Arts Community Fund: $" . number_format($fund_community,2)
+					."<br>Arts Education Fund: $" . number_format($fund_education,2);
+
+		if ($fund_designated > 0.0){
+			$message .= "<br>Designated Fund (" . $fund_designated_name . "): $" . number_format($fund_designated, 2);
+		}
+		if (($paytype == "cc-recur") || ($paytype == "workplace")){
+			$message .= "<br>Annual Pledge: $" . number_format($fund_total, 2);
+		}else{
+			$message .= "<br>Total Pledge: $" . number_format($fund_total, 2);
+		}
+		$db_timestamp = strtotime($timestamp);
+		$message .= "<br>Date Received: " . date("m-d-Y", $db_timestamp) . "</p>";
+			?>
+			<div id="results_main_body"><p><?php
+			switch($paytype){
+			case "check":
+				$message.="<p>Please mail your check to:<br>Work for Art<br>411 NW Park Avenue<br>Suite 101"
+					."<br>Portland, OR 97209<br>(payment due by June 2018)<br><br>We will mail to you an official acknowledgement and tax receipt in the next few days.</p>";
+				break;
+			case "workplace":
+				$message.="<p>Your monthtly payroll deduction of $".number_format(floatval($period_total),2)
+					." will begin in July 2018 and continue for ". number_format($period_count,0,'','') ." pay periods. You may update or cancel your recurring gifts at any time by contacting us at 503-823-2969 or <a href='mailto:info@workforarg.org'>info@workforart.org</a>.</p>";
+				break;
+			case "cc-once":
+				if($success == "yes"){
+					$message.="<p>Your payment of $". number_format($fund_total,2). " has been received, thank you! We will mail to you an official acknowledgement and tax receipt in the next few days.</p>";
+				}else{
+					$message.="<p>We have recieved your pledge of $". number_format($fund_total,2). ", but there was a problem processing your payment, please try again, using the same payment form as before.</p>";
+				}
+				break;
+			case "cc-recur":
+				if($success == "yes"){
+					$message.="<p>Your monthtly gift of $".number_format(floatval($period_total),2)
+						." has begun. We will mail to you an official acknowledgement and tax receipt in the next few days. You may update or cancel your recurring gifts at any time by calling us at 503-823-2969 or e-mail us at <a href='mailto:info@workforarg.org'>info@workforart.org</a>.</p>";
+				}else{
+					$message.="<p>We have recieved your annual pledge of $". number_format($fund_total,2). ", but there was a problem processing your first monthly payment of $".number_format(floatval($period_total),2). " please try again, using the same payment form as before.</p>";
+				}
+				break;
+			}	
+			_e($message); 
+			?></p></div>
+			<div id="tax_info">
+				<p><i>Work for Art is a program of the Regional Arts & Culture Council, a 501(c)(3) nonprofit organization – Tax ID #93-1059037. Your gift is tax deductible to the fullest extent of the law. This letter serves as documentation for your tax purposes, along with the following:  your check stub, personal bank record of this contribution, end-of-the-year paystub or Form W-2, or other employer-furnished document showing the amount withheld for this contribution. If you received The Arts Card, please note that this donor benefit has no cash value. If you use The Arts Card to receive complimentary tickets to events and performances, it may lessen the tax-deductibility of your gift; please consult your tax advisor.</i></p>
 			</div>
 		</div>
 		<?php
