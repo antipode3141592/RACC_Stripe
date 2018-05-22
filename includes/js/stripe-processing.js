@@ -32,7 +32,7 @@ jQuery(document).ready(function($){
 			}
 			if ($('#giftartscard').prop("checked"))
 			{
-				$('#confirm_artscard_address').html('<hr>' + $('#artscard_name').val() + '<br>'
+				$('#confirm_artscard_address').html('<hr>Your Arts Card shall be gifted to: <br>' + $('#artscard_name').val() + '<br>'
 					+ $('#artscard_address_1').val() + ' ' + $('#artscard_address_2').val() + '<br>' 
 					+ $('#artscard_city').val() + ', ' + $('#artscard_state').val() + ' ' + $('#artscard_zip').val() + '<br>');
 			}else{

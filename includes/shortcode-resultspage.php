@@ -45,8 +45,9 @@ function racc_stripe_resultpage($atts, $content = null){
 			<div id="results_intro_paragraph">
 				<p><b><?php _e("Thank you, ".$donor_first_name."!") ?> 
 				</b></p>
-				<p>We are so grateful for your contribution to Work for Art through the Spring 2018 Arts Community Campaign. Your generous support helps our funded groups bring people together through shared experiences, boost our kids’ creativity and critical thinking, spark conversation and social change, and ensure that a wide variety of performances and events are available to everyone in our community.</p>
-				<p><?php _e("A receipt will be e-mailed to you at ". $donor_email) ."." ?>
+				<p>We are so grateful for your contribution to Work for Art! Your generous support helps our funded groups bring people together through shared experiences, boost our kids’ creativity and critical thinking, spark conversation and social change, and ensure that a wide variety of performances and events are available to everyone in our community.</p>
+				<br>
+				<p><?php _e("A donation receipt will be e-mailed to you at ". $donor_email) ."." ?>
 				</p>
 			</div>
 			<?php
@@ -59,10 +60,10 @@ function racc_stripe_resultpage($atts, $content = null){
 					?><p>Your contribution qualifies you for The Arts Card! You have chosen to gift your Arts Card to <?php _e($artscard_name) ?> . We will mail them their Arts Card soon with a little note that it's a gift from you.</p><?php
 				}
 
-		$message = "<p>" . $donor_first_name . ", thanks again for joining the campaign in support of ourt arts and culture community.</p>";
+		$message = "<p>" . $donor_first_name . ", thanks again for bringing the power and joy of the arts into our communities through your support today.</p>";
 		$message .= "<p>Sincerely,<br>Your Work for Art Team<br>503-823-2969<br><a href='mailto:info@workforarg.org'>info@workforart.org</a>";
 		$message .= "<br><br><i>For your record-keeping, please print/save this page. We will also send you this pledge summary/tax receipt by email.</i>";
-		$message .= "<br><b>Work for Art Tax Receipt and Pledge Distribution</b></p>";
+		$message .= "<hr><br><b>Work for Art Tax Receipt and Pledge Distribution</b></p>";
 
 		$message .= "<p>Donor: " . $donor_first_name . " " . $donor_last_name;
 		$message .=	"<br>Arts Community Fund: $" . number_format($fund_community,2)
@@ -76,7 +77,8 @@ function racc_stripe_resultpage($atts, $content = null){
 		}else{
 			$message .= "<br>Total Pledge: $" . number_format($fund_total, 2);
 		}
-		$message .= "<br>Date Received: " . $timestamp . "</p>";
+		$db_timestamp = strtotime($timestamp);
+		$message .= "<br>Date Received: " . date("m-d-Y", $db_timestamp) . "</p>";
 			?>
 			<div id="results_main_body"><p><?php
 			switch($paytype){
@@ -86,7 +88,7 @@ function racc_stripe_resultpage($atts, $content = null){
 				break;
 			case "workplace":
 				$message.="<p>Your monthtly payroll deduction of $".number_format(floatval($period_total),2)
-					." will begin in July 2018 and continue for ". number_format($period_count,0,'','') ." pay periods. We will mail to you an official acknowledgement and tax receipt in the next few days. You may update or cancel your recurring gifts at any time by calling us at 503-823-2969 or e-mail us at <a href='mailto:info@workforarg.org'>info@workforart.org</a>.</p>";
+					." will begin in July 2018 and continue for ". number_format($period_count,0,'','') ." pay periods. You may update or cancel your recurring gifts at any time by contacting us at 503-823-2969 or <a href='mailto:info@workforarg.org'>info@workforart.org</a>.</p>";
 				break;
 			case "cc-once":
 				if($success == "yes"){

@@ -51,8 +51,8 @@ function racc_mailer($donor_id,$success="no"){
 
 		$message .= "<p>" . $donor_first_name . ", thanks again for joining the campaign in support of ourt arts and culture community.</p>";
 		$message .= "<p>Sincerely,<br>Your Work for Art Team<br>503-823-2969<br><a href='mailto:info@workforarg.org'>info@workforart.org</a>";
-		$message .= "<br><br><i>For your record-keeping, please print/save this page. We will also send you this pledge summary/tax receipt by email.</i>";
-		$message .= "<br><b>Work for Art Tax Receipt and Pledge Distribution</b></p>";
+		
+		$message .= "<hr><br><b>Work for Art Tax Receipt and Pledge Distribution</b></p>";
 
 		$message .= "<p>Donor: " . $donor_first_name . " " . $donor_last_name;
 		$message .=	"<br>Arts Community Fund: $" . number_format($fund_community,2)
@@ -65,20 +65,21 @@ function racc_mailer($donor_id,$success="no"){
 		}else{
 			$message .= "<br>Total Pledge: $" . number_format($fund_total, 2);
 		}
-		$message .= "<br>Date Received: " . $timestamp . "</p>";
+		$db_timestamp = strtotime($timestamp);
+		$message .= "<br>Date Received: " . date("m-d-Y", $db_timestamp) . "</p>";
 
 		switch($paytype){
 			case "check":
 				$message.="<p>Please mail your check to:<br>Work for Art<br>411 NW Park Avenue<br>Suite 101"
-					."<br>Portland, OR 97209<br>(payment due by June 2018)<br><br>We will mail to you an official acknowledgement and tax receipt in the next few days.</p>";
+					."<br>Portland, OR 97209<br>(payment due by June 2018)</p>";
 				break;
 			case "workplace":
 				$message.="<p>Your monthtly payroll deduction of $".number_format(floatval($period_total),2)
-					." will begin in July 2018 and continue for ". number_format($period_count,0,'','') ." pay periods. We will mail to you an official acknowledgement and tax receipt in the next few days. You may update or cancel your recurring gifts at any time by calling us at 503-823-2969 or e-mail us at <a href='mailto:info@workforarg.org'>info@workforart.org</a>.</p>";
+					." will begin in July 2018 and continue for ". number_format($period_count,0,'','') ." pay periods. You may update or cancel your recurring gifts at any time by contacting us at 503-823-2969 or <a href='mailto:info@workforarg.org'>info@workforart.org</a>.</p>";
 				break;
 			case "cc-once":
 				if($success == "yes"){
-					$message.="<p>Your payment of $". number_format($fund_total,2). " has been received, thank you! We will mail to you an official acknowledgement and tax receipt in the next few days.</p>";
+					$message.="<p>Your payment of $". number_format($fund_total,2). " has been received, thank you!</p>";
 				}else{
 					$message.="<p>We have recieved your pledge of $". number_format($fund_total,2). ", but there was a problem processing your payment, please try again, using the same payment form as before.</p>";
 				}
@@ -86,7 +87,7 @@ function racc_mailer($donor_id,$success="no"){
 			case "cc-recur":
 				if($success == "yes"){
 					$message.="<p>Your monthtly gift of $".number_format(floatval($period_total),2)
-						." has begun. We will mail to you an official acknowledgement and tax receipt in the next few days. You may update or cancel your recurring gifts at any time by calling us at 503-823-2969 or e-mail us at <a href='mailto:info@workforarg.org'>info@workforart.org</a>.</p>";
+						." has begun. We will mail to you an official acknowledgement and tax receipt in the next few days. You may update or cancel your recurring gifts at any time by contacting us at 503-823-2969 or <a href='mailto:info@workforarg.org'>info@workforart.org</a>.</p>";
 				}else{
 					$message.="<p>We have recieved your annual pledge of $". number_format($fund_total,2). ", but there was a problem processing your first monthly payment of $".number_format(floatval($period_total),2). " please try again, using the same payment form as before.</p>";
 				}
