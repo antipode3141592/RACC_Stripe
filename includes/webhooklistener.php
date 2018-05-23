@@ -21,9 +21,8 @@ function racc_stripe_listener($atts, $content = null){
 			$body = file_get_contents('php://input');
 			// grab the event information
 			$event_json = json_decode($body);
-			// error_log($event_json);
 		}catch(Exception $e){
-			error_log($e->message);
+			error_log("webhooklistenere error: " + $e->message);
 		}
 		$subject = '';
 		$message = '';
@@ -52,43 +51,49 @@ function racc_stripe_listener($atts, $content = null){
 			} catch(\Stripe\Error\Card $e) {
 				//decline error
 				$body = $e->getJsonBody();
-  				$err  = $body->error;
-  				error_log('type: ' . $err->type);
-  				error_log('message: ' . $err->message);
+				$err = $body['error'];
+  				$error_message = $err['message'];
+  				error_log("Error Type: " + $err['type']);
+  				error_log("Error Message: " + $err['message']);
 			} catch (\Stripe\Error\RateLimit $e) {
 			  // Too many requests made to the API too quickly
 				$body = $e->getJsonBody();
-  				$err  = $body->error;
-  				error_log('type: ' . $err->type);
-  				error_log('message: ' . $err->message);
+				$err = $body['error'];
+  				$error_message = $err['message'];
+  				error_log("Error Type: " + $err['type']);
+  				error_log("Error Message: " + $err['message']);
 			} catch (\Stripe\Error\InvalidRequest $e) {
 			  // Invalid parameters were supplied to Stripe's API
 				$body = $e->getJsonBody();
-  				$err  = $body->error;
-  				error_log('type: ' . $err->type);
-  				error_log('message: ' . $err->message);
+				$err = $body['error'];
+  				$error_message = $err['message'];
+  				error_log("Error Type: " + $err['type']);
+  				error_log("Error Message: " + $err['message']);
 			} catch (\Stripe\Error\Authentication $e) {
 			  // Authentication with Stripe's API failed
 			  // (maybe you changed API keys recently)
 				$body = $e->getJsonBody();
-  				$err  = $body->error;
-  				error_log('type: ' . $err->type);
-  				error_log('message: ' . $err->message);
+				$err = $body['error'];
+  				$error_message = $err['message'];
+  				error_log("Error Type: " + $err['type']);
+  				error_log("Error Message: " + $err['message']);
 			} catch (\Stripe\Error\ApiConnection $e) {
 			  // Network communication with Stripe failed
 				$body = $e->getJsonBody();
-  				$err  = $body->error;
-  				error_log('type: ' . $err->type);
-  				error_log('message: ' . $err->message);
+				$err = $body['error'];
+  				$error_message = $err['message'];
+  				error_log("Error Type: " + $err['type']);
+  				error_log("Error Message: " + $err['message']);
 			} catch (\Stripe\Error\Base $e) {
 			  // Display a very generic error to the user, and maybe send
 			  // yourself an email
 				$body = $e->getJsonBody();
-				$err  = $body->error;
-  				error_log('type: ' . $err->type);
-  				error_log('message: ' . $err->message);
+				$err = $body['error'];
+  				$error_message = $err['message'];
+  				error_log("Error Type: " + $err['type']);
+  				error_log("Error Message: " + $err['message']);
 			}catch(Exception $e){
-				error_log($e->message);
+				error_log("webhooklistener error: " + $e->message);
 			}
 		}
 	}

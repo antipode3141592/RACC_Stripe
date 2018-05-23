@@ -55,8 +55,12 @@ function racc_mailer($donor_id,$success="no"){
 		$message .= "<hr><br><b>Work for Art Tax Receipt and Pledge Distribution</b></p>";
 
 		$message .= "<p>Donor: " . $donor_first_name . " " . $donor_last_name;
-		$message .=	"<br>Arts Community Fund: $" . number_format($fund_community,2)
-					."<br>Arts Education Fund: $" . number_format($fund_education,2);
+		if ($fund_community > 0.0){
+			$message .=	"<br>Arts Community Fund: $" . number_format($fund_community,2);
+		}
+		if ($fund_education > 0.0){
+			$message .= "<br>Arts Education Fund: $" . number_format($fund_education,2);
+		}
 		if ($fund_designated > 0.0){
 			$message .= "<br>Designated Fund (" . $fund_designated_name . "): $" . number_format($fund_designated, 2);
 		}
@@ -99,7 +103,7 @@ function racc_mailer($donor_id,$success="no"){
 
 		$headers[] = 'From: receipt@workforart.org';
 		$headers[] = 'Content-type: text/html';
-		$result = wp_mail(sanitize_email($donor_email),"[TEST] Thank you for your gift to Work for Art!", $message, $headers);
+		$result = wp_mail(sanitize_email($donor_email),"Thank you for your gift to Work for Art!", $message, $headers);
 		return $result;
 	}
 	catch(Exception $e){

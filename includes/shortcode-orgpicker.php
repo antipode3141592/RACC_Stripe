@@ -18,7 +18,7 @@ function racc_org_picker($atts, $content = null){
 	    	$shortcode .= ' payperiods="' . $pay_periods. '"';
 	    }
 	    if($optional_periods){
-	    	$shortcode .= ' optionalperiods="' . $optionalperiods. '"';
+	    	$shortcode .= ' optionalperiods="' . $optional_periods. '"';
 	    }
 	    if($payroll){
 	    	$shortcode .= ' payroll="' . $payroll. '"';

@@ -12,3 +12,9 @@ jQuery(document).ready(function(){
 		printWindow.document.close();
 	});
 });
+
+jQuery(document).ready(function(){
+	jQuery('#errorbackbutton').click(function(){
+		window.history.back();		
+	});
+});
