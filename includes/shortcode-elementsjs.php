@@ -182,6 +182,10 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 			<div id="card-element" class="form-row">
 			</div>
 		</div>
+		<div id="additional-comments">
+			<h2>Comments?</h2>
+			<textarea id="comment_input" name="comment_input" maxlength="500" placeholder="Comments/Questions/Concerns" rows="5" ></textarea>
+		</div>
 		<div class="payment-error" id="payment_error_div"></div>
 		<input type="hidden" name="sc_organization" id="sc_organization" value="<?php _e($organization);?>"/>
 		<input type="hidden" id="sc_payperiods" value="<?php _e($payperiods);?>"/>

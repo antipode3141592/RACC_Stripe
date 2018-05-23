@@ -179,6 +179,12 @@ jQuery(document).ready(function($){
 	});
 });
 
+jQuery(document).ready(function(){
+	jQuery('#comment_input').change(function(){
+		
+	});
+});
+
 //javascript updates visibility of input elements based on selected payment type (donationradio)
 function change_frequency(donationradio){
 	var optionalperiods = document.getElementById("sc_optionalperiods");
@@ -271,6 +277,7 @@ function fund_sum(){
 }
 
 function check_artscardqualifty(test_total){
+	var artscardqualify = document.getElementById('artscardqualify');
 	if(test_total >= 60.0)
 		{
 			jQuery('#artscardvalidation').show();
