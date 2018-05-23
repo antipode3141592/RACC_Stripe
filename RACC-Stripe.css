@@ -10,6 +10,7 @@ h1,h2,h3,h4,h5,h6 {
 	margin: auto;
 	max-width: 1000px;
 	width: 80vw;
+	margin-bottom: 45px;
 	}
 
 #stripe-payment-form-singlepage > div {
@@ -27,14 +28,23 @@ h1,h2,h3,h4,h5,h6 {
 	border: 0;
 }
 
+#stripe-payment-form-singlepage h1 {
+	font-size: 2rem;
+}
+
 #stripe-payment-form-singlepage h2 {
 	background-color: darkolivegreen;
 	width: 100%;
 	display: block;
 	border-radius: 5px;
 	color: white;
-	padding: 0 0 5px 5px; 
+	padding: 5px 0 5px 5px; 
 	margin: 15px 0;
+	font-size: 1.3rem;
+}
+
+#stripe-payment-form-singlepage h3 {
+	font-size: 1.1rem;
 }
 
 #stripe-payment-form-singlepage > div:hover:not(#payment_error_div) {
@@ -70,12 +80,12 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 #donor_names_div label, #email_and_phone_div label, #donor_addresses_citystatezip_div label, #artscard_address_input label {
-	line-height: 4em;
-	padding: 0 5px;
+    padding: 0 5px;
+    transform: translateY(11px);
 }
 
 /* input checkbox replacement with lock images*/
-div > .input_lock {
+/*div > .input_lock {
 	display: none;
 }
 
@@ -91,9 +101,7 @@ div > .input_lock:checked + label {
 	width: 20px;
 	height: 20px;
 	display: inline-flex;
-}
-
-
+}*/
 
 input[type=text], input[type=email], input[type=number] {
     border-radius: 0 3px 3px 0;
@@ -121,7 +129,7 @@ input[type=text]:focus, input[type=email]:focus, input[type=number]:focus {
 }
 
 #donor_first_name, #donor_last_name, #donor_email, #donor_phone, #donor_city, #donor_state, #donor_zip {
-	width: 80%;
+	width: 78%;
 }
 
 #donor_addresses_div > input  {
@@ -140,7 +148,6 @@ input[type=text]:focus, input[type=email]:focus, input[type=number]:focus {
 	display: block;
 	font-weight: 700;
 	padding-top: 15px;
-
 }
 
 #fund_community, #fund_education {
@@ -149,6 +156,21 @@ input[type=text]:focus, input[type=email]:focus, input[type=number]:focus {
 
 #gift-details > .form-row {
 	width: 40%; 
+}
+
+#fund_total {
+	border: 0;
+	box-shadow: 0;
+	background: none;
+}
+
+#fund_total:focus {
+	border: 0px!important;
+	box-shadow: none;
+}
+
+#gift_allocations input {
+	display: flex;
 }
 
 #payperiod_container {
@@ -165,6 +187,21 @@ input[type=text]:focus, input[type=email]:focus, input[type=number]:focus {
 
 #artscardvalidation {
 	justify-content: center!important;
+}
+
+#giftartscard_input {
+    display: flex;
+    width: 100%;
+    justify-content: center!important;
+    margin: auto;
+}
+
+#artscard_image {
+    background: url(/wp-content/uploads/2018/05/Arts-Card-web-small.png) no-repeat;
+    background-size: 150px;
+    width: 150px;
+    height: 100px;
+    margin: auto;
 }
 
 #artscard_name_div, #artscard_email_div {
@@ -283,10 +320,15 @@ button#confirmation_button:hover {
 	border-radius: 5px;
 }
 
-#confirm_payroll_deduction {
+#confirmation_popup_content > p {
+	margin: 10px 0;
+}
+
+#confirm_payroll_deduction, #confirm_artscard, #confirm_paymethod {
 	font-weight: 800;
 	color: #900;
-	
+	padding: 5px 0;
+	margin-bottom: 10px;
 }
 
 input.invalid{
@@ -332,7 +374,9 @@ input.invalid{
 	color:red;
 }
 
-
+#resultscontent p {
+	font-size: 100%!important;
+}
 
 /*** Responsive Styles Tablet And Below ***/
 @media (max-width: 900px) {
@@ -444,6 +488,10 @@ input.invalid{
 	#cc-payment-container > label {
 		width: 25%;
 	} 
+	
+	button#confirmation_button {
+		font-size: 1em;
+	}
 
 }
 

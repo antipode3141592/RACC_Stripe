@@ -140,9 +140,11 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		</div>
 		<div id="artscardvalidation">
 			<h2>In appreciation of your pledge of $60 or more, we'll be mailing you The Arts Card!</h2>
-			<div id="artscard_image"></div>
-			<label for="giftartscard">I prefer to gift my Arts Card</label>
-			<input type="checkbox" name="giftartscard" id="giftartscard" value="yes"/>
+			<div id="artscard_image">&nbsp;</div>
+			<div id="giftartscard_input">
+				<label for="giftartscard">I prefer to gift my Arts Card</label>
+				<input type="checkbox" name="giftartscard" id="giftartscard" value="yes"/>
+			</div>
 		</div>
 		<div id="artscard_address_input" style="display: none">
 			<h3>Arts Card Recepient</h3>

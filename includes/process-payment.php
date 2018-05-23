@@ -108,11 +108,17 @@ function racc_stripe_process_payment() {
 				if ($donation_frequency == "cc-recur") {
 					//Process recurring payment
 					try {
+						if(isset($stripe_options['test_mode']) && $stripe_options['test_mode']) {
+							$product_id = 'prod_Bav1bXDCwcN0Kr';
+						} else {
+							$product_id = 'prod_CuHVCy1RGoijo1';
+						}
+
 						$plan = \Stripe\Plan::create(array(
 							'amount' => number_format(floatval($period_total)*100,0,'.',''),
 							'interval' => 'month',
 							//'product' => 'prod_Bav1bXDCwcN0Kr',
-							'product' => 'prod_CuHVCy1RGoijo1',
+							'product' => $product_id,
 							'currency' => 'usd',
 							)
 						);
@@ -311,7 +317,7 @@ function racc_stripe_process_payment() {
 		
 		wp_safe_redirect(esc_url_raw(add_query_arg(array(
 			'success' => $success,
-			'error_message' => $error_message,
+			//'error_message' => $error_message,
 			'id' => $new_donor_id
 		), $redirect))); exit;
 	}	

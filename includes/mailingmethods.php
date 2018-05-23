@@ -55,8 +55,12 @@ function racc_mailer($donor_id,$success="no"){
 		$message .= "<hr><br><b>Work for Art Tax Receipt and Pledge Distribution</b></p>";
 
 		$message .= "<p>Donor: " . $donor_first_name . " " . $donor_last_name;
-		$message .=	"<br>Arts Community Fund: $" . number_format($fund_community,2)
-					."<br>Arts Education Fund: $" . number_format($fund_education,2);
+		if ($fund_community > 0.0){
+			$message .=	"<br>Arts Community Fund: $" . number_format($fund_community,2);
+		}
+		if ($fund_education > 0.0){
+			$message .= "<br>Arts Education Fund: $" . number_format($fund_education,2);
+		}
 		if ($fund_designated > 0.0){
 			$message .= "<br>Designated Fund (" . $fund_designated_name . "): $" . number_format($fund_designated, 2);
 		}
