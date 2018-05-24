@@ -95,12 +95,8 @@ function racc_stripe_resultpage($atts, $content = null){
 						." will begin in July 2018 and continue for ". number_format($period_count,0,'','') ." pay periods.</p>";
 					break;
 				case "cc-recur":
-					if($success == "yes"){
-						$message.="<p>Your monthly gift of $".number_format(floatval($period_total),2)
+					$message.="<p>Your monthly gift of $".number_format(floatval($period_total),2)
 							." has begun. We will send you a new acknowledgement and Arts Card (if applicable) each year. You may update or cancel your recurring gifts at any time by calling us at 503-823-2969 or e-mail us at <a href='mailto:info@workforarg.org'>info@workforart.org</a>.</p>";
-					}else{
-						$message.="<p>We have recieved your annual pledge of $". number_format($fund_total,2). ", but there was a problem processing your first monthly payment of $".number_format(floatval($period_total),2). " please try again, using the same payment form as before.</p>";
-					}
 					break;
 				}	
 				_e($message); 

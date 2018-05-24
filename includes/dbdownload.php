@@ -12,6 +12,13 @@ function racc_db_download() {
 			$filename = 'racc_db';
 		    $date = date("YmdHis");
 		    $output = fopen('php://output', 'w');
+		    header("Pragma: public");
+		    header("Expires: 0");
+		    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		    header("Cache-Control: private", false);
+		    header('Content-Type: text/csv; charset=utf-8');
+		    header("Content-Disposition: attachment; filename=\"" . $filename . " " . $date . ".csv\";" );
+		    header("Content-Transfer-Encoding: binary");
 		    fputcsv( $output, array('timestamp', 'donor_id', 'first_name', 'last_name', 'anon', 'artscard', 'giftartscard', 'organization', 'email', 'community', 'education', 'designated', 'designated name', 'pledgetotal', 'paytype', 'periodtotal', 'address1', 'address2', 'city', 'state', 'zipcode', 'artscard_name', 'artscard_add1', 'artscard_add2', 'artscard_city', 'artscard_state', 'artscard_zip'));
 		    foreach ($results as $value) {
 		        $modified_values = array(
@@ -45,13 +52,7 @@ function racc_db_download() {
 		        );
 		        fputcsv( $output, $modified_values );
 		    }
-		    header("Pragma: public");
-		    header("Expires: 0");
-		    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-		    header("Cache-Control: private", false);
-		    header('Content-Type: text/csv; charset=utf-8');
-		    header("Content-Disposition: attachment; filename=\"" . $filename . " " . $date . ".csv\";" );
-		    header("Content-Transfer-Encoding: binary");exit;
+		    exit;
 		}		
 	}	
 }
