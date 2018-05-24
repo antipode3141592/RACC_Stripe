@@ -91,7 +91,7 @@ function racc_stripe_resultpage($atts, $content = null){
 						."<br>Portland, OR 97209</p>";
 					break;
 				case "workplace":
-					$message.="<p>Your monthtly payroll deduction of $".number_format(floatval($period_total),2)
+					$message.="<p>Your payroll deduction of $".number_format(floatval($period_total),2)
 						." will begin in July 2018 and continue for ". number_format($period_count,0,'','') ." pay periods.</p>";
 					break;
 				case "cc-recur":
