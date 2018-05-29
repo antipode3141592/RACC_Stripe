@@ -269,7 +269,7 @@ function fund_sum(){
 	var i;
 	for(i = 0; i < funds.length; i++){
 		sum += parseFloat(funds[i].value);
-		console.log("sum = " + sum.toFixed(2));
+		// console.log("sum = " + sum.toFixed(2));
 	}
 	check_artscardqualifty(sum);
 	calc_periodtotal(sum);

@@ -44,7 +44,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 				</span>
 				<span id="donor_phone_section">
 					<label for="donor_phone">Phone</label>
-					<input type="text" size="15" maxlength="40" name="donor_phone" autocomplete="tel-national" id="donor_text" class="input_text" />
+					<input type="text" size="15" maxlength="40" name="donor_phone" autocomplete="tel-national" id="donor_text" class="input_text" required />
 				</span>
 			</div>
 			<div class="form-row" id="donor_addresses_div">	

@@ -1,9 +1,9 @@
 function stripeResponseHandler(token){
 	if(token.error){
-		jQuery(".payment-error").html(token.error.message);
+		jQuery('.payment-error').html(token.error.message);
 		jQuery('#stripe-submit').attr("disabled", false);
 	}else {
-		var form = jQuery("#stripe-payment-form-singlepage");
+		var form = jQuery('#stripe-payment-form-singlepage');
         if(jQuery('input[name="donation_frequency"]:checked').val() == "cc-recur" || jQuery('input[name="donation_frequency"]:checked').val() == "cc-once")
         {
         	var tokenid = token.token.id;

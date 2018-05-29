@@ -15,10 +15,13 @@ jQuery(document).ready(function(){
 });
 
 jQuery(document).ready(function($) {
-	$("#form-selector").submit(function(event){
+	$('#form-selector').submit(function(event){
 		jQuery.getJSON(urls.base_url + "/data/orglist.json", function(data) {
+			var select_input = jQuery('#orginput').prop('selected');
 			jQuery.each(data, function(key,entry) {
-				if (entry.organization == jQuery('#orginput').val()){
+				// console.log(select_input);
+				if (select_input == entry.organization){
+					
 					var org = encodeURIComponent(entry.organization);
 					// org = org.replace('&','%26');
 					// org = org.replace(' ', '+');
@@ -30,10 +33,13 @@ jQuery(document).ready(function($) {
 					var address = urls.site_url + "/springcampaign2018/?org=" + org + "&pp=" + payperiods
 						+ "&op=" + optionalperiods + "&pr=" + payroll + "&dg=" + dg;
 					// console.log(address);
-					console.log(address);
+					// console.log(address);
 					document.location.assign(address);
 					return false;
-				}
+				}	
+				// } else { 
+				// 	console.log("org: " + entry.organization);
+				// }
 			});
 		});
 		// var x =  document.getElementById("orginput");
