@@ -22,9 +22,11 @@ function racc_stripe_process_payment() {
 		$period_total = isset($_POST['period_total']) ? $_POST['period_total'] : 0.0;
 		$artscardqualify = isset($_POST['artscardqualify']) ? $_POST['artscardqualify'] : 'no';
 		$designated = isset($_POST['sc_dg']) ? $_POST['sc_dg'] : 'no';
+		$comment = isset($_POST['comment_input']) ? sanitize_text_field($_POST['comment_input']) : null;
 
 		//donor information
-		$organization = isset($_POST['sc_organization']) ? sanitize_text_field($_POST['sc_organization']) : null;
+		$sc_org = isset($_POST['sc_organization']) ? sanitize_text_field($_POST['sc_organization']) : null;
+		$org = isset($_POST['donor_org_input']) ? sanitize_text_field($_POST['donor_org_input']) : null;
 		$donor_first_name = isset($_POST['donor_first_name']) ? sanitize_text_field($_POST['donor_first_name']) : null;
 		$donor_middle_name = isset($_POST['donor_middle_name']) ? sanitize_text_field($_POST['donor_middle_name']) : null;
 		$donor_last_name = isset($_POST['donor_last_name']) ? sanitize_text_field($_POST['donor_last_name']) : null;
@@ -50,36 +52,49 @@ function racc_stripe_process_payment() {
 		$new_donor_id = date('YmdHis') . rand(1,1000000);
 		// $new_donor_id = $donor_last_name . date('YmdHis');
 		try{
-		//wpdb is the WordPress database, query() is used to run the stored procedure call created by prepare()
-		if($artscardqualify == 'yes'){
-			$db_artscard = 1;
-		} else {$db_artscard = 0; }
-		if($giftartscard == 'yes'){
-			$db_giftartscard = 1;
-		}else {$db_giftartscard = 0;}
-		$rows_inserted = $wpdb->query(
-			$wpdb->prepare("CALL sp_adddonor(%s,%s,%s,%s,%s,%s,%s,%s)", $donor_first_name, $donor_middle_name, $donor_last_name, $new_donor_id, $anon,$db_artscard, $db_giftartscard, $organization));
-		$rows_inserted = $wpdb->query(
-			$wpdb->prepare("CALL sp_addcontactinfo(%s,%s,%s)", "email", $donor_email, $new_donor_id));
-		if($donor_phone != null){
-		$rows_inserted = $wpdb->query(
-			$wpdb->prepare("CALL sp_addcontactinfo(%s,%s,%s)", "phone", $donor_phone, $new_donor_id));
-		}
-		$rows_inserted = $wpdb->query(
-			$wpdb->prepare("CALL sp_addaddress(%s,%s,%s,%s,%s,%s,%s,%s)", $donor_address_1, $donor_address_2, $donor_city, $donor_state, $donor_zip, "Primary",$new_donor_id, null));
-		if($giftartscard == "yes")
-		{
+			//wpdb is the WordPress database, query() is used to run the stored procedure call created by prepare()
+			if($artscardqualify == 'yes'){
+				$db_artscard = 1;
+			} else {$db_artscard = 0; }
+			if($giftartscard == 'yes'){
+				$db_giftartscard = 1;
+			}else {$db_giftartscard = 0;}
+			if ($sc_org == "None"){
+				if ($org != "None"){
+					$temp_org = $org;
+				}else{
+					$temp_org = "None";
+				}
+			}else{
+				$temp_org = $sc_org;
+			}
 			$rows_inserted = $wpdb->query(
-			$wpdb->prepare("CALL sp_addaddress(%s,%s,%s,%s,%s,%s,%s,%s)", $artscard_address_1, $artscard_address_2, $artscard_city, $artscard_state, $artscard_zip, "Arts Card",$new_donor_id, $artscard_name));
+				$wpdb->prepare("CALL sp_adddonor(%s,%s,%s,%s,%s,%s,%s,%s)", $donor_first_name, $donor_middle_name, $donor_last_name, $new_donor_id, $anon,$db_artscard, $db_giftartscard, $temp_org));
 			$rows_inserted = $wpdb->query(
-			$wpdb->prepare("CALL sp_addcontactinfo(%s,%s,%s)", "email-artscard", $artscard_email, $new_donor_id));
-		}
-		$rows_inserted = $wpdb->query(
-			$wpdb->prepare("CALL sp_addallocation(%s,%s,%s,%s,%s,%s,%s,%s)", $new_donor_id,"community", number_format($fund_community,2,'.',''), number_format($fund_total,2,'.',''),$donation_frequency, number_format($period_total,2,'.',''),number_format($payperiods,0,'',''),"community"));
-		$rows_inserted = $wpdb->query(
-			$wpdb->prepare("CALL sp_addallocation(%s,%s,%s,%s,%s,%s,%s,%s)", $new_donor_id,"education", number_format($fund_education,2,'.',''), number_format($fund_total,2,'.',''),$donation_frequency, number_format($period_total,2,'.',''),number_format($payperiods,0,'',''),"education"));
-		$rows_inserted = $wpdb->query(
-			$wpdb->prepare("CALL sp_addallocation(%s,%s,%s,%s,%s,%s,%s,%s)", $new_donor_id, $fund_designated_name, number_format($fund_designated,2,'.',''), number_format($fund_total,2,'.',''),$donation_frequency, number_format($period_total,2,'.',''),number_format($payperiods,0,'',''),"designated"));
+				$wpdb->prepare("CALL sp_addcontactinfo(%s,%s,%s)", "email", $donor_email, $new_donor_id));
+			if($donor_phone != null){
+			$rows_inserted = $wpdb->query(
+				$wpdb->prepare("CALL sp_addcontactinfo(%s,%s,%s)", "phone", $donor_phone, $new_donor_id));
+			}
+			$rows_inserted = $wpdb->query(
+				$wpdb->prepare("CALL sp_addaddress(%s,%s,%s,%s,%s,%s,%s,%s)", $donor_address_1, $donor_address_2, $donor_city, $donor_state, $donor_zip, "Primary",$new_donor_id, null));
+			if($giftartscard == "yes")
+			{
+				$rows_inserted = $wpdb->query(
+				$wpdb->prepare("CALL sp_addaddress(%s,%s,%s,%s,%s,%s,%s,%s)", $artscard_address_1, $artscard_address_2, $artscard_city, $artscard_state, $artscard_zip, "Arts Card",$new_donor_id, $artscard_name));
+				$rows_inserted = $wpdb->query(
+				$wpdb->prepare("CALL sp_addcontactinfo(%s,%s,%s)", "email-artscard", $artscard_email, $new_donor_id));
+			}
+			$rows_inserted = $wpdb->query(
+				$wpdb->prepare("CALL sp_addallocation(%s,%s,%s,%s,%s,%s,%s,%s)", $new_donor_id,"community", number_format($fund_community,2,'.',''), number_format($fund_total,2,'.',''),$donation_frequency, number_format($period_total,2,'.',''),number_format($payperiods,0,'',''),"community"));
+			$rows_inserted = $wpdb->query(
+				$wpdb->prepare("CALL sp_addallocation(%s,%s,%s,%s,%s,%s,%s,%s)", $new_donor_id,"education", number_format($fund_education,2,'.',''), number_format($fund_total,2,'.',''),$donation_frequency, number_format($period_total,2,'.',''),number_format($payperiods,0,'',''),"education"));
+			$rows_inserted = $wpdb->query(
+				$wpdb->prepare("CALL sp_addallocation(%s,%s,%s,%s,%s,%s,%s,%s)", $new_donor_id, $fund_designated_name, number_format($fund_designated,2,'.',''), number_format($fund_total,2,'.',''),$donation_frequency, number_format($period_total,2,'.',''),number_format($payperiods,0,'',''),"designated"));
+			if ($comment != null) {
+				$rows_inserted = $wpdb->query(
+				$wpdb->prepare("CALL sp_addcomment(%s,%s)", $new_donor_id, $comment));
+			}
 		}catch(Exception $e){
 			error_log("process-payment, database calls error: " + $e->getMessage());
 		}
