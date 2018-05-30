@@ -145,6 +145,12 @@ jQuery(document).ready(function($){
 		}else{
 			$('#dg_fields').show();
 		}
+		if($('#sc_organization').val() == 'None')
+		{
+			$('#donor_org_div').show();
+		}else{
+			$('#donor_org_div').hide();
+		}
 	});
 });
 
