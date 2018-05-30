@@ -44,7 +44,11 @@ function racc_stripe_resultpage($atts, $content = null){
 		<div id="resultscontent">
 			<div id="results_intro_paragraph">
 				<p><b><?php _e("Thank you, ".$donor_first_name."!") ?></b></p>
-				<p>We are so grateful for your contribution to Work for Art! Your generous support helps our funded groups bring people together through shared experiences, boost our kids’ creativity and critical thinking, spark conversation and social change, and ensure that a wide variety of performances and events are available to everyone in our community.</p>
+				<p>We are so grateful for your <?php 
+				if (number_format($fund_total, 2) >= 500.00){
+					_e("leaderful");
+				}
+				?> contribution to Work for Art! Your generous support helps our funded groups bring people together through shared experiences, boost our kids’ creativity and critical thinking, spark conversation and social change, and ensure that a wide variety of performances and events are available to everyone in our community.</p>
 				<p><?php _e("A donation receipt will be e-mailed to you at " . $donor_email . ".")  ?></p>
 			</div>
 			<br>
@@ -63,7 +67,6 @@ function racc_stripe_resultpage($atts, $content = null){
 			<div id="results_main_body"><p><?php
 				$message = "<p>" . $donor_first_name . ", thanks again for bringing the power and joy of the arts into our communities through your support today.</p>";
 				$message .= "<br><p>Sincerely,<br>Your Work for Art Team<br>503-823-2969<br><a href='mailto:info@workforarg.org'>info@workforart.org</a>";
-				// $message .= "<br><br><i>For your record-keeping, please print/save this page. We will also send you this pledge summary/tax receipt by email.</i>";
 				$message .= "<hr><br><b>Work for Art Tax Receipt and Pledge Distribution</b></p>";
 
 				$message .= "<p>Donor: " . $donor_first_name . " " . $donor_last_name;
