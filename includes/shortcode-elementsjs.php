@@ -43,8 +43,8 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 					<input type="email" size="40" maxlength="40" class="email" name="donor_email" id="donor_email" class="input_text" autocomplete="email" required/>
 				</span>
 				<span id="donor_phone_section">
-					<label for="donor_phone">Phone</label>
-					<input type="text" size="15" maxlength="40" name="donor_phone" autocomplete="tel-national" id="donor_text" class="input_text" />
+					<label for="donor_phone">Phone *</label>
+					<input type="text" size="15" maxlength="40" name="donor_phone" autocomplete="tel-national" id="donor_text" class="input_text" required />
 				</span>
 			</div>
 			<div class="form-row" id="donor_addresses_div">	
@@ -65,6 +65,10 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 					<label for="donor_zip">Zip *</label>
 					<input type="text" size="10" maxlength="15" name="donor_zip" id="donor_zip" class="input_text" autocomplete="postal-code" required/>
 				</span>
+			</div>
+			<div class="form-row" id="donor_org_div">
+				<label for="donor_org_input">Organization</label>
+				<input type="text" name="donor_org_input" id="donor_org_input" maxlength="50" class="input_text" autocomplete="off">
 			</div>
 			<div class="form-row" id="donor_anon_div">
 				<label for="anon">Anonymous Gift</label>
@@ -181,6 +185,22 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 			<label for="card-element">Credit or Debit</label>
 			<div id="card-element" class="form-row">
 			</div>
+			<div id="cc_images">
+				<table class="image_table">
+					<tr>
+						<td id="img1"></td>
+						<td id="img2"></td>
+						<td id="img3"></td>
+						<td id="img4"></td>
+						<td id="img5"></td>
+						<td id="img6"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div id="additional-comments" class="wrap">
+			<h2>Comments?</h2>
+			<textarea id="comment_input" name="comment_input" maxlength="500" placeholder="Comments/Questions/Concerns" rows="5" ></textarea>
 		</div>
 		<div class="payment-error" id="payment_error_div"></div>
 		<input type="hidden" name="sc_organization" id="sc_organization" value="<?php _e($organization);?>"/>

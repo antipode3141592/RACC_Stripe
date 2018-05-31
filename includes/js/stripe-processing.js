@@ -145,6 +145,12 @@ jQuery(document).ready(function($){
 		}else{
 			$('#dg_fields').show();
 		}
+		if($('#sc_organization').val() == 'None')
+		{
+			$('#donor_org_div').show();
+		}else{
+			$('#donor_org_div').hide();
+		}
 	});
 });
 
@@ -176,6 +182,12 @@ jQuery(document).ready(function($){
 			$('#payperiodinputs').val(parseFloat($('#payperiodinputs').val()).toFixed(0));
 		}
 		fund_sum();
+	});
+});
+
+jQuery(document).ready(function(){
+	jQuery('#comment_input').change(function(){
+		
 	});
 });
 
@@ -263,7 +275,7 @@ function fund_sum(){
 	var i;
 	for(i = 0; i < funds.length; i++){
 		sum += parseFloat(funds[i].value);
-		console.log("sum = " + sum.toFixed(2));
+		// console.log("sum = " + sum.toFixed(2));
 	}
 	check_artscardqualifty(sum);
 	calc_periodtotal(sum);
@@ -271,6 +283,7 @@ function fund_sum(){
 }
 
 function check_artscardqualifty(test_total){
+	var artscardqualify = document.getElementById('artscardqualify');
 	if(test_total >= 60.0)
 		{
 			jQuery('#artscardvalidation').show();
