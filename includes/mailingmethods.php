@@ -37,7 +37,11 @@ function racc_mailer($donor_id,$success="no"){
 		    $artscard_zip = $results[0]->artscard_zip;
 		}
 		$message = "<p><b>Thank you, ".$donor_first_name."!</b></p>";
-		$message .= "<p>We are so grateful for your contribution to Work for Art! Your generous support helps our funded groups bring people together through shared experiences, boost our kids’ creativity and critical thinking, spark conversation and social change, and ensure that a wide variety of performances and events are available to everyone in our community.</p>";
+		$message .= "<p>We are so grateful for your";
+		if (number_format($fund_total, 2) >= 500.00){
+			$message .=" leaderful";
+		}		
+		$message .= " contribution to Work for Art! Your generous support helps our funded groups bring people together through shared experiences, boost our kids’ creativity and critical thinking, spark conversation and social change, and ensure that a wide variety of performances and events are available to everyone in our community.</p>";
 
 		if($anon == 'yes'){
 			$message.="<p>Your gift is marked as anonymous: we will withold your name from all publications.</p>";
