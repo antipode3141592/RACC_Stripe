@@ -24,6 +24,15 @@ h1,h2,h3,h4,h5,h6 {
 	justify-content: space-around;
 }
 
+#stripe-payment-form-singlepage tr td {
+	background-size: 60px;
+	border: 0;
+}
+
+#stripe-payment-form-singlepage table {
+	border: 0;
+}
+
 #stripe-payment-form-singlepage div.payment-error {
 	border: 0;
 }
@@ -51,6 +60,12 @@ h1,h2,h3,h4,h5,h6 {
 	background-color: #fff;
 	}
 
+#stripe-payment-form-singlepage table {
+    width: 50%;
+    margin: auto;
+    margin-top: 25px;
+}
+
 .form-row {
 	padding: 5px;
     border-radius: 5px;
@@ -68,7 +83,7 @@ h1,h2,h3,h4,h5,h6 {
 	font-weight: bold;
 }
 
-#donor_names_div > span, #email_and_phone_div > span, #donor_addresses_citystatezip_div > span, #donor_addresses_div, #artscard_address_input > div {
+#donor_names_div > span, #email_and_phone_div > span, #donor_addresses_citystatezip_div > span, #donor_addresses_div, #artscard_address_input > div,  #donor_org_div span:not(#anon-section) {
 	display: inline-flex;
     background: #456;
     border-radius: 5px;
@@ -79,9 +94,18 @@ h1,h2,h3,h4,h5,h6 {
 	padding: 0px;
 }
 
-#donor_names_div label, #email_and_phone_div label, #donor_addresses_citystatezip_div label, #artscard_address_input label {
+#anon-section { 
+	display: inline-flex;
+}
+
+
+#donor_names_div label, #email_and_phone_div label, #donor_addresses_citystatezip_div label, #artscard_address_input label, #donor_org_div label {
     padding: 0 5px;
     transform: translateY(11px);
+}
+
+#anon-section input {
+	transform: translateY(11px);
 }
 
 input[type=text], input[type=email], input[type=number] {
@@ -123,6 +147,10 @@ input[type=text]:focus, input[type=email]:focus, input[type=number]:focus {
 
 #state-section, #zip-section {
 	width: 24.7%;
+}
+
+#org-section > input {
+	width : 80%;
 }
 
 #gift_allocations > label {
@@ -323,7 +351,7 @@ input.invalid{
     border-radius: 50%;
     width: 1.5em;
     border: 1px solid gray;
-	font-size: 0.9em;
+	font-size: 0.7rem;
 	line-height: 1.5em;
 	padding-left: 0.5em;
 	font-style: oblique;
@@ -546,6 +574,10 @@ table.image_table > tr, td{
 	button#confirmation_button {
 		font-size: 1em;
 	}
+		#stripe-payment-form-singlepage tr td {
+		background-size: 50px;
+		padding-left: 28px;
+	}
 
 }
 
@@ -559,5 +591,10 @@ table.image_table > tr, td{
 	#cc-payment-container > label {
 		padding: 1em 0.1em!important;
 		font-size: 0.6rem;
+	}
+	
+	#stripe-payment-form-singlepage tr td {
+		background-size: 40px;
+		padding-left: 18px;
 	}
 }

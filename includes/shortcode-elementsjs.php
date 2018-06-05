@@ -67,15 +67,17 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 				</span>
 			</div>
 			<div class="form-row" id="donor_org_div">
-				<label for="donor_org_input">Organization</label>
-				<input type="text" name="donor_org_input" id="donor_org_input" maxlength="50" class="input_text" autocomplete="off">
-			</div>
-			<div class="form-row" id="donor_anon_div">
-				<label for="anon">Anonymous Gift</label>
-				<input type="checkbox" name="anon" id="anon" value="yes"/>
-				<div class="infopopup">i
-					<div id="anon_description" class="popupcontent">Check this box if you would like us to withold your name from all publications.</div>
-				</div>
+				<span id="org-section">
+					<label for="donor_org_input">Employer</label>
+					<input type="text" name="donor_org_input" id="donor_org_input" maxlength="50" class="input_text" autocomplete="off">
+				</span>
+				<span id="anon-section">	
+					<label for="anon">Anonymous Gift</label>
+					<input type="checkbox" name="anon" id="anon" value="yes"/>
+					<div class="infopopup">i
+						<div id="anon_description" class="popupcontent">Check this box if you would like us to withold your name from all publications.</div>
+					</div>
+				</span>
 			</div>
 		</div>
 		<div name="gift-details" id="gift-details">
