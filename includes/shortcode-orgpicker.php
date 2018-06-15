@@ -9,6 +9,10 @@ function racc_org_picker($atts, $content = null){
 	    $payroll = isset($_GET['pr']) ? $_GET['pr'] : null;
 	    $dg = isset($_GET['dg']) ? $_GET['dg'] : null;
 
+	    extract( shortcode_atts( array(
+		'sg' => '60.00'
+		), $atts ) );
+
 	    //build shortcode
 	    $shortcode = '[payment_form_elementsjs';
 	    if($org_name){
@@ -25,6 +29,9 @@ function racc_org_picker($atts, $content = null){
 	    }
 	    if($dg){
 	    	$shortcode .= ' dg="' . $dg. '"';
+	    }
+	    if($sg){
+	    	$shortcode .= ' sg="' . $sg. '"';
 	    }
 	    $shortcode .= ']';
 

@@ -8,7 +8,8 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		'payperiods' => '26',		//default 26 for payperiods in a year
 		'optionalperiods' => 'no',	//'yes' or 'no', 'yes' allows donor to specify 
 		'payroll' => 'yes',			//'yes' allows selection of workplace giving option and disables cc-recur, 'no' disables workplace giving option and enables cc-recur
-		'dg' =>'no'
+		'dg' =>'no',
+		'sg' => '60.00'
 	), $atts ) );
 
 	//TODO: add $_POST calls to grab starting data, for cases where user 
@@ -71,6 +72,8 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 					<label for="donor_org_input">Employer</label>
 					<input type="text" name="donor_org_input" id="donor_org_input" maxlength="50" class="input_text" autocomplete="off">
 				</span>
+			</div>
+			<div class="form-row">
 				<span id="anon-section">	
 					<label for="anon">Anonymous Gift</label>
 					<input type="checkbox" name="anon" id="anon" value="yes"/>
@@ -110,7 +113,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 						<div class="infopopup">i
 							<div id="fund_community_description" class="popupcontent">Supports tri-county-based arts and culture organizations that receive RACC General Operating Support (GOS) and Project Grant funding for a wide array of services, programs, exhibits, events, and performances.</div>
 						</div>
-						<input type="number" name="fund_community" id="fund_community" class="racc_fund" value='30.00' step="0.01" min='0' autocomplete="off" onchange="fund_sum();"/>
+						<input type="number" name="fund_community" id="fund_community" class="racc_fund" value="<?php _e($sg);?>" step="0.01" min='0' autocomplete="off" onchange="fund_sum();"/>
 					</div>
 
 					<div class="form-row">
@@ -118,7 +121,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 						<div class="infopopup">i
 							<div id="fund_education_description" class="popupcontent">Distributed to 40+ arts and culture organizations (many GOS groups) that provide substantial arts education opportunities for students and teachers throughout our region.</div>
 						</div>
-						<input type="number" name="fund_education" id="fund_education" class="racc_fund" value='30.00' step="0.01" min="0" autocomplete="off" onchange="fund_sum();"/>
+						<input type="number" name="fund_education" id="fund_education" class="racc_fund" value='0.00' step="0.01" min="0" autocomplete="off" onchange="fund_sum();"/>
 					</div>
 
 					<div class="form-row" id="dg_fields">
@@ -139,7 +142,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 						<label for="payperiodinputs" id="periodinput_label" style="display: none">Pay Periods</label>
 						<input type="number" name="payperiodinputs" id="payperiodinputs" style="display: none" value="1" step="1" min="1" autocomplete="off" readonly/>
 						<label for="period_total" id="period_total_label">Per Period Amount</label>
-						<input type="number" name="period_total" id="period_total" value='60.00' readonly/>
+						<input type="number" name="period_total" id="period_total" value='100.00' readonly/>
 					</div>
 				</div>
 			</div>

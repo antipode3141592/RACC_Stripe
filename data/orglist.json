@@ -337,9 +337,9 @@
 	},
 	{
 		"organization": "The Portland Ballet",
-		"payperiods": "1",
-		"optionalperiods":"no",
-		"payroll":"no",
+		"payperiods": "24",
+		"optionalperiods":"yes",
+		"payroll":"yes",
 		"dg":"no"
 	},
 	{
