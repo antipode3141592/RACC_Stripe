@@ -78,12 +78,12 @@ function racc_mailer($donor_id,$success="no"){
 
 		switch($paytype){
 			case "check":
-				$message.="<p>Please mail your check by June 30 to:<br>Work for Art<br>411 NW Park Avenue<br>Suite 101"
+				$message.="<p>Please mail your check at your earliest convenience:<br>Work for Art<br>411 NW Park Avenue<br>Suite 101"
 					."<br>Portland, OR 97209</p>";
 				break;
 			case "workplace":
 				$message.="<p>Your payroll deduction of $".number_format(floatval($period_total),2)
-					." will begin in July 2018 and continue for ". number_format($period_count,0,'','') ." pay periods.</p>";
+					." will continue for ". number_format($period_count,0,'','') ." pay periods.</p>";
 				break;
 			case "cc-once":
 				$message.="<p>Your payment of $". number_format($fund_total,2). " has been received, thank you!</p>";

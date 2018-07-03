@@ -1,5 +1,7 @@
 // validate required input fields exist
-// shows confirmation div, populates values for user review
+// shows confirmation div, populates values for user review  to make any changes to the text, edit the appropriate inline
+// TODO:  make this much easier to alter.  perhaps create an entry form in the admin side for the confirmation popup, results page, and emails
+//		so that text changes don't require code alteration!
 jQuery(document).ready(function($){
 	$('#confirmation_button').click(function(event)
 	{	
@@ -59,11 +61,11 @@ jQuery(document).ready(function($){
 						$('#confirm_payroll_deduction').show();
 						$('#confirm_payroll_authorization').prop('checked',false);	//decheck box
 						$('#stripe-submit').attr("disabled", "disabled");	//disable sumbission for final acknowledgement
-						$('#confirm_paymethod').html('Giving Method: Payroll deduction will begin July 2018.');
+						$('#confirm_paymethod').html('Giving Method: Payroll Deduction');
 						break;
 					case "check":
 						$('#confirm_payroll_deduction').hide();
-						$('#confirm_paymethod').html('Giving Method: <b>Please mail your check to Work for Art by June 2018</b>.');
+						$('#confirm_paymethod').html('Giving Method: <b>Please mail your check to Work for Art at your earliest convenience</b>.');
 						break;
 				}
 			} else {
