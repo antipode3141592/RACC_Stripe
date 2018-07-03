@@ -1,7 +1,7 @@
 <?php
 
 function racc_org_picker($atts, $content = null){
-
+	$shortcode = '[payment_form_elementsjs';
 	if(isset($_GET['org'])){
 	    $org_name = $_GET['org'];
 	    $pay_periods = isset($_GET['pp']) ? $_GET['pp'] : null;
@@ -12,7 +12,6 @@ function racc_org_picker($atts, $content = null){
 	    extract( shortcode_atts( array(
 		'sg' => '60.00'
 		), $atts ) );
-
 	    //build shortcode
 	    $shortcode = '[payment_form_elementsjs';
 	    if($org_name){
@@ -38,8 +37,13 @@ function racc_org_picker($atts, $content = null){
 	    // error_log($shortcode);
 	    ob_start();
 	    _e(do_shortcode($shortcode));
+	    return ob_get_clean();
+	}else{
+		$shortcode .= ' dg="yes" payroll="no"]';
+		ob_start();
+	    _e(do_shortcode($shortcode));
+	    return ob_get_clean();
 	}
-	return ob_get_clean();
 }
 add_shortcode('racc_org_picker', 'racc_org_picker');
 ?>
