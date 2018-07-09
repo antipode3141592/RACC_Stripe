@@ -19,7 +19,7 @@ function racc_db_download() {
 		    header("Content-Type: text/csv; charset=utf-8");
 		    header("Content-Disposition: attachment; filename=\"" . $filename . " " . $date . ".csv\";" );
 		    header("Content-Transfer-Encoding: binary");
-		    fputcsv( $output, array('timestamp', 'donor_id', 'first_name', 'last_name', 'anon', 'artscard', 'giftartscard', 'organization', 'email', 'community', 'education', 'designated', 'designated name', 'pledgetotal', 'paytype', 'periodtotal', 'address1', 'address2', 'city', 'state', 'zipcode', 'artscard_name', 'artscard_add1', 'artscard_add2', 'artscard_city', 'artscard_state', 'artscard_zip', 'comment'));
+		    fputcsv( $output, array('timestamp', 'donor_id', 'first_name', 'last_name', 'anon', 'artscard', 'giftartscard', 'organization', 'email', 'phone', 'community', 'education', 'designated', 'designated name', 'pledgetotal', 'paytype', 'periodtotal', 'address1', 'address2', 'city', 'state', 'zipcode', 'artscard_name', 'artscard_add1', 'artscard_add2', 'artscard_city', 'artscard_state', 'artscard_zip', 'comment'));
 		    foreach ($results as $value) {
 		        $modified_values = array(
 		                        $value->timestamp,
@@ -30,7 +30,8 @@ function racc_db_download() {
 		                        $value->artscard,	
 		                        $value->giftartscard,	
 		                        $value->organization,	
-		                        $value->email,	
+		                        $value->email,
+		                        $value->phone,
 		                        $value->community_fund,	
 		                        $value->education_fund,
 		                        $value->designated_fund,
@@ -58,4 +59,6 @@ function racc_db_download() {
 	}	
 }
 add_action('init', 'racc_db_download');
+
+// function racc_output_
 ?>
