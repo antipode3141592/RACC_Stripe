@@ -42,7 +42,7 @@ jQuery(document).ready(function($){
 					$('#confirm_artscard_address').hide();
 				}
 				$('#confirm_fund_community').html('Arts Community Fund: $'+ parseFloat($('#fund_community').val()).toFixed(2));
-				$('#confirm_fund_education').html('Arts Education Fund: $'+ parseFloat($('#fund_education').val()).toFixed(2));
+				// $('#confirm_fund_education').html('Arts Education Fund: $'+ parseFloat($('#fund_education').val()).toFixed(2));
 				if ($('#sc_dg').val() == 'yes'){
 					$('#confirm_fund_designated').html('Designated Fund (' + $('#fund_designated_name').val() + '): $'+ parseFloat($('#fund_designated').val()).toFixed(2));
 				}
@@ -56,6 +56,10 @@ jQuery(document).ready(function($){
 					case "cc-recur":
 						$('#confirm_payroll_deduction').hide();
 						$('#confirm_paymethod').html('Giving Method: Recurring monthly payment of $'+ parseFloat($('#period_total').val()).toFixed(2) +' by Credit/Debit Card.');
+						break;
+					case "cc-annual":
+						$('#confirm_payroll_deduction').hide();
+						$('#confirm_paymethod').html('Giving Method: Recurring annual payment of $'+ parseFloat($('#fund_total').val()).toFixed(2) +' by Credit/Debit Card.');
 						break;
 					case "workplace":
 						$('#confirm_payroll_deduction').show();
@@ -135,6 +139,7 @@ function artscardhide(){
 //show/hide payroll deduction fields on pageshow (just after on 'load')
 jQuery(document).ready(function($){
 	$(window).on("pageshow",function(){		
+		//payroll options
 		if($('#sc_payroll').val() == 'no'){
 			$('#workplace_div').hide();
 			jQuery('#donationradio3').click();
@@ -142,17 +147,35 @@ jQuery(document).ready(function($){
 			$('#workplace_div').show();
 			jQuery('#donationradio1').click();
 		}
+		// designated giving check
 		if($('#sc_dg').val() == 'no'){
 			$('#dg_fields').hide();
 		}else{
 			$('#dg_fields').show();
 		}
+		//org not set check
 		if($('#sc_organization').val() == 'None')
 		{
 			$('#donor_org_div').show();
 		}else{
 			$('#donor_org_div').hide();
 		}
+		//check for shortcode fields
+		if($('#sc_fund1enable').val() == 'yes')
+		{
+			$('#div_fund1').show();
+			$('#fund1label').html($('#sc_fund1name').val());
+		}else{
+			$('#div_fund1').hide();
+		}
+		if($('#sc_fund2enable').val() == 'yes')
+		{
+			$('#div_fund2').show();
+			$('#fund2label').html($('#sc_fund2name').val());
+		}else{
+			$('#div_fund2').hide();
+		}
+
 	});
 });
 
@@ -200,7 +223,7 @@ function change_frequency(donationradio){
 	var payperiodinputs =  document.getElementById("payperiodinputs");
 	var ccpaymentcontainer = document.getElementById("cc-payment-container");	//div that contains cc data entry
 	var periodlabel = document.getElementById("periodinput_label");
-	var periortotallabel = document.getElementById("period_total_label");
+	var periodtotallabel = document.getElementById("period_total_label");
 	var payperiod_container = document.getElementById("payperiod_container");	//div that contains payperiod data
 	switch(donationradio.value)
 	{
@@ -209,7 +232,7 @@ function change_frequency(donationradio){
 			ccpaymentcontainer.style.display = "none";
 			periodlabel.style.display = "block";
 			payperiod_container.style.display = "block";
-			periortotallabel.innerHTML = "Per Period Amount";
+			periodtotallabel.innerHTML = "Per Period Amount";
 			if (optionalperiods.value == 'yes'){
 				periodlabel.innerHTML = "Pay Periods (max " + parseInt(maxperiods.value,10) + ")";
 				payperiodinputs.removeAttribute('readonly');
@@ -229,7 +252,15 @@ function change_frequency(donationradio){
     		payperiodinputs.removeAttribute('readonly');
     		payperiodinputs.removeAttribute('max');
     		payperiodinputs.value = '12';
-    		periortotallabel.innerHTML = "Monthly Amount";
+    		periodtotallabel.innerHTML = "Monthly Amount";
+			payperiodinputs.setAttribute('readonly','readonly');
+    		break;
+    	case "cc-annual":
+			payperiodinputs.style.display = "none";
+			ccpaymentcontainer.style.display = "flex";
+			periodlabel.style.display = "none";
+			payperiod_container.style.display = "none";
+    		payperiodinputs.value = '1';
 			payperiodinputs.setAttribute('readonly','readonly');
     		break;
 		case "check":

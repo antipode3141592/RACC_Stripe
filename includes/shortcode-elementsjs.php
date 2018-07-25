@@ -1,15 +1,19 @@
 <?php
 function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 	// $atts contains organization(string) and payperiods(int) options.  example: [payment_form_singlepage organization="PGE" payperiods=26 optionalperiods="yes"]
-	global $stripe_options;
-	global $wpdb;
+	// global $stripe_options;
+	// global $wpdb;
 	extract( shortcode_atts( array(
 		'organization' => 'None',	//default None for organization name
 		'payperiods' => '26',		//default 26 for payperiods in a year
 		'optionalperiods' => 'no',	//'yes' or 'no', 'yes' allows donor to specify 
 		'payroll' => 'yes',			//'yes' allows selection of workplace giving option and disables cc-recur, 'no' disables workplace giving option and enables cc-recur
-		'dg' =>'no',
-		'sg' => '60.00'
+		'dg' =>'no',				//designated giving (default off)
+		'sg' => '60.00',			//suggested gift (default $60, minimum for Arts Card)
+		'fund1name' => 'Arts Community Fund',
+		'fund2name' => 'Arts Education Fund',
+		'fund1enable' => 'yes',
+		'fund2enable' => 'no'
 	), $atts ) );
 
 	//TODO: add $_POST calls to grab starting data, for cases where user 
@@ -90,7 +94,13 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 					<input type="radio" id="donationradio1" name="donation_frequency" value="workplace" onclick="change_frequency(this);"/><label for="donationradio1">Payroll Deduction</label>
 				</div>
 				<div>
-					<input type="radio" id="donationradio2" name="donation_frequency" value="cc-recur" onclick="change_frequency(this);"/><label for="donationradio2">Recurring Gift - Credit/Debit Card</label>
+					<input type="radio" id="donationradio2" name="donation_frequency" value="cc-recur" onclick="change_frequency(this);"/><label for="donationradio2">Monthly Gift - Credit/Debit Card</label>
+					<div class="infopopup">i
+						<div class="popupcontent">We will send you a new pledge acknowledgement and Arts Card (if applicable) every year.</div>
+					</div>
+				</div>
+				<div>
+					<input type="radio" id="donationradio5" name="donation_frequency" value="cc-annual" onclick="change_frequency(this);"/><label for="donationradio5">Annual Gift - Credit/Debit Card</label>
 					<div class="infopopup">i
 						<div class="popupcontent">We will send you a new pledge acknowledgement and Arts Card (if applicable) every year.</div>
 					</div>
@@ -108,16 +118,16 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 					<h3>Allocation</h3>
 					<p>How would you like to distribute your pledge?</p>
 					
-					<div class="form-row">
-						<label for="fund_community" id="fund_community_label">Arts Community Fund</label>
+					<div class="form-row" id="div_fund1">
+						<label for="fund_community" id="fund1label">Arts Community Fund</label>
 						<div class="infopopup">i
 							<div id="fund_community_description" class="popupcontent">Supports tri-county-based arts and culture organizations that receive RACC General Operating Support (GOS) and Project Grant funding for a wide array of services, programs, exhibits, events, and performances.</div>
 						</div>
 						<input type="number" name="fund_community" id="fund_community" class="racc_fund" value="<?php _e($sg);?>" step="0.01" min='0' autocomplete="off" onchange="fund_sum();"/>
 					</div>
 
-					<div class="form-row">
-						<label for="fund_education" id="fund_education_label">Arts Education Fund</label>
+					<div class="form-row" id="div_fund2">
+						<label for="fund_education" id="fund2label">Arts Education Fund</label>
 						<div class="infopopup">i
 							<div id="fund_education_description" class="popupcontent">Distributed to 40+ arts and culture organizations (many GOS groups) that provide substantial arts education opportunities for students and teachers throughout our region.</div>
 						</div>
@@ -213,6 +223,10 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		<input type="hidden" name="sc_optionalperiods" id="sc_optionalperiods" value="<?php _e($optionalperiods);?>"/>
 		<input type="hidden" name="sc_payroll" id="sc_payroll" value="<?php _e($payroll);?>"/>
 		<input type="hidden" name="sc_dg" id="sc_dg" value="<?php _e($dg);?>"/>
+		<input type="hidden" name="sc_fund1name" id="sc_fund1name" value="<?php _e($fund1name);?>"/>
+		<input type="hidden" name="sc_fund2name" id="sc_fund2name" value="<?php _e($fund2name);?>"/>
+		<input type="hidden" name="sc_fund1enable" id="sc_fund1enable" value="<?php _e($fund1enable);?>"/>
+		<input type="hidden" name="sc_fund2enable" id="sc_fund2enable" value="<?php _e($fund2enable);?>"/>
 		<input type="hidden" name="artscardqualify" id="artscardqualify" value="yes"/>
 		<input type="hidden" name="action" value="stripe"/>
 		<input type="hidden" name="stripe_nonce" value="<?php _e(wp_create_nonce('stripe-nonce')); ?>"/>
