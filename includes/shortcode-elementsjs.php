@@ -94,13 +94,13 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 					<input type="radio" id="donationradio1" name="donation_frequency" value="workplace" onclick="change_frequency(this);"/><label for="donationradio1">Payroll Deduction</label>
 				</div>
 				<div>
-					<input type="radio" id="donationradio2" name="donation_frequency" value="cc-recur" onclick="change_frequency(this);"/><label for="donationradio2">Monthly Gift - Credit/Debit Card</label>
+					<input type="radio" id="donationradio2" name="donation_frequency" value="cc-recur" onclick="change_frequency(this);"/><label for="donationradio2">Monthly Recurring Gift - Credit/Debit Card</label>
 					<div class="infopopup">i
 						<div class="popupcontent">We will send you a new pledge acknowledgement and Arts Card (if applicable) every year.</div>
 					</div>
 				</div>
 				<div>
-					<input type="radio" id="donationradio5" name="donation_frequency" value="cc-annual" onclick="change_frequency(this);"/><label for="donationradio5">Annual Gift - Credit/Debit Card</label>
+					<input type="radio" id="donationradio5" name="donation_frequency" value="cc-annual" onclick="change_frequency(this);"/><label for="donationradio5">Annual Recurring Gift - Credit/Debit Card</label>
 					<div class="infopopup">i
 						<div class="popupcontent">We will send you a new pledge acknowledgement and Arts Card (if applicable) every year.</div>
 					</div>

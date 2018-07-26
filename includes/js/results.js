@@ -4,7 +4,7 @@ jQuery(document).ready(function(){
 		var printableContent = jQuery('#resultscontent').html();
 		var windowFeatures = "menubar=yes,scrollbars=yes"
 		var printWindow = window.open('','',windowFeatures);
-		printWindow.document.write('<html><head><title>Work for Art Donation - Print Preview</title>');
+		printWindow.document.write('<html><head><title>Donation Details- Print Preview</title>');
 		printWindow.document.write('</head><body>');
 		printWindow.document.write(printableContent);
 		printWindow.document.write('<a href="javascript:window.print()">Print!</a>');

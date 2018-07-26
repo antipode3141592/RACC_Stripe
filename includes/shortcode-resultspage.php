@@ -48,7 +48,7 @@ function racc_stripe_resultpage($atts, $content = null){
 				if (number_format($fund_total, 2) >= 500.00){
 					_e("leaderful");
 				}
-				?> contribution to Work for Art! Your generous support helps our funded groups bring people together through shared experiences, boost our kids’ creativity and critical thinking, spark conversation and social change, and ensure that a wide variety of performances and events are available to everyone in our community.</p>
+				?> contribution! Your generous support helps our funded groups bring people together through shared experiences, boost our kids’ creativity and critical thinking, spark conversation and social change, and ensure that a wide variety of performances and events are available to everyone in our community.</p>
 				<p><?php _e("A donation receipt will be e-mailed to you at " . $donor_email . ".")  ?></p>
 			</div>
 			<br>
@@ -67,7 +67,7 @@ function racc_stripe_resultpage($atts, $content = null){
 			<div id="results_main_body"><p><?php
 				$message = "<p>" . $donor_first_name . ", thanks again for bringing the power and joy of the arts into our communities through your support today.</p>";
 				$message .= "<br><p>Sincerely,<br>Your Work for Art Team<br>503-823-2969<br><a href='mailto:info@workforarg.org'>info@workforart.org</a>";
-				$message .= "<hr><br><b>Work for Art Tax Receipt and Pledge Distribution</b></p>";
+				$message .= "<hr><br><b>Tax Receipt and Pledge Distribution</b></p>";
 
 				$message .= "<p>Donor: " . $donor_first_name . " " . $donor_last_name;
 				if ($fund_community > 0.0){
@@ -90,7 +90,7 @@ function racc_stripe_resultpage($atts, $content = null){
 				$message .= "<br>Date Received: " . date("m-d-Y", $db_timestamp) . "</p>";
 				switch($paytype){
 				case "check":
-					$message.="<p>Please mail your check at your earliest convenience to:<br>Work for Art<br>411 NW Park Avenue<br>Suite 101"
+					$message.="<p>Please mail your check at your earliest convenience to:<br>Regional Arts and Culture Council<br>411 NW Park Avenue<br>Suite 101"
 						."<br>Portland, OR 97209</p>";
 					break;
 				case "workplace":
@@ -105,7 +105,7 @@ function racc_stripe_resultpage($atts, $content = null){
 				_e($message); 
 			?></p></div>
 			<div id="tax_info">
-				<p><i>Work for Art is a program of the Regional Arts & Culture Council, a 501(c)(3) nonprofit organization – Tax ID #93-1059037. Your gift is tax deductible to the fullest extent of the law. This letter serves as documentation for your tax purposes, along with the following:  your check stub, personal bank record of this contribution, end-of-the-year paystub or Form W-2, or other employer-furnished document showing the amount withheld for this contribution. If you received The Arts Card, please note that this donor benefit has no cash value. If you use The Arts Card to receive complimentary tickets to events and performances, it may lessen the tax-deductibility of your gift; please consult your tax advisor.</i></p>
+				<p><i>The Regional Arts & Culture Council is a 501(c)(3) nonprofit organization – Tax ID #93-1059037. Your gift is tax deductible to the fullest extent of the law. This letter serves as documentation for your tax purposes, along with the following:  your check stub, personal bank record of this contribution, end-of-the-year paystub or Form W-2, or other employer-furnished document showing the amount withheld for this contribution. If you received The Arts Card, please note that this donor benefit has no cash value. If you use The Arts Card to receive complimentary tickets to events and performances, it may lessen the tax-deductibility of your gift; please consult your tax advisor.</i></p>
 			</div>
 		</div>
 		<div id="printerdiv">
