@@ -81,11 +81,11 @@ function racc_stripe_resultpage($atts, $content = null){
 				if ($fund_designated > 0.0){
 					$message .= "<br>Designated Fund (" . $fund_designated_name . "): $" . number_format($fund_designated, 2);
 				}
-				if (($paytype == "cc-recur") || ($paytype == "workplace")){
-					$message .= "<br>Annual Pledge: $" . number_format($fund_total, 2);
-				}else{
-					$message .= "<br>Total Pledge: $" . number_format($fund_total, 2);
-				}
+				// if (($paytype == "cc-recur") || ($paytype == "workplace")){
+				// 	$message .= "<br>Annual Pledge: $" . number_format($fund_total, 2);
+				// }else{
+				$message .= "<br>Total Pledge: $" . number_format($fund_total, 2);
+				// }
 				$db_timestamp = strtotime($timestamp);
 				$message .= "<br>Date Received: " . date("m-d-Y", $db_timestamp) . "</p>";
 				switch($paytype){

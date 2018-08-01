@@ -144,7 +144,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 					</div>
 
 					<div class="form-row" >
-						<label for="fund_total" id="fund_total_label">Annual Pledge</label>
+						<label for="fund_total" id="fund_total_label">Total Pledge</label>
 						<input type="number" name="fund_total" id="fund_total" value='60.00' step='0.01' min='1' autocomplete="off" readonly/>
 					</div>
 					

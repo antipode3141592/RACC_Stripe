@@ -46,7 +46,7 @@ jQuery(document).ready(function($){
 				if ($('#sc_dg').val() == 'yes'){
 					$('#confirm_fund_designated').html('Designated Fund (' + $('#fund_designated_name').val() + '): $'+ parseFloat($('#fund_designated').val()).toFixed(2));
 				}
-				$('#confirm_fund_total').html('Annual Pledge: $'+ parseFloat($('#fund_total').val()).toFixed(2));
+				$('#confirm_fund_total').html('Total Pledge: $'+ parseFloat($('#fund_total').val()).toFixed(2));
 				switch($('input[name="donation_frequency"]:checked').val())
 				{
 					case "cc-once":
