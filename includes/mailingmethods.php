@@ -1,7 +1,7 @@
 <?php
 //use $donor_id to query database for e-mail details and then e-mail them
 function racc_mailer($donor_id,$success="no"){
-	global $stripe_options;
+	// global $stripe_options;
 	global $wpdb;
 
 	try{
@@ -35,6 +35,8 @@ function racc_mailer($donor_id,$success="no"){
 		    $artscard_city = $results[0]->artscard_city;	
 		    $artscard_state = $results[0]->artscard_state;	
 		    $artscard_zip = $results[0]->artscard_zip;
+		} else {
+			exit();
 		}
 		$message = "<p><b>Thank you, ".$donor_first_name."!</b></p>";
 		$message .= "<p>We are so grateful for your";

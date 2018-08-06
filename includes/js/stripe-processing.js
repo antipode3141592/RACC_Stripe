@@ -210,11 +210,11 @@ jQuery(document).ready(function($){
 	});
 });
 
-jQuery(document).ready(function(){
-	jQuery('#comment_input').change(function(){
+// jQuery(document).ready(function(){
+// 	jQuery('#comment_input').change(function(){
 		
-	});
-});
+// 	});
+// });
 
 //javascript updates visibility of input elements based on selected payment type (donationradio)
 function change_frequency(donationradio){
