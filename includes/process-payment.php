@@ -68,9 +68,11 @@ function racc_stripe_process_payment() {
 			}else{
 				$temp_org = $sc_org;
 			}
+			$browser = get_browser(null,false);
+
 			//store basic contact data
 			$rows_inserted = $wpdb->query(
-				$wpdb->prepare("CALL sp_adddonor(%s,%s,%s,%s,%s,%s,%s,%s)", $donor_first_name, $donor_middle_name, $donor_last_name, $new_donor_id, $anon,$db_artscard, $db_giftartscard, $temp_org));
+				$wpdb->prepare("CALL sp_adddonor(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $donor_first_name, $donor_middle_name, $donor_last_name, $new_donor_id, $anon,$db_artscard, $db_giftartscard, $temp_org, $browser->parent, $browser->platform));
 			$rows_inserted = $wpdb->query(
 				$wpdb->prepare("CALL sp_addcontactinfo(%s,%s,%s)", "email", $donor_email, $new_donor_id));
 			if($donor_phone != null){
