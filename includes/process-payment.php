@@ -49,7 +49,7 @@ function racc_stripe_process_payment() {
 		$artscard_zip = isset($_POST['artscard_zip']) ? sanitize_text_field($_POST['artscard_zip']) : null;
 		$giftartscard = isset($_POST['giftartscard']) ? $_POST['giftartscard'] : 'no';
  		
-		$new_donor_id = date('YmdHis') . rand(1,1000000);
+		$new_donor_id = date('YmdHis') . rand(1,1000000) . substr($donor_first_name,0,1) . substr($donor_last_name,0,1) ;
 		// Insert data into database, using parameterized stored procedures
 		try{
 			//wpdb is the WordPress database, query() is used to run the stored procedure call created by prepare()

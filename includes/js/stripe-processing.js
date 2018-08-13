@@ -197,24 +197,17 @@ jQuery(document).ready(function($){
 
 jQuery(document).ready(function($){
 	$('#payperiodinputs').change(function(){
-		var p = $('#payperiodinputs').val();
-		var max = $('#payperiodinputs').attr('max')
-		if (isNaN(p) || (p == "") || (p < 1.0)){
-			$('#payperiodinputs').val('1');
-		} else if (p >= max){
-			$('#payperiodinputs').val(parseFloat(max).toFixed(0));
-		} else {
-			$('#payperiodinputs').val(parseFloat($('#payperiodinputs').val()).toFixed(0));
+		var p = parseInt($('#payperiodinputs').val());
+		var max = parseInt($('#payperiodinputs').attr('max'));
+		if (p >= max){
+			p = max;
+		} else if (p < 1.0){
+			p = 1;
 		}
-		fund_sum();
+		$('#payperiodinputs').val(parseInt(p));
+		fund_sum(p);
 	});
 });
-
-// jQuery(document).ready(function(){
-// 	jQuery('#comment_input').change(function(){
-		
-// 	});
-// });
 
 //javascript updates visibility of input elements based on selected payment type (donationradio)
 function change_frequency(donationradio){
@@ -281,10 +274,11 @@ function change_frequency(donationradio){
 	fund_sum();
 }
 
-function fund_sum(){
+function fund_sum(periods){
 	var fund_community = document.getElementById('fund_community');
 	var fund_education = document.getElementById('fund_education');
 	var fund_designated = document.getElementById('fund_designated');
+	periods = typeof periods !== 'undefined' ? periods : document.getElementById("payperiodinputs").value;
 
 	if (isNaN(fund_community.value) || (fund_community.value == "") || (fund_community.value < 0.0)){
 		fund_community.value = (0.0).toFixed(2);
@@ -304,14 +298,12 @@ function fund_sum(){
 
 	var sum = 0.0;
 	var funds = document.getElementsByClassName('racc_fund');
-	// console.log("sum = " + sum.toFixed(2));
 	var i;
 	for(i = 0; i < funds.length; i++){
 		sum += parseFloat(funds[i].value);
-		// console.log("sum = " + sum.toFixed(2));
 	}
 	check_artscardqualifty(sum);
-	calc_periodtotal(sum);
+	calc_periodtotal(sum, periods);
 	document.getElementById('fund_total').value = sum.toFixed(2);
 }
 
@@ -329,10 +321,8 @@ function check_artscardqualifty(test_total){
 		}
 }
 
-function calc_periodtotal(total){
+function calc_periodtotal(total, periods){
 	var period_total = document.getElementById("period_total");
-	var periods =  document.getElementById("payperiodinputs").value;
-
 	var t = total / periods; 
 	period_total.value = t.toFixed(2);
 }
