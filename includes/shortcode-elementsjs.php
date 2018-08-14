@@ -10,10 +10,12 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		'payroll' => 'yes',			//'yes' allows selection of workplace giving option and disables cc-recur, 'no' disables workplace giving option and enables cc-recur
 		'dg' =>'no',				//designated giving (default off)
 		'sg' => '60.00',			//suggested gift (default $60, minimum for Arts Card)
-		'fund1name' => 'Arts Community Fund',
+		'fund1name' => 'Arts Impact Fund',
 		'fund2name' => 'Arts Education Fund',
 		'fund1enable' => 'yes',
-		'fund2enable' => 'no'
+		'fund2enable' => 'no',
+		'fund1desc' => 'Your donation to the Arts Impact Fund benefits regional nonprofit arts and culture organizations that strengthen our communities through arts education, performances and events, and outreach programs.  Employee donations expand RACC&#39;s grantmaking to organizations that demonstrate community impact, fiscal responsibility, and equitable access to arts and culture.'
+
 	), $atts ) );
 
 	//TODO: add $_POST calls to grab starting data, for cases where user 
@@ -121,7 +123,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 					<div class="form-row" id="div_fund1">
 						<label for="fund_community" id="fund1label">Arts Community Fund</label>
 						<div class="infopopup">i
-							<div id="fund_community_description" class="popupcontent">Supports tri-county-based arts and culture organizations that receive RACC General Operating Support (GOS) and Project Grant funding for a wide array of services, programs, exhibits, events, and performances.</div>
+							<div id="fund1description" class="popupcontent"></div>
 						</div>
 						<input type="number" name="fund_community" id="fund_community" class="racc_fund" value="<?php _e($sg);?>" step="0.01" min='0' autocomplete="off" onchange="fund_sum();"/>
 					</div>
@@ -227,6 +229,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		<input type="hidden" name="sc_fund2name" id="sc_fund2name" value="<?php _e($fund2name);?>"/>
 		<input type="hidden" name="sc_fund1enable" id="sc_fund1enable" value="<?php _e($fund1enable);?>"/>
 		<input type="hidden" name="sc_fund2enable" id="sc_fund2enable" value="<?php _e($fund2enable);?>"/>
+		<input type="hidden" name="sc_fund1desc" id="sc_fund1desc" value="<?php _e($fund1desc);?>"/>
 		<input type="hidden" name="artscardqualify" id="artscardqualify" value="yes"/>
 		<input type="hidden" name="action" value="stripe"/>
 		<input type="hidden" name="stripe_nonce" value="<?php _e(wp_create_nonce('stripe-nonce')); ?>"/>

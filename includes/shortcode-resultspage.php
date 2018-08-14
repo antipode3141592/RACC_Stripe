@@ -71,7 +71,7 @@ function racc_stripe_resultpage($atts, $content = null){
 
 				$message .= "<p>Donor: " . $donor_first_name . " " . $donor_last_name;
 				if ($fund_community > 0.0){
-					$message .=	"<br>Arts Community Fund: $" . number_format($fund_community,2);
+					$message .=	"<br>Arts Impact Fund: $" . number_format($fund_community,2);
 							
 				}
 				if ($fund_education > 0.0){
