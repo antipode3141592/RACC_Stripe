@@ -3,6 +3,7 @@
 function racc_load_stripe_scripts() {
  
 	global $stripe_options;
+	global $racc_db_version;
  
 	// check to see if we are in test mode
 	if(isset($stripe_options['test_mode']) && $stripe_options['test_mode']) {
@@ -35,6 +36,6 @@ function racc_load_stripe_scripts() {
 	wp_register_style('RACC-Stripe-css', STRIPE_BASE_URL . '/RACC-Stripe.css');
     wp_enqueue_style('RACC-Stripe-css');
 
-}
+ }
 add_action('wp_enqueue_scripts', 'racc_load_stripe_scripts');
 
