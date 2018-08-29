@@ -39,24 +39,25 @@ function racc_mailer($donor_id,$success="no"){
 			exit();
 		}
 		$message = "<p><b>Thank you, ".$donor_first_name."!</b></p>";
-		$message .= "<p>We are so grateful for your";
+		$message .= "<p>We are very grateful for your";
 		if (number_format($fund_total, 2) >= 500.00){
 			$message .=" leaderful";
 		}		
-		$message .= " contribution! Your generous support helps our funded groups bring people together through shared experiences, boost our kids’ creativity and critical thinking, spark conversation and social change, and ensure that a wide variety of performances and events are available to everyone in our community.</p>";
+		$message .= " contribution today. Your generous support helps our funded groups bring people together through shared experiences, boost our kids’ creativity and critical thinking, and ensure that a wide variety of performances and events are available to everyone in our community.</p>";
+		$message .= "<p>" . $donor_first_name . ", thanks again for helping us to bring the power and joy of the arts into our communities.</p>";
 
 		if($anon == 'yes'){
 			$message.="<p>Your gift is marked as anonymous: we will withold your name from all publications.</p>";
 		}
 
 		if(($artscardqualify == 1)&&($giftartscard != 1)){	//$giftartscard can be null
-			$message.="<p>Your contribution qualifies you for The Arts Card! Watch for your new Arts Card to arrive by mail in the next couple of weeks. In the meantime, you can check out upcoming events here: <a href='https://workforart.org/artscardevents'>workforart.org/artscardevents</a>.</p>";
+			$message.="<p>Your contribution qualifies you for The Arts Card! Watch for your new Arts Card to arrive by mail in the next couple of weeks. In the meantime, you can check out upcoming events here: <a href='https://artsimpactfund.racc.org/arts-card/'>artsimpactfund.racc.org/arts-card</a>.</p>";
 		}elseif(($artscardqualify == 1)&&($giftartscard == 1)){
 			$message.="<p>Your contribution qualifies you for The Arts Card! You have chosen to gift your Arts Card to ".$artscard_name.". We will mail them their Arts Card soon with a little note that it's a gift from you.</p>";
 		}
 
 		$message .= "<p>" . $donor_first_name . ", thanks again for bringing the power and joy of the arts into our communities through your support today.</p>";
-		$message .= "<p>Sincerely,<br>Your Work for Art Team<br>503-823-2969<br><a href='mailto:info@workforarg.org'>info@workforart.org</a>";
+		$message .= "<p>Sincerely,<br>Your Arts Advocacy Team<br>503-823-2969<br><a href='mailto:artsimpactfund@racc.org'>artsimpactfund@racc.org</a>";
 		
 		$message .= "<hr><br><b>Tax Receipt and Pledge Distribution</b></p>";
 
@@ -92,16 +93,16 @@ function racc_mailer($donor_id,$success="no"){
 				break;
 			case "cc-recur":
 				$message.="<p>Your monthtly gift of $".number_format(floatval($period_total),2)
-						." has begun. We will send you a new acknowledgement and Arts Card (if applicable) each year. You may update or cancel your recurring gifts at any time by calling us at 503-823-2969 or e-mail us at <a href='mailto:info@workforarg.org'>info@workforart.org</a>.</p>";
+						." has begun. We will send you a new acknowledgement and Arts Card (if applicable) each year. You may update or cancel your recurring gifts at any time by calling us at 503-823-2969 or e-mail us at <a href='mailto:artsimpactfund@racc.org'>artsimpactfund@racc.org</a>.</p>";
 				break;
 		}
 
 		$message .= "<p><i>The Regional Arts & Culture Council is a 501(c)(3) nonprofit organization – Tax ID #93-1059037. Your gift is tax deductible to the fullest extent of the law. This letter serves as documentation for your tax purposes, along with the following:  your check stub, personal bank record of this contribution, end-of-the-year paystub or Form W-2, or other employer-furnished document showing the amount withheld for this contribution. If you received The Arts Card, please note that this donor benefit has no cash value. If you use The Arts Card to receive complimentary tickets to events and performances, it may lessen the tax-deductibility of your gift; please consult your tax advisor.</i></p>";
 		
 
-		$headers[] = 'From: receipt@workforart.org';
+		$headers[] = 'From: artsimpactfund@racc.org';
 		$headers[] = 'Content-type: text/html';
-		$result = wp_mail(sanitize_email($donor_email),"Thank you for your gift to Work for Art!", $message, $headers);
+		$result = wp_mail(sanitize_email($donor_email),"Thank you for your contribution to the arts!", $message, $headers);
 		return $result;
 	}
 	catch(Exception $e){

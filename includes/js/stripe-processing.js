@@ -69,7 +69,7 @@ jQuery(document).ready(function($){
 						break;
 					case "check":
 						$('#confirm_payroll_deduction').hide();
-						$('#confirm_paymethod').html('Giving Method: <b>Please mail your check to Work for Art at your earliest convenience</b>.');
+						$('#confirm_paymethod').html('Giving Method: <b>Please mail your check to RACC at your earliest convenience</b>.');
 						break;
 				}
 			} else {
