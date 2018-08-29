@@ -68,24 +68,10 @@ function RACC_stripe_render_options_page() {
 						</td>
 					</tr>
 				</tbody>
-			</table>
-
-			<table class="form-table">
-				<tbody>
-					<tr valign="top">	
-						<th scope="row" valign="top">
-							<?php _e('Allow Recurring', 'RACC_stripe'); ?>
-						</th>
-						<td>
-							<input id="stripe_settings[recurring]" name="stripe_settings[recurring]" type="checkbox" value="1" <?php checked(1, $stripe_options['recurring']); ?> />
-							<label class="description" for="stripe_settings[recurring]"><?php _e('Check this to allow users to setup recurring payments.', 'RACC_stripe'); ?></label>
-						</td>
-					</tr>
-				</tbody>
-			</table>			
+			</table>	
  
 			<p class="submit">
-				<input type="submit" class="button-primary" value="<?php _e('Save Options', 'mfwp_domain'); ?>" />
+				<input type="submit" class="button-primary" value="<?php _e('Save Options', 'RACC_stripe'); ?>" />
 			</p>
  
 		</form>
