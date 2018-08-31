@@ -166,7 +166,7 @@ function racc_stripe_process_payment() {
 					$charge = \Stripe\Charge::create(array(	//NOTE: function call was Stripe_Charge in prev Stripe API
 							'amount' => $amount,
 							'currency' => 'usd',
-							'statement_descriptor' => 'Work for Art Donation',
+							'statement_descriptor' => 'RACC Arts Impact Gift',
 							'customer' => $customer->id,
 						)
 					);
