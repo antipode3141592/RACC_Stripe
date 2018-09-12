@@ -50,25 +50,35 @@ function RACC_stripe_render_options_page() {
 						</td>
 					</tr>
 					<tr valign="top">	
-						<th scope="row" valign="top">
-							<?php _e('Test Secret', 'RACC_stripe'); ?>
-						</th>
+						<th scope="row" valign="top">Test Secret</th>
 						<td>
 							<input id="stripe_settings[test_secret_key]" name="stripe_settings[test_secret_key]" type="text" class="regular-text" value="<?php echo $stripe_options['test_secret_key']; ?>"/>
 							<label class="description" for="stripe_settings[test_secret_key]"><?php _e('Paste your test secret key.', 'RACC_stripe'); ?></label>
 						</td>
 					</tr>
 					<tr valign="top">	
-						<th scope="row" valign="top">
-							<?php _e('Test Publishable', 'RACC_stripe'); ?>
-						</th>
+						<th scope="row" valign="top">Test Publishable</th>
 						<td>
 							<input id="stripe_settings[test_publishable_key]" name="stripe_settings[test_publishable_key]" class="regular-text" type="text" value="<?php echo $stripe_options['test_publishable_key']; ?>"/>
 							<label class="description" for="stripe_settings[test_publishable_key]"><?php _e('Paste your test publishable key.', 'RACC_stripe'); ?></label>
 						</td>
 					</tr>
+					<tr valign="top">	
+						<th scope="row" valign="top">reCaptcha Site Key</th>
+						<td>
+							<input id="stripe_settings[site_key]" name="stripe_settings[site_key]" type="text" class="regular-text" value="<?php echo $stripe_options['site_key']; ?>"/>
+							<label class="description" for="stripe_settings[site_key]">Paste your site key.</label>
+						</td>
+					</tr>
+					<tr valign="top">	
+						<th scope="row" valign="top">reCaptcha Secret Key</th>
+						<td>
+							<input id="stripe_settings[secret_key]" name="stripe_settings[secret_key]" class="regular-text" type="text" value="<?php echo $stripe_options['secret_key']; ?>"/>
+							<label class="description" for="stripe_settings[secret_key]">Paste your test secret key.</label>
+						</td>
+					</tr>
 				</tbody>
-			</table>	
+			</table>
  
 			<p class="submit">
 				<input type="submit" class="button-primary" value="<?php _e('Save Options', 'RACC_stripe'); ?>" />

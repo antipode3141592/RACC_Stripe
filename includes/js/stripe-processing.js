@@ -242,7 +242,7 @@ function change_frequency(donationradio){
 			break;
     	case "cc-recur":
 			payperiodinputs.style.display = "none";
-			ccpaymentcontainer.style.display = "flex";
+			ccpaymentcontainer.style.display = "block";
 			periodlabel.style.display = "none";
 			payperiod_container.style.display = "block";
     		payperiodinputs.removeAttribute('readonly');
@@ -253,7 +253,7 @@ function change_frequency(donationradio){
     		break;
     	case "cc-annual":
 			payperiodinputs.style.display = "none";
-			ccpaymentcontainer.style.display = "flex";
+			ccpaymentcontainer.style.display = "block";
 			periodlabel.style.display = "none";
 			payperiod_container.style.display = "none";
     		payperiodinputs.value = '1';
@@ -266,7 +266,7 @@ function change_frequency(donationradio){
 			payperiodinputs.setAttribute('readonly','readonly');
 			break;
 		case "cc-once":
-			ccpaymentcontainer.style.display = "flex";
+			ccpaymentcontainer.style.display = "block";
 			payperiod_container.style.display = "none";
 			payperiodinputs.value = '1';
 			payperiodinputs.setAttribute('readonly','readonly');

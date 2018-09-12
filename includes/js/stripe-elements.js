@@ -23,6 +23,7 @@ window.addEventListener("DOMContentLoaded", function(event){
 			var stripe = Stripe(stripe_vars.publishable_key);
 			var elements = stripe.elements();
 			var card = elements.create('card',{hidePostalCode: true});
+			
 			card.mount('#card-element');
 			card.addEventListener('change', function(event) {
   				if (event.error) {
@@ -33,14 +34,29 @@ window.addEventListener("DOMContentLoaded", function(event){
 			});
 			document.getElementById('stripe-submit').addEventListener('click',function(e){
 				document.getElementById('stripe-submit').setAttribute("disabled", "disabled");	//disable button to prevent multiple clicks
-				if ((jQuery('input[name="donation_frequency"]:checked').val() == "cc-once") || 
-					(jQuery('input[name="donation_frequency"]:checked').val() == "cc-recur") ||
-					(jQuery('input[name="donation_frequency"]:checked').val() == "cc-annual")){
-					e.preventDefault();
-					stripe.createToken(card).then(stripeResponseHandler);
-				}else{
-					document.getElementById('stripe-payment-form-singlepage').submit();
-				}
+				// var captcha_json = grecaptcha.getResponse();
+				// console.log("JSON response from reCaptcha: " + JSON.stringify(captcha_json));
+				// $.ajax({
+				// 	type: "POST", 
+				// 	url: "https://www.google.com/recaptcha/api/siteverify",
+				// 	data: {
+				// 		captcha: grecaptcha.getResponse()
+				// 	},
+				// 	success: function() {
+				// 		console.log("reCaptcha success, submitting form normally");
+				// 	}
+				// })
+				// if (captcha_json.success == "true")
+				// {
+					if ((jQuery('input[name="donation_frequency"]:checked').val() == "cc-once") || 
+						(jQuery('input[name="donation_frequency"]:checked').val() == "cc-recur") ||
+						(jQuery('input[name="donation_frequency"]:checked').val() == "cc-annual")){
+						e.preventDefault();
+						stripe.createToken(card).then(stripeResponseHandler);
+					}else{
+						document.getElementById('stripe-payment-form-singlepage').submit();
+					}
+				// }
 			});
 		}catch(err){
 			console.log(err.message);
