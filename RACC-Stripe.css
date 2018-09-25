@@ -1,31 +1,40 @@
-h1,h2,h3,h4,h5,h6 {
-	font-weight: 700;
+.pink {
+	color: #eb0f96;
+}
+.teal {
+	color: #14afaf;
 }
 
 #stripe-payment-form-singlepage {
-	position:relative;
-	padding: 15px;
-	background: linear-gradient(#eee, #cec);
-	border-radius: 5px;
-	margin: auto;
-	max-width: 1000px;
-	width: 80vw;
-	margin-bottom: 45px;
-	}
 
-#stripe-payment-form-singlepage > div {
-	padding: 15px 5px;
-	border-bottom: #ccc 1px solid;
-	border-radius: 5px;
-	transition: background-color .25s;
-	transition-timing-function: ease-in-out;
-	display: flex;
-	flex-flow: row wrap;
-	justify-content: space-around;
 }
 
+#stripe-payment-form-singlepage > div:not(#payment_error_div):not(#confirmation_popup) {
+	transition: background-color .25s;
+	transition-timing-function: ease-in-out;
+	background-color: rgba(20, 175, 175, 0.1);
+	background-image: linear-gradient(45deg, rgba(20, 175, 175, 0.22) 0%, rgba(221, 221, 221, 0.33) 60%, rgba(20, 175, 175, 0.1) 100%);
+	padding: 15px;
+	border-radius: 5px;
+	box-shadow: 1px 1px 2px 0px rgba(0,0,0,0.3);
+	margin-bottom: 15px; 
+}
+
+#stripe-payment-form-singlepage > div:hover:not(#payment_error_div) {
+	background-color: rgba(20, 175, 175, 0.2);
+	}
+
+#stripe-payment-form-singlepage > div:focus-within:not(#payment_error_div) {
+	background-color: rgba(20, 175, 175, 0.3);
+	}
+
 #stripe-payment-form-singlepage div.payment-error {
-	border: 0;
+	background-color: rgba(255,255,255,0);
+	background-image: none;
+	border: 0px;
+	box-shadow: none;
+	padding: 15px;
+	margin: auto;
 }
 
 #stripe-payment-form-singlepage h1 {
@@ -33,11 +42,10 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 #stripe-payment-form-singlepage h2 {
-	background-color: darkolivegreen;
 	width: 100%;
 	display: block;
 	border-radius: 5px;
-	color: white;
+	color: #eb0f96;
 	padding: 5px 0 5px 5px; 
 	margin: 15px 0;
 	font-size: 1.3rem;
@@ -47,101 +55,98 @@ h1,h2,h3,h4,h5,h6 {
 	font-size: 1.1rem;
 }
 
-#stripe-payment-form-singlepage > div:hover:not(#payment_error_div) {
-	background-color: #fff;
+.form-row > span {
+	display: block;
+	background-color: rgba(255, 255, 255, 0.33);
+	margin-bottom: 5px;
+	padding: 10px 25px;
+	border-radius: 0px;
+	transition: border-radius .25s;
+	transition-timing-function: ease-in-out;
 	}
 
-.form-row {
-	padding: 5px;
-    border-radius: 5px;
-    flex-flow: row wrap;
-	justify-content: flex-end;
+.form-row > span:focus-within {
+	background-color: rgba(255, 255, 255, 0.66);
+	border-radius: 50px;
+	}
+
+#donor_addresses_div:focus-within, #artscard_address_div:focus-within, #artscard_email_div:focus-within, #artscard_name_div:focus-within {
+	background-color: rgba(255, 255, 255, 0.66);
+	border-radius: 50px;
+	}
+
+#donor_addresses_div, #artscard_address_div, #artscard_email_div, #artscard_name_div  {
+	display: block;
+	background-color: rgba(255, 255, 255, 0.33);
+	margin-bottom: 5px;
+	padding: 10px 25px;
+	border-radius: 0px;
+	transition: border-radius .25s;
+	transition-timing-function: ease-in-out;
 }
 
-.form-row > span {
-	display: flex;
-	width: 49.8%;
-	justify-content: flex-end;
+#stripe-payment-form-singlepage label {
+	width: 100%;
+	text-transform: uppercase;
+	display: block;
+	font-size: 0.8rem;
+	margin-bottom: -5px;
+	}
+
+#stripe-payment-form-singlepage input[type=text], #stripe-payment-form-singlepage input[type=email] {
+	width: 100%;
+	padding: 5px;
+	margin: 0px 0px 10px 0px;
+	box-sizing: border-box;
+  	background: none;
+  	resize: none;
+  	border: 0;
+  	font-family: "Stag Sans", sans-serif;
+	font-size: 1.2rem;
+	color: #047b7b;
+  	transition: all 0.3s;
+  	border-bottom: 2px solid #bebed2;
 }
+
+#stripe-payment-form-singlepage input[type=text]:focus, #stripe-payment-form-singlepage input[type=email]:focus {
+	border-bottom: 1px dashed #14afaf;
+}
+
+#stripe-payment-form-singlepage input[type=number], #stripe-payment-form-singlepage input[type=number] {
+	width: 100%;
+	padding: 5px;
+	margin: 0px 0px 10px 0px;
+	box-sizing: border-box;
+  	background: none;
+  	resize: none;
+  	border: 0;
+  	font-family: "Stag sans", sans-serif;
+	font-size: 1.2rem;
+	color: #047b7b;
+  	transition: all 0.3s;
+  	border-bottom: 2px solid #bebed2;
+}
+
+#stripe-payment-form-singlepage input[type=number]:focus, #stripe-payment-form-singlepage input[type=number]:focus {
+	border-bottom: 1px dashed #14afaf;
+}
+
+#gift-details input[type=radio], #gift-details label {
+	display: inline;
+}
+
 
 .important_text {
 	font-weight: bold;
 }
 
-#donor_names_div > span, #email_and_phone_div > span, #donor_addresses_citystatezip_div > span, #donor_addresses_div, #artscard_address_input > div {
-	display: inline-flex;
-    background: #456;
-    border-radius: 5px;
-    color: white;
-    font-size: 0.8em;
-    margin: 2px 0;
-    position: relative;
-	padding: 0px;
-}
-
-#donor_names_div label, #email_and_phone_div label, #donor_addresses_citystatezip_div label, #artscard_address_input label {
-    padding: 0 5px;
-    transform: translateY(11px);
-}
-
-input[type=text], input[type=email], input[type=number] {
-    border-radius: 0 3px 3px 0;
-    height: 45px;
-    border: 1px solid lightgrey;
-	padding: 15px!important;
-	font-size: 1.2em;
-}
-
-input[type=text]:focus, input[type=email]:focus, input[type=number]:focus {
-	border: 2px solid #456!important;
-	box-shadow: inset 5px 5px 20px -10px rgba(0,0,0,0.75);
-}
-
-#donor_addresses_div {
-	width: 99%!important;
-}
-
-#donor_addresses_div > label {
-	padding: 1em;
-}
-
-#donor-information > .form-row {
-	width: 100%;
-}
-
-#donor_first_name, #donor_last_name, #donor_email, #donor_phone, #donor_city, #donor_state, #donor_zip {
-	width: 78%;
-}
-
-#donor_addresses_div > input  {
-	width: 80%;
-}
-
-#donor_addresses_citystatezip_div {
-	flex-flow: nowrap;
-}
-
-#state-section, #zip-section {
-	width: 24.7%;
-}
-
-#gift_allocations > label {
-	display: block;
-	font-weight: 700;
-	padding-top: 15px;
-}
-
-#fund_community, #fund_education {
-	width: 10em;
-}
-
-#gift-details > .form-row {
-	width: 40%; 
+#freqradio {
+	margin-left: 15px;
 }
 
 #fund_total {
 	border: 0;
-	box-shadow: 0;
+	box-shadow: none;
 	background: none;
 }
 
@@ -150,9 +155,6 @@ input[type=text]:focus, input[type=email]:focus, input[type=number]:focus {
 	box-shadow: none;
 }
 
-#gift_allocations input {
-	display: flex;
-}
 
 #payperiod_container {
 	margin-top: 25px;
@@ -166,16 +168,72 @@ input[type=text]:focus, input[type=email]:focus, input[type=number]:focus {
 	display: block;
 }
 
-#artscardvalidation {
-	justify-content: center!important;
+#period_total_label::after {
+	content: " equals $";
 }
 
-#giftartscard_input {
-    display: flex;
-    width: 100%;
-    justify-content: center!important;
-    margin: auto;
+input#period_total {
+	border: 0px;
+	background-color: rgba(0, 0, 0, 0);
 }
+
+#gift_allocations {
+	padding: 10px;
+	margin-top: 15px;
+	display: flex;
+    flex-wrap: wrap;
+	justify-content: space-around;
+}
+
+#gift_allocations > div {
+	border: white dashed 1px;
+	margin: 15px;
+	padding: 10px;
+	width: 42%;
+	text-align: center;
+}
+
+#gift_allocations .infopopup {
+	text-align: left;
+}
+
+#gift_allocations > h3 {
+	width: 100%;
+}
+
+#gift_allocations input {
+	text-align: center;
+}
+
+#fund_designated_name::placeholder {
+	font-size: 0.9rem;
+}
+
+#gift_allocations > p:first-of-type {
+	width: 100%;
+	text-align: center;
+}
+
+#gift_allocations > div:focus-within {
+	border: white solid 1px;
+	margin: 15px;
+	padding: 10px;
+	background-color: rgba(255, 255, 255, 0.66);
+}
+
+
+#gift_allocations > div:nth-last-child(2) {
+	border: 0px;
+	font-weight: 800;
+	align-content: center;
+}
+
+#gift_allocations > div:nth-last-child(2) > input {
+	border-bottom: 0px;
+	font-weight: 800;
+	text-align: center;
+}
+
 
 #artscard_image {
     background: url(data/Arts-Card-web-small.png) no-repeat;
@@ -185,124 +243,100 @@ input[type=text]:focus, input[type=email]:focus, input[type=number]:focus {
     margin: auto;
 }
 
-#artscard_name_div, #artscard_email_div {
-	height: 45px;
+#giftartscard_input label, #giftartscard_input input {
+	display: inline;
 }
 
-#artscard_name_div > input, #artscard_email_div > input, #artscard_city_section > input {
-	max-width: 80%;
-}
-
-#artscard_address_input > h3 {
-	width: 100%;
-}
-
-#artscard_address_input > .form-row {
-	width: 49.8%;
-	margin-bottom: 5px;
-}
-
-#artscard_address_1, #artscard_address_2 {
-	width: 70%;
-}
-
-#artscard_city_section {
-	width: 100%;
-}
-
-#artscard_state {
-	width: 30%;
-}
-
-#artscard_state_section > label, #artscard_zip_section > label {
-	max-width: 60%;
-}
-
-label#artscard_state_section {
-	width: 25%;
-}
-
-#cc-payment-container > h2 {
-	width: 100%;
-}
-
-div#cc-payment-container {
-	display: flex;
-	justify-content: center;
-}
-
-#cc-payment-container > label {	
-    background: #456;
-    border-radius: 5px 0 0 5px;
-    padding: 1.25em;
-    color: white;
-    font-size: 0.8em;
-    margin: 0;
-    position: relative;
-	height: 45px;
-	width: 20%;
+#giftartscard_input {
+	text-align: center;
 }
 
 #card-element {
-	width: 60%;
-	border-radius: 0 3px 3px 0;
-    border: 1px solid lightgrey;
-	padding: 0.7em 0em 1em 0.1em!important;
-	font-size: 1.2em;
-	background-color: white;
-	height: 45px;
+	padding: 5px;
+	margin: 10px;
+	border-bottom: 2px solid #bebed2;
 }
 
-#cc-payment-container > .form-row {
-	padding: 5px;
-	display: inline-block;
+#cc-payment-container > label {
+
+}
+
+#cc-payment-container > label::after {
+	content:" Card Info";
 }
 
 button#confirmation_button {
-	margin-top: 25px;
+	margin-top: 5px;
+	margin-bottom: 5px;
     margin-left: 25%;
     width: 50%;
     position: relative;
     height: 45px;
-    background: #fc3;
-    border-radius: 5px;
+    background: #eb0f96;
+    border-radius: 50px;
     border: 1px solid #960;
-    color: #330;
-    font-size: 1.3em;
-    transition: background .5s;
+    color: #fff;
+	font-size: 1.3em;
+	box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.5);
+    transition: background .2s, box-shadow .3s, color .4s;
     transition-timing-function: ease-in-out;
 }
 
 button#confirmation_button:hover {
-	background: #960;
-	color: white;
+	background: #c90d74;
+	color: rgba(255, 255, 255, 0.66);
+	box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.2);
 }
 
 #confirmation_popup {
 	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	z-index: 1001;
 	width: 100vw;
 	height: 100vh;
-	background-color: rgba(0, 0, 0, 0.5)!important;
+	background-color: rgba(0, 0, 0, 0.75)!important;
 	top: 0;
 	left: 0;
 	margin: auto;
 }
 
 #confirmation_popup_content {
-	position: relative;
 	background-color: #fff;
 	padding: 5px 25px 25px 25px;
-	max-width: 800px;
-	margin: auto;
-	/* top: 20vh; */	
-	box-shadow: 2px 2px 10px 0px rgba(0,0,0,0.5);
+	box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.5);
 	border: black 1px solid;
 	border-radius: 5px;
+    overflow: auto;
 }
 
 #confirmation_popup_content > p {
 	margin: 10px 0;
+}
+
+#confirmation_popup button {    
+	padding: 10px;
+	margin-right: 10px;
+	border-radius: 25px;
+	color: #14afaf;
+	background-color: white;
+	transition: background .5s;
+    transition-timing-function: ease-in-out;
+}
+
+#confirmation_popup button:hover {    
+	background-color: #aadfdf;
+}
+
+button#stripe-submit {    
+    color: white;
+    background-color: #14afaf;
+    border-color: #99dfdf;
+}
+
+button#stripe-submit:hover { 
+	background-color: #aadfdf; 
 }
 
 #confirm_payroll_deduction, #confirm_artscard, #confirm_paymethod {
@@ -323,7 +357,7 @@ input.invalid{
     border-radius: 50%;
     width: 1.5em;
     border: 1px solid gray;
-	font-size: 0.9em;
+	font-size: 0.7rem;
 	line-height: 1.5em;
 	padding-left: 0.5em;
 	font-style: oblique;
@@ -343,7 +377,7 @@ input.invalid{
     bottom: 125%;
     left: 50%;
     margin-left: -80px;
-	box-shadow: 2px 2px 10px 0px rgba(0,0,0,0.5);
+	box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.5);
 }
 
 .infopopup .show{
@@ -374,190 +408,166 @@ input.invalid{
 	height: 100%;
 }
 
-table.image_table {
-	width: 100%;
-	height: 100%;
-	border-collapse: collapse;
+#stripe-payment-form-singlepage .image_table {
+    margin: auto;
+    width: 80%;
+    height: 1.7rem;
+    border: 0px;
+    padding: 15px;
 }
-table.image_table > tr, td{
+
+#stripe-payment-form-singlepage .image_table > tr, td{
 	padding: 0;
+	border: 0px;
 }
 
 #img1{
     background: url(data/logo_visa_40.png) no-repeat;
     background-position: center;
-    width: 64px;
-    height: 40px;
-    object-fit: contain;
-    margin: auto;
+	background-size: contain;
 }
 #img2{
     background: url(data/logo_mastercard_40.png) no-repeat;
     background-position: center;
-    width: 64px;
-    height: 40px;
-    object-fit: contain;
-    margin: auto;
+	background-size: contain;
 }
 #img3{
     background: url(data/logo_amex_40.png) no-repeat;
     background-position: center;
-    width: 64px;
-    height: 40px;
-    object-fit: contain;
-    margin: auto;
+	background-size: contain;
 }
 #img4{
     background: url(data/logo_discover_40.png) no-repeat;
     background-position: center;
-    width: 64px;
-    height: 40px;
-    object-fit: contain;
-    margin: auto;
+	background-size: contain;
 }
 #img5{
     background: url(data/logo_DCI_40.png) no-repeat;
     background-position: center;
-    width: 64px;
-    height: 40px;
-    object-fit: contain;
-    margin: auto;
+	background-size: contain;
 }
 #img6{
     background: url(data/logo_JCB_40.png) no-repeat;
     background-position: center;
-    width: 64px;
-    height: 40px;
-    object-fit: contain;
-    margin: auto;
+	background-size: contain;
 }
 
+
+/* CUSTOM CHECK-BOXES AND RADIO-BUTTONS */
+
+.control__indicator, #stripe-payment-form-singlepage label.control--checkbox {
+	display: inline;
+}
+
+.control {
+	font-size: 18px;
+	position: relative;
+	display: block;
+	margin-bottom: 15px;
+	padding-left: 30px;
+	cursor: pointer;
+}
+
+.control input {
+	position: absolute;
+	z-index: -1;
+	opacity: 0;
+}
+
+.control__indicator {
+	position: absolute;
+	top: -2px;
+	left: 0;
+	width: 20px;
+	height: 20px;
+	background: rgba(255,255,255,0.25);
+	box-shadow: 0px 0px 0px 1px white;
+}
+
+.control--radio .control__indicator {
+	border-radius: 50%;
+}
+
+/* Hover and focus states */
+.control:hover input ~ .control__indicator,
+.control input:focus ~ .control__indicator {
+	background: #ccc;
+}
+
+/* Checked state */
+.control input:checked ~ .control__indicator {
+	background: #047b7b;
+}
+
+/* Hover state whilst checked */
+.control:hover input:not([disabled]):checked ~ .control__indicator,
+.control input:checked:focus ~ .control__indicator {
+	background: #0e647d;
+}
+
+/* Disabled state */
+.control input:disabled ~ .control__indicator {
+	pointer-events: none;
+	opacity: .6;
+	background: #e6e6e6;
+}
+
+/* Check mark */
+.control__indicator:after {
+	position: absolute;
+	display: none;
+	content: '';
+}
+
+/* Show check mark */
+.control input:checked ~ .control__indicator:after {
+	display: block;
+}
+
+/* Checkbox tick */
+.control--checkbox .control__indicator:after {
+	top: 4px;
+	left: 8px;
+	width: 3px;
+	height: 8px;
+	transform: rotate(45deg);
+	border: solid #fff;
+	border-width: 0 2px 2px 0;
+}
+
+/* Disabled tick colour */
+.control--checkbox input:disabled ~ .control__indicator:after {
+	border-color: #7b7b7b;
+}
+
+/* Radio button inner circle */
+.control--radio .control__indicator:after {
+	top: 7px;
+	left: 7px;
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: #fff;
+}
+
+/* Disabled circle colour */
+.control--radio input:disabled ~ .control__indicator:after {
+	background: #7b7b7b;
+}
+
+
 /*** Responsive Styles Tablet And Below ***/
-@media (max-width: 900px) {
-	
-	#stripe-payment-form-singlepage {
-		padding: 5px;
-	}
-	
-	#stripe-payment-form-singlepage div {
-		padding: 5px;
-	}
-	
-	.form-row > span {
-		display: inline-flex;
+@media (max-width: 550px) {
+	#gift_allocations > div {
 		width: 100%;
 	}
-
-	#first_name_section, #last_name_section {
-		width: 100%;
-		height: 45px;
-	}
-
-	#email_and_phone_div > span {
-		height: 45px;
-	}
-	
-	#donor_addresses_div {
-		padding: 0px!important;
-		width: 97%!important;
-		justify-content: flex-end;
-	}	
-	
-	#donor_addresses_div > input {
-		width: 65%;
-	}	
-	
-	#donor_addresses_div > label {
-		padding: 1em;
-	}
-	
-	#donor_address_2 {
-		margin-left: 0;
-		left: 0;
-	}
-	
-	#city-section {
-		height: 45px;
-	}
-	
-	#state-section, #zip-section {
-		width: 49.4%;
-		height: 45px;
-	}	
-	
-	#state-section > label {
-		max-width: 60%;		
-	}
-
-	#gift-details > .form-row {
-		width: 100%;		
-	}	
-
-	#gift-details > div {
-		width: 100%;		
-	}	
-	
-	#artscard_address_input div {
-		padding: 0px;
-	}
-	
-	#artscard_address_input input {
-		width: 80%;
-	}
-	
-	#artscard_address_input > .form-row {
-		width: 100%;
-	}
-
-	#artscard_mailing_address_div > label {
-		display: block;
-		border-radius: 5px 5px 0 0;
-		top: 1px!important;
-		left: 3px;
-	}
-	
-	input#artscard_address_1, input#artscard_address_2 {
-		max-width: 70%;
-	}	
-	
-	span#artscard_city_section {
-		width: 100%;	
-		height: 45px;
-	}
-	
-	span#artscard_state_section, span#artscard_zip_section {
-		width: 49%;	
-		height: 45px;
-	}
-
-	.infopopup {
-		line-height: 0.6em;
-		padding-left: 0.5em!important;
-	}
-	
-	#cc-payment-container > .form-row {
-		width: 75%;
-	}
-	
-	#cc-payment-container > label {
-		width: 25%;
-	} 
-	
 	button#confirmation_button {
-		font-size: 1em;
+		font-size: 1rem;
 	}
-
-}
-
-/*** Responsive Styles Tablet And Below ***/
-@media (max-width: 450px) {
-	.form-row > span > label, #donor_addresses_div > label, #artscard_address_input label {
-		padding: 0.4em 0.1em!important;
-		font-size: 0.6rem;
-		}
-	
-	#cc-payment-container > label {
-		padding: 1em 0.1em!important;
-		font-size: 0.6rem;
+	#confirmation_popup_content {
+		top: 10vh;
+    	left: 5vw;
+    	width: 90vw;
+    	height: 80vh;
 	}
 }
