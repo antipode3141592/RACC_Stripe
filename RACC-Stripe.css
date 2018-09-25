@@ -312,6 +312,29 @@ button#confirmation_button:hover {
 	margin-bottom: 10px;
 }
 
+#confirmation_popup button {    
+	padding: 10px;
+	border-radius: 25px;
+	color: #14afaf;
+	background-color: white;
+	transition: background .5s;
+    transition-timing-function: ease-in-out;
+}
+
+#confirmation_popup button:hover {    
+	background-color: #aadfdf;
+}
+
+#confirmation_popup button#stripe-submit {    
+    color: white;
+    background-color: #14afaf;
+    border-color: #99dfdf;
+}
+
+#confirmation_popup button#stripe-submit:hover { 
+	background-color: #aadfdf; 
+}
+
 input.invalid{
 	border: 3px solid red !important;
 }
