@@ -25,14 +25,6 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 	<div id="racc-form-holder">
 	<form method="post" id="stripe-payment-form-singlepage" class="stripe-payment-form-elementsjs">
 		<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-		<?php
-			if ($organization != "None"){
-				?>
-				<h1><?php _e(strip_tags($organization))?></h1>
-				<?php		
-			}
-		
-		?>
 		<div name="donor-information" id="donor-information">
 			<h2>Donor Information</h2>
 			<div class="form-row" id="donor_names_div">
@@ -191,8 +183,12 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		<div id="artscard_address_input" style="display: none">
 			<h3>Arts Card Recepient</h3>
 			<div class="form-row" id="artscard_name_div">
-				<label for="artscard_name">Name *</label>
-				<input type="text" size="50" maxlength="50" name="artscard_name" id="artscard_name" class="input_text" autocomplete="section-gift name" />
+				<label for="artscard_name">First Name *</label>
+				<input type="text" size="50" maxlength="50" name="artscard_first_name" id="artscard_first_name" class="input_text" autocomplete="section-gift name" />
+			</div>
+			<div class="form-row" id="artscard_name_div">
+				<label for="artscard_name">Last Name *</label>
+				<input type="text" size="50" maxlength="50" name="artscard_last_name" id="artscard_last_name" class="input_text" autocomplete="section-gift name" />
 			</div>
 			<div class="form-row" id="artscard_email_div">
 				<label for="artscard_email">E-Mail *</label>
