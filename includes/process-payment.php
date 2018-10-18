@@ -49,8 +49,8 @@ function racc_stripe_process_payment() {
 		$artscard_zip = isset($_POST['artscard_zip']) ? sanitize_text_field($_POST['artscard_zip']) : null;
 		$giftartscard = isset($_POST['giftartscard']) ? $_POST['giftartscard'] : 'no';
  		
-		$new_donor_id = date('YmdHis') . rand(1,1000000);
-		// $new_donor_id = $donor_last_name . date('YmdHis');
+		$new_donor_id = date('YmdHis') . rand(1,1000000) . substr($donor_first_name,0,1) . substr($donor_last_name,0,1) ;
+		// Insert data into database, using parameterized stored procedures
 		try{
 			//wpdb is the WordPress database, query() is used to run the stored procedure call created by prepare()
 			if($artscardqualify == 'yes'){
@@ -68,8 +68,11 @@ function racc_stripe_process_payment() {
 			}else{
 				$temp_org = $sc_org;
 			}
+			$browser = get_browser(null,false);
+
+			//store basic contact data
 			$rows_inserted = $wpdb->query(
-				$wpdb->prepare("CALL sp_adddonor(%s,%s,%s,%s,%s,%s,%s,%s)", $donor_first_name, $donor_middle_name, $donor_last_name, $new_donor_id, $anon,$db_artscard, $db_giftartscard, $temp_org));
+				$wpdb->prepare("CALL sp_adddonor(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $donor_first_name, $donor_middle_name, $donor_last_name, $new_donor_id, $anon,$db_artscard, $db_giftartscard, $temp_org, $browser->parent, $browser->platform));
 			$rows_inserted = $wpdb->query(
 				$wpdb->prepare("CALL sp_addcontactinfo(%s,%s,%s)", "email", $donor_email, $new_donor_id));
 			if($donor_phone != null){
@@ -78,6 +81,7 @@ function racc_stripe_process_payment() {
 			}
 			$rows_inserted = $wpdb->query(
 				$wpdb->prepare("CALL sp_addaddress(%s,%s,%s,%s,%s,%s,%s,%s)", $donor_address_1, $donor_address_2, $donor_city, $donor_state, $donor_zip, "Primary",$new_donor_id, null));
+			//store Arts Card address, if qualified
 			if($giftartscard == "yes")
 			{
 				$rows_inserted = $wpdb->query(
@@ -85,12 +89,20 @@ function racc_stripe_process_payment() {
 				$rows_inserted = $wpdb->query(
 				$wpdb->prepare("CALL sp_addcontactinfo(%s,%s,%s)", "email-artscard", $artscard_email, $new_donor_id));
 			}
-			$rows_inserted = $wpdb->query(
-				$wpdb->prepare("CALL sp_addallocation(%s,%s,%s,%s,%s,%s,%s,%s)", $new_donor_id,"community", number_format($fund_community,2,'.',''), number_format($fund_total,2,'.',''),$donation_frequency, number_format($period_total,2,'.',''),number_format($payperiods,0,'',''),"community"));
-			$rows_inserted = $wpdb->query(
-				$wpdb->prepare("CALL sp_addallocation(%s,%s,%s,%s,%s,%s,%s,%s)", $new_donor_id,"education", number_format($fund_education,2,'.',''), number_format($fund_total,2,'.',''),$donation_frequency, number_format($period_total,2,'.',''),number_format($payperiods,0,'',''),"education"));
-			$rows_inserted = $wpdb->query(
-				$wpdb->prepare("CALL sp_addallocation(%s,%s,%s,%s,%s,%s,%s,%s)", $new_donor_id, $fund_designated_name, number_format($fund_designated,2,'.',''), number_format($fund_total,2,'.',''),$donation_frequency, number_format($period_total,2,'.',''),number_format($payperiods,0,'',''),"designated"));
+			//store allocations greater than 0.0
+			if($fund_community > 0.0){
+				$rows_inserted = $wpdb->query(
+					$wpdb->prepare("CALL sp_addallocation(%s,%s,%s,%s,%s,%s,%s,%s)", $new_donor_id,"community", number_format($fund_community,2,'.',''), number_format($fund_total,2,'.',''),$donation_frequency, number_format($period_total,2,'.',''),number_format($payperiods,0,'',''),"community"));
+			}
+			if($fund_education > 0.0){
+				$rows_inserted = $wpdb->query(
+					$wpdb->prepare("CALL sp_addallocation(%s,%s,%s,%s,%s,%s,%s,%s)", $new_donor_id,"education", number_format($fund_education,2,'.',''), number_format($fund_total,2,'.',''),$donation_frequency, number_format($period_total,2,'.',''),number_format($payperiods,0,'',''),"education"));
+			}
+			if($fund_designated > 0.0){
+				$rows_inserted = $wpdb->query(
+					$wpdb->prepare("CALL sp_addallocation(%s,%s,%s,%s,%s,%s,%s,%s)", $new_donor_id, $fund_designated_name, number_format($fund_designated,2,'.',''), number_format($fund_total,2,'.',''),$donation_frequency, number_format($period_total,2,'.',''),number_format($payperiods,0,'',''),"designated"));
+			}
+			//store comment
 			if ($comment != null) {
 				$rows_inserted = $wpdb->query(
 				$wpdb->prepare("CALL sp_addcomment(%s,%s)", $new_donor_id, $comment));
@@ -98,12 +110,15 @@ function racc_stripe_process_payment() {
 		}catch(Exception $e){
 			error_log("process-payment, database calls error: " + $e->getMessage());
 		}
- 		if (($donation_frequency == "cc-once") or ($donation_frequency == "cc-recur")){
+
+ 		if (($donation_frequency == "cc-once") or ($donation_frequency == "cc-recur") or ($donation_frequency == "cc-annual")){
 			//check for test mode
 			if(isset($stripe_options['test_mode']) && $stripe_options['test_mode']) {
 				$secret_key = $stripe_options['test_secret_key'];
+				$product_id = 'prod_CmGEdHms0uIcOx';
 			} else {
 				$secret_key = $stripe_options['live_secret_key'];
+				$product_id = 'prod_CuHVCy1RGoijo1';
 			}
 			//NOTE: latest Stripe API adds namespaces, so be sure to use the proper format for calling classes
 			\Stripe\Stripe::setApiKey($secret_key);
@@ -114,158 +129,48 @@ function racc_stripe_process_payment() {
 						'source' => $token,
 						'email' => strip_tags($donor_email),
 						'metadata' => array(
-							'fund_community' => strip_tags($fund_community),
-							'fund_education' => strip_tags($fund_education),
 							'id_token' => strip_tags($new_donor_id))
 					)
 				);	
 				//determine if one-time or recurring
-				if ($donation_frequency == "cc-recur") {
+				if (($donation_frequency == "cc-recur") or ($donation_frequency == "cc-annual")) {
 					//Process recurring payment
-					try {
-						if(isset($stripe_options['test_mode']) && $stripe_options['test_mode']) {
-							$product_id = 'prod_Bav1bXDCwcN0Kr';
-						} else {
-							$product_id = 'prod_CuHVCy1RGoijo1';
-						}
-
+					if ($donation_frequency == "cc-recur"){
 						$plan = \Stripe\Plan::create(array(
 							'amount' => number_format(floatval($period_total)*100,0,'.',''),
 							'interval' => 'month',
-							//'product' => 'prod_Bav1bXDCwcN0Kr',
 							'product' => $product_id,
 							'currency' => 'usd',
 							)
 						);
-						$subscription = \Stripe\Subscription::create(array(
-							'customer' => $customer->id,
-							'items' => array(
-								array('plan' => $plan->id))
+					}
+					else{
+						$plan = \Stripe\Plan::create(array(
+							'amount' => number_format(floatval($amount),0,'.',''),
+							'interval' => 'year',
+							'product' => $product_id,
+							'currency' => 'usd',
 							)
 						);
-						$success = 'yes';
-					} catch(\Stripe\Error\Card $e) {
-						//decline error
-						$success = 'no';
-						$body = $e->getJsonBody();
-						$err = $body['error'];
-		  				$error_message = $err['message'];
-		  				error_log("Error Type: " + $err['type']);
-		  				error_log("Error Message: " + $err['message']);
-					} catch (\Stripe\Error\RateLimit $e) {
-					  // Too many requests made to the API too quickly
-						$success = 'no';
-						$body = $e->getJsonBody();
-						$err = $body['error'];
-		  				$error_message = $err['message'];
-		  				error_log("Error Type: " + $err['type']);
-		  				error_log("Error Message: " + $err['message']);
-					} catch (\Stripe\Error\InvalidRequest $e) {
-					  // Invalid parameters were supplied to Stripe's API
-						$success = 'no';
-						$body = $e->getJsonBody();
-						$err = $body['error'];
-		  				$error_message = $err['message'];
-		  				error_log("Error Type: " + $err['type']);
-		  				error_log("Error Message: " + $err['message']);
-					} catch (\Stripe\Error\Authentication $e) {
-					  // Authentication with Stripe's API failed
-					  // (maybe you changed API keys recently)
-						$success = 'no';
-						$body = $e->getJsonBody();
-						$err = $body['error'];
-		  				$error_message = $err['message'];
-		  				error_log("Error Type: " + $err['type']);
-		  				error_log("Error Message: " + $err['message']);
-					} catch (\Stripe\Error\ApiConnection $e) {
-					  // Network communication with Stripe failed
-						$success = 'no';
-						$body = $e->getJsonBody();
-						$err = $body['error'];
-		  				$error_message = $err['message'];
-		  				error_log("Error Type: " + $err['type']);
-		  				error_log("Error Message: " + $err['message']);
-					} catch (\Stripe\Error\Base $e) {
-					  // Display a very generic error to the user, and maybe send
-					  // yourself an email
-						$success = 'no';
-						$body = $e->getJsonBody();
-						$err = $body['error'];
-		  				$error_message = $err['message'];
-		  				error_log("Error Type: " + $err['type']);
-		  				error_log("Error Message: " + $err['message']);
-					} catch (Exception $e) {
-						$success = 'no';
-						$error_message = $e->getMessage();
-						error_log('Stripe Recurring Payment Error: '.$e->getMessage());
 					}
+					$subscription = \Stripe\Subscription::create(array(
+						'customer' => $customer->id,
+						'items' => array(
+							array('plan' => $plan->id))
+						)
+					);
+					$success = 'yes';
 				} elseif ($donation_frequency == "cc-once") {
 					//process one-time payment
 					//attempt to charge the customer's card
-					try {
-						$charge = \Stripe\Charge::create(array(	//NOTE: function call was Stripe_Charge in prev Stripe API
-								'amount' => $amount,
-								'currency' => 'usd',
-								'statement_descriptor' => 'Work for Art Donation',
-								'customer' => $customer->id,
-							)
-						);
-						$success = 'yes';
-					} catch(\Stripe\Error\Card $e) {
-						//decline error
-						$success = 'no';
-					$body = $e->getJsonBody();
-					$err = $body['error'];
-	  				$error_message = $err['message'];
-	  				error_log("Error Type: " + $err['type']);
-	  				error_log("Error Message: " + $err['message']);
-					} catch (\Stripe\Error\RateLimit $e) {
-					  // Too many requests made to the API too quickly
-						$success = 'no';
-						$body = $e->getJsonBody();
-						$err = $body['error'];
-		  				$error_message = $err['message'];
-		  				error_log("Error Type: " + $err['type']);
-		  				error_log("Error Message: " + $err['message']);
-					} catch (\Stripe\Error\InvalidRequest $e) {
-					  // Invalid parameters were supplied to Stripe's API
-						$success = 'no';
-						$body = $e->getJsonBody();
-						$err = $body['error'];
-		  				$error_message = $err['message'];
-		  				error_log("Error Type: " + $err['type']);
-		  				error_log("Error Message: " + $err['message']);
-					} catch (\Stripe\Error\Authentication $e) {
-					  // Authentication with Stripe's API failed
-					  // (maybe you changed API keys recently)
-						$success = 'no';
-						$body = $e->getJsonBody();
-						$err = $body['error'];
-		  				$error_message = $err['message'];
-		  				error_log("Error Type: " + $err['type']);
-		  				error_log("Error Message: " + $err['message']);
-					} catch (\Stripe\Error\ApiConnection $e) {
-					  // Network communication with Stripe failed
-						$success = 'no';
-						$body = $e->getJsonBody();
-						$err = $body['error'];
-		  				$error_message = $err['message'];
-		  				error_log("Error Type: " + $err['type']);
-		  				error_log("Error Message: " + $err['message']);
-					} catch (\Stripe\Error\Base $e) {
-					  // Display a very generic error to the user, and maybe send
-					  // yourself an email
-						$success = 'no';
-						$body = $e->getJsonBody();
-						$err = $body['error'];
-		  				$error_message = $err['message'];
-		  				error_log("Error Type: " + $err['type']);
-		  				error_log("Error Message: " + $err['message']);
-					} catch (Exception $e) {
-						$success = 'no';
-						$error_message = $e->getMessage();
-						error_log('Stripe One-Time Payment Error: '.$e->getMessage());
-					}
+					$charge = \Stripe\Charge::create(array(	//NOTE: function call was Stripe_Charge in prev Stripe API
+							'amount' => $amount,
+							'currency' => 'usd',
+							'statement_descriptor' => 'RACC Arts Impact Gift',
+							'customer' => $customer->id,
+						)
+					);
+					$success = 'yes';
 				}
 			} catch(\Stripe\Error\Card $e) {
 				//decline error

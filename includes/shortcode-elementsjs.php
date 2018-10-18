@@ -2,13 +2,20 @@
 function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 	// $atts contains organization(string) and payperiods(int) options.  example: [payment_form_singlepage organization="PGE" payperiods=26 optionalperiods="yes"]
 	global $stripe_options;
-	global $wpdb;
+
 	extract( shortcode_atts( array(
 		'organization' => 'None',	//default None for organization name
 		'payperiods' => '26',		//default 26 for payperiods in a year
 		'optionalperiods' => 'no',	//'yes' or 'no', 'yes' allows donor to specify 
 		'payroll' => 'yes',			//'yes' allows selection of workplace giving option and disables cc-recur, 'no' disables workplace giving option and enables cc-recur
-		'dg' =>'no'
+		'dg' =>'no',				//designated giving (default off)
+		'sg' => '60.00',			//suggested gift (default $60, minimum for Arts Card)
+		'fund1name' => 'Arts Impact Fund',
+		'fund2name' => 'Arts Education Fund',
+		'fund1enable' => 'yes',
+		'fund2enable' => 'no',
+		'fund1desc' => 'Your donation to the Arts Impact Fund benefits regional nonprofit arts and culture organizations that strengthen our communities through arts education, performances and events, and outreach programs.  Employee donations expand RACC&#39;s grantmaking to organizations that demonstrate community impact, fiscal responsibility, and equitable access to arts and culture.'
+
 	), $atts ) );
 
 	//TODO: add $_POST calls to grab starting data, for cases where user 
@@ -17,14 +24,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 	?> 
 	<div id="racc-form-holder">
 	<form method="post" id="stripe-payment-form-singlepage" class="stripe-payment-form-elementsjs">
-		<?php
-			if ($organization != "None"){
-				?>
-				<h1><?php _e(strip_tags($organization))?></h1>
-				<?php		
-			}
-		
-		?>
+		<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 		<div name="donor-information" id="donor-information">
 			<h2>Donor Information</h2>
 			<div class="form-row" id="donor_names_div">
@@ -67,34 +67,62 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 				</span>
 			</div>
 			<div class="form-row" id="donor_org_div">
-				<label for="donor_org_input">Organization</label>
-				<input type="text" name="donor_org_input" id="donor_org_input" maxlength="50" class="input_text" autocomplete="off">
+				<span id="org-section">
+					<label for="donor_org_input">Employer</label>
+					<input type="text" name="donor_org_input" id="donor_org_input" maxlength="50" class="input_text" autocomplete="off">
+				</span>
 			</div>
-			<div class="form-row" id="donor_anon_div">
-				<label for="anon">Anonymous Gift</label>
-				<input type="checkbox" name="anon" id="anon" value="yes"/>
-				<div class="infopopup">i
-					<div id="anon_description" class="popupcontent">Check this box if you would like us to withold your name from all publications.</div>
-				</div>
+			<div class="form-row">
+				<span id="anon-section">	
+					<label class="control control--checkbox" for="anon">Anonymous Gift
+						<input type="checkbox" name="anon" id="anon" value="yes"/>
+						<div class="control__indicator"></div>
+					</label>
+					<div class="infopopup">i
+						<div id="anon_description" class="popupcontent">Check this box if you would like us to withold your name from all publications.</div>
+					</div>
+				</span>
 			</div>
 		</div>
 		<div name="gift-details" id="gift-details">
 			<h2>How would you like to contribute?</h2>
 			<div class="form-row" id="freqradio">
 				<div id="workplace_div">
-					<input type="radio" id="donationradio1" name="donation_frequency" value="workplace" onclick="change_frequency(this);"/><label for="donationradio1">Payroll Deduction</label>
+					<label class="control control--radio" for="donationradio1">Payroll Deduction
+						<input type="radio" id="donationradio1" name="donation_frequency" value="workplace" onclick="change_frequency(this);"/>
+						<div class="control__indicator"></div>
+					</label>
 				</div>
 				<div>
-					<input type="radio" id="donationradio2" name="donation_frequency" value="cc-recur" onclick="change_frequency(this);"/><label for="donationradio2">Recurring Gift - Credit/Debit Card</label>
+					<label class="control control--radio" for="donationradio2">Monthly Recurring Gift - Credit/Debit Card
+						<input type="radio" id="donationradio2" name="donation_frequency" value="cc-recur" onclick="change_frequency(this);"/>
+						<div class="control__indicator"></div>
+					</label>
 					<div class="infopopup">i
 						<div class="popupcontent">We will send you a new pledge acknowledgement and Arts Card (if applicable) every year.</div>
 					</div>
 				</div>
 				<div>
-					<input type="radio" id="donationradio3" name="donation_frequency" value="cc-once" onclick="change_frequency(this);"/><label for="donationradio3">One-Time Gift - Credit/Debit Card</label>
+					<label class="control control--radio" for="donationradio5">Annual Recurring Gift - Credit/Debit Card
+						<input type="radio" id="donationradio5" name="donation_frequency" value="cc-annual" onclick="change_frequency(this);"/>
+						<div class="control__indicator"></div>
+					</label>
+					<div class="infopopup">i
+						<div class="popupcontent">We will send you a new pledge acknowledgement and Arts Card (if applicable) every year.</div>
+					</div>
 				</div>
 				<div>
-					<input type="radio" id="donationradio4" name="donation_frequency" value="check" onclick="change_frequency(this);"/><label for="donationradio4">One-Time Gift - Check</label>
+					<label class="control control--radio" for="donationradio3">One-Time Gift - Credit/Debit Card
+						<input type="radio" id="donationradio3" name="donation_frequency" value="cc-once" onclick="change_frequency(this);"/>
+						<div class="control__indicator"></div>
+					</label>
+				</div>
+				<div>
+					<label class="control control--radio" for="donationradio4">One-Time Gift - Check
+						<input type="radio" id="donationradio4" name="donation_frequency" value="check" onclick="change_frequency(this);"/>
+						<div class="control__indicator"></div>
+					</label>
+					
 				</div>
 				
 			</div>
@@ -103,20 +131,20 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 					<h3>Allocation</h3>
 					<p>How would you like to distribute your pledge?</p>
 					
-					<div class="form-row">
-						<label for="fund_community" id="fund_community_label">Arts Community Fund</label>
+					<div class="form-row" id="div_fund1">
+						<label for="fund_community" id="fund1label">Arts Community Fund</label>
 						<div class="infopopup">i
-							<div id="fund_community_description" class="popupcontent">Supports tri-county-based arts and culture organizations that receive RACC General Operating Support (GOS) and Project Grant funding for a wide array of services, programs, exhibits, events, and performances.</div>
+							<div id="fund1description" class="popupcontent"></div>
 						</div>
-						<input type="number" name="fund_community" id="fund_community" class="racc_fund" value='30.00' step="0.01" min='0' autocomplete="off" onchange="fund_sum();"/>
+						<input type="number" name="fund_community" id="fund_community" class="racc_fund" value="<?php _e($sg);?>" step="1.00" min='0' autocomplete="off" onchange="fund_sum();"/>
 					</div>
 
-					<div class="form-row">
-						<label for="fund_education" id="fund_education_label">Arts Education Fund</label>
+					<div class="form-row" id="div_fund2">
+						<label for="fund_education" id="fund2label">Arts Education Fund</label>
 						<div class="infopopup">i
 							<div id="fund_education_description" class="popupcontent">Distributed to 40+ arts and culture organizations (many GOS groups) that provide substantial arts education opportunities for students and teachers throughout our region.</div>
 						</div>
-						<input type="number" name="fund_education" id="fund_education" class="racc_fund" value='30.00' step="0.01" min="0" autocomplete="off" onchange="fund_sum();"/>
+						<input type="number" name="fund_education" id="fund_education" class="racc_fund" value='0.00' step="1.00" min="0" autocomplete="off" onchange="fund_sum();"/>
 					</div>
 
 					<div class="form-row" id="dg_fields">
@@ -124,20 +152,20 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 						<div class="infopopup">i
 							<div id="fund_designated_description" class="popupcontent">You may designate part or all of your gift to any arts &amp; culture nonprofit based in Clackamas, Multnomah, or Washington County.</div>
 						</div>
-						<input type="text" name="fund_designated_name" id="fund_designated_name" placeholder="Org Name" value="" maxlength="100"/>
-						<input type="number" name="fund_designated" id="fund_designated" class="racc_fund" value='0.00' step="0.01" min="0" autocomplete="off" onchange="fund_sum();"/>
+						<input type="text" name="fund_designated_name" id="fund_designated_name" placeholder="Organization Name" value="" maxlength="100"/>
+						<input type="number" name="fund_designated" id="fund_designated" class="racc_fund" value='0.00' step="1.00" min="0" autocomplete="off" onchange="fund_sum();"/>
 					</div>
 
 					<div class="form-row" >
-						<label for="fund_total" id="fund_total_label">Annual Pledge</label>
-						<input type="number" name="fund_total" id="fund_total" value='60.00' step='0.01' min='1' autocomplete="off" readonly/>
+						<label for="fund_total" id="fund_total_label">Total Pledge</label>
+						<input type="number" name="fund_total" id="fund_total" value='60.00' step='1.00' min='1' autocomplete="off" readonly/>
 					</div>
 					
 					<div id="payperiod_container" style="display: none">
 						<label for="payperiodinputs" id="periodinput_label" style="display: none">Pay Periods</label>
 						<input type="number" name="payperiodinputs" id="payperiodinputs" style="display: none" value="1" step="1" min="1" autocomplete="off" readonly/>
 						<label for="period_total" id="period_total_label">Per Period Amount</label>
-						<input type="number" name="period_total" id="period_total" value='60.00' readonly/>
+						<input type="number" name="period_total" id="period_total" value='100.00' readonly/>
 					</div>
 				</div>
 			</div>
@@ -146,15 +174,21 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 			<h2>In appreciation of your pledge of $60 or more, we'll be mailing you The Arts Card!</h2>
 			<div id="artscard_image">&nbsp;</div>
 			<div id="giftartscard_input">
-				<label for="giftartscard">I prefer to gift my Arts Card</label>
-				<input type="checkbox" name="giftartscard" id="giftartscard" value="yes"/>
+				<label class="control control--checkbox" for="giftartscard">I prefer to gift my Arts Card
+					<input type="checkbox" name="giftartscard" id="giftartscard" value="yes"/>
+					<div class="control__indicator"></div>
+				</label>
 			</div>
 		</div>
 		<div id="artscard_address_input" style="display: none">
 			<h3>Arts Card Recepient</h3>
 			<div class="form-row" id="artscard_name_div">
-				<label for="artscard_name">Name *</label>
-				<input type="text" size="50" maxlength="50" name="artscard_name" id="artscard_name" class="input_text" autocomplete="section-gift name" />
+				<label for="artscard_name">First Name *</label>
+				<input type="text" size="50" maxlength="50" name="artscard_first_name" id="artscard_first_name" class="input_text" autocomplete="section-gift name" />
+			</div>
+			<div class="form-row" id="artscard_name_div">
+				<label for="artscard_name">Last Name *</label>
+				<input type="text" size="50" maxlength="50" name="artscard_last_name" id="artscard_last_name" class="input_text" autocomplete="section-gift name" />
 			</div>
 			<div class="form-row" id="artscard_email_div">
 				<label for="artscard_email">E-Mail *</label>
@@ -180,7 +214,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 				</span>
 			</div>
 		</div>
-		<div id="cc-payment-container" style="display: flex">
+		<div id="cc-payment-container">
 			<h2>Payment Information</h2>
 			<label for="card-element">Credit or Debit</label>
 			<div id="card-element" class="form-row">
@@ -200,7 +234,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		</div>
 		<div id="additional-comments" class="wrap">
 			<h2>Comments?</h2>
-			<textarea id="comment_input" name="comment_input" maxlength="500" placeholder="Comments/Questions/Concerns" rows="5" ></textarea>
+			<textarea id="comment_input" name="comment_input" maxlength="500" placeholder="Comments/Questions" rows="5" ></textarea>
 		</div>
 		<div class="payment-error" id="payment_error_div"></div>
 		<input type="hidden" name="sc_organization" id="sc_organization" value="<?php _e($organization);?>"/>
@@ -208,6 +242,11 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		<input type="hidden" name="sc_optionalperiods" id="sc_optionalperiods" value="<?php _e($optionalperiods);?>"/>
 		<input type="hidden" name="sc_payroll" id="sc_payroll" value="<?php _e($payroll);?>"/>
 		<input type="hidden" name="sc_dg" id="sc_dg" value="<?php _e($dg);?>"/>
+		<input type="hidden" name="sc_fund1name" id="sc_fund1name" value="<?php _e($fund1name);?>"/>
+		<input type="hidden" name="sc_fund2name" id="sc_fund2name" value="<?php _e($fund2name);?>"/>
+		<input type="hidden" name="sc_fund1enable" id="sc_fund1enable" value="<?php _e($fund1enable);?>"/>
+		<input type="hidden" name="sc_fund2enable" id="sc_fund2enable" value="<?php _e($fund2enable);?>"/>
+		<input type="hidden" name="sc_fund1desc" id="sc_fund1desc" value="<?php _e($fund1desc);?>"/>
 		<input type="hidden" name="artscardqualify" id="artscardqualify" value="yes"/>
 		<input type="hidden" name="action" value="stripe"/>
 		<input type="hidden" name="stripe_nonce" value="<?php _e(wp_create_nonce('stripe-nonce')); ?>"/>

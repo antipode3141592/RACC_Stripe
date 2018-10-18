@@ -1,5 +1,7 @@
 // validate required input fields exist
-// shows confirmation div, populates values for user review
+// shows confirmation div, populates values for user review  to make any changes to the text, edit the appropriate inline
+// TODO:  make this much easier to alter.  perhaps create an entry form in the admin side for the confirmation popup, results page, and emails
+//		so that text changes don't require code alteration!
 jQuery(document).ready(function($){
 	$('#confirmation_button').click(function(event)
 	{	
@@ -39,12 +41,12 @@ jQuery(document).ready(function($){
 				}else{
 					$('#confirm_artscard_address').hide();
 				}
-				$('#confirm_fund_community').html('Arts Community Fund: $'+ parseFloat($('#fund_community').val()).toFixed(2));
-				$('#confirm_fund_education').html('Arts Education Fund: $'+ parseFloat($('#fund_education').val()).toFixed(2));
+				$('#confirm_fund_community').html('Arts Impact Fund: $'+ parseFloat($('#fund_community').val()).toFixed(2));
+				// $('#confirm_fund_education').html('Arts Education Fund: $'+ parseFloat($('#fund_education').val()).toFixed(2));
 				if ($('#sc_dg').val() == 'yes'){
 					$('#confirm_fund_designated').html('Designated Fund (' + $('#fund_designated_name').val() + '): $'+ parseFloat($('#fund_designated').val()).toFixed(2));
 				}
-				$('#confirm_fund_total').html('Annual Pledge: $'+ parseFloat($('#fund_total').val()).toFixed(2));
+				$('#confirm_fund_total').html('Total Pledge: $'+ parseFloat($('#fund_total').val()).toFixed(2));
 				switch($('input[name="donation_frequency"]:checked').val())
 				{
 					case "cc-once":
@@ -55,15 +57,19 @@ jQuery(document).ready(function($){
 						$('#confirm_payroll_deduction').hide();
 						$('#confirm_paymethod').html('Giving Method: Recurring monthly payment of $'+ parseFloat($('#period_total').val()).toFixed(2) +' by Credit/Debit Card.');
 						break;
+					case "cc-annual":
+						$('#confirm_payroll_deduction').hide();
+						$('#confirm_paymethod').html('Giving Method: Recurring annual payment of $'+ parseFloat($('#fund_total').val()).toFixed(2) +' by Credit/Debit Card.');
+						break;
 					case "workplace":
 						$('#confirm_payroll_deduction').show();
 						$('#confirm_payroll_authorization').prop('checked',false);	//decheck box
 						$('#stripe-submit').attr("disabled", "disabled");	//disable sumbission for final acknowledgement
-						$('#confirm_paymethod').html('Giving Method: Payroll deduction will begin July 2018.');
+						$('#confirm_paymethod').html('Giving Method: Payroll Deduction');
 						break;
 					case "check":
 						$('#confirm_payroll_deduction').hide();
-						$('#confirm_paymethod').html('Giving Method: <b>Please mail your check to Work for Art by June 2018</b>.');
+						$('#confirm_paymethod').html('Giving Method: <b>Please mail your check to RACC at your earliest convenience</b>.');
 						break;
 				}
 			} else {
@@ -133,6 +139,7 @@ function artscardhide(){
 //show/hide payroll deduction fields on pageshow (just after on 'load')
 jQuery(document).ready(function($){
 	$(window).on("pageshow",function(){		
+		//payroll options
 		if($('#sc_payroll').val() == 'no'){
 			$('#workplace_div').hide();
 			jQuery('#donationradio3').click();
@@ -140,17 +147,38 @@ jQuery(document).ready(function($){
 			$('#workplace_div').show();
 			jQuery('#donationradio1').click();
 		}
+		// designated giving check
 		if($('#sc_dg').val() == 'no'){
 			$('#dg_fields').hide();
 		}else{
 			$('#dg_fields').show();
 		}
+		//org not set check
 		if($('#sc_organization').val() == 'None')
 		{
 			$('#donor_org_div').show();
 		}else{
 			$('#donor_org_div').hide();
 		}
+		//check for shortcode fields
+		if($('#sc_fund1enable').val() == 'yes')
+		{
+			$('#div_fund1').show();
+			$('#fund1label').html($('#sc_fund1name').val());
+		}else{
+			$('#div_fund1').hide();
+		}
+		if($('#sc_fund2enable').val() == 'yes')
+		{
+			$('#div_fund2').show();
+			$('#fund2label').html($('#sc_fund2name').val());
+		}else{
+			$('#div_fund2').hide();
+		}
+		// if($('#sc_fund1desc').val()){
+			$('#fund1description').html($('#sc_fund1desc').val());
+		// }
+
 	});
 });
 
@@ -172,22 +200,15 @@ jQuery(document).ready(function($){
 
 jQuery(document).ready(function($){
 	$('#payperiodinputs').change(function(){
-		var p = $('#payperiodinputs').val();
-		var max = $('#payperiodinputs').attr('max')
-		if (isNaN(p) || (p == "") || (p < 1.0)){
-			$('#payperiodinputs').val('1');
-		} else if (p >= max){
-			$('#payperiodinputs').val(parseFloat(max).toFixed(0));
-		} else {
-			$('#payperiodinputs').val(parseFloat($('#payperiodinputs').val()).toFixed(0));
+		var p = parseInt($('#payperiodinputs').val());
+		var max = parseInt($('#payperiodinputs').attr('max'));
+		if (p >= max){
+			p = max;
+		} else if (p < 1.0){
+			p = 1;
 		}
-		fund_sum();
-	});
-});
-
-jQuery(document).ready(function(){
-	jQuery('#comment_input').change(function(){
-		
+		$('#payperiodinputs').val(parseInt(p));
+		fund_sum(p);
 	});
 });
 
@@ -198,7 +219,7 @@ function change_frequency(donationradio){
 	var payperiodinputs =  document.getElementById("payperiodinputs");
 	var ccpaymentcontainer = document.getElementById("cc-payment-container");	//div that contains cc data entry
 	var periodlabel = document.getElementById("periodinput_label");
-	var periortotallabel = document.getElementById("period_total_label");
+	var periodtotallabel = document.getElementById("period_total_label");
 	var payperiod_container = document.getElementById("payperiod_container");	//div that contains payperiod data
 	switch(donationradio.value)
 	{
@@ -207,7 +228,7 @@ function change_frequency(donationradio){
 			ccpaymentcontainer.style.display = "none";
 			periodlabel.style.display = "block";
 			payperiod_container.style.display = "block";
-			periortotallabel.innerHTML = "Per Period Amount";
+			periodtotallabel.innerHTML = "Per Period Amount";
 			if (optionalperiods.value == 'yes'){
 				periodlabel.innerHTML = "Pay Periods (max " + parseInt(maxperiods.value,10) + ")";
 				payperiodinputs.removeAttribute('readonly');
@@ -221,13 +242,21 @@ function change_frequency(donationradio){
 			break;
     	case "cc-recur":
 			payperiodinputs.style.display = "none";
-			ccpaymentcontainer.style.display = "flex";
+			ccpaymentcontainer.style.display = "block";
 			periodlabel.style.display = "none";
 			payperiod_container.style.display = "block";
     		payperiodinputs.removeAttribute('readonly');
     		payperiodinputs.removeAttribute('max');
     		payperiodinputs.value = '12';
-    		periortotallabel.innerHTML = "Monthly Amount";
+    		periodtotallabel.innerHTML = "Monthly Amount";
+			payperiodinputs.setAttribute('readonly','readonly');
+    		break;
+    	case "cc-annual":
+			payperiodinputs.style.display = "none";
+			ccpaymentcontainer.style.display = "block";
+			periodlabel.style.display = "none";
+			payperiod_container.style.display = "none";
+    		payperiodinputs.value = '1';
 			payperiodinputs.setAttribute('readonly','readonly');
     		break;
 		case "check":
@@ -237,7 +266,7 @@ function change_frequency(donationradio){
 			payperiodinputs.setAttribute('readonly','readonly');
 			break;
 		case "cc-once":
-			ccpaymentcontainer.style.display = "flex";
+			ccpaymentcontainer.style.display = "block";
 			payperiod_container.style.display = "none";
 			payperiodinputs.value = '1';
 			payperiodinputs.setAttribute('readonly','readonly');
@@ -248,10 +277,11 @@ function change_frequency(donationradio){
 	fund_sum();
 }
 
-function fund_sum(){
+function fund_sum(periods){
 	var fund_community = document.getElementById('fund_community');
 	var fund_education = document.getElementById('fund_education');
 	var fund_designated = document.getElementById('fund_designated');
+	periods = typeof periods !== 'undefined' ? periods : document.getElementById("payperiodinputs").value;
 
 	if (isNaN(fund_community.value) || (fund_community.value == "") || (fund_community.value < 0.0)){
 		fund_community.value = (0.0).toFixed(2);
@@ -271,14 +301,12 @@ function fund_sum(){
 
 	var sum = 0.0;
 	var funds = document.getElementsByClassName('racc_fund');
-	// console.log("sum = " + sum.toFixed(2));
 	var i;
 	for(i = 0; i < funds.length; i++){
 		sum += parseFloat(funds[i].value);
-		// console.log("sum = " + sum.toFixed(2));
 	}
 	check_artscardqualifty(sum);
-	calc_periodtotal(sum);
+	calc_periodtotal(sum, periods);
 	document.getElementById('fund_total').value = sum.toFixed(2);
 }
 
@@ -296,10 +324,8 @@ function check_artscardqualifty(test_total){
 		}
 }
 
-function calc_periodtotal(total){
+function calc_periodtotal(total, periods){
 	var period_total = document.getElementById("period_total");
-	var periods =  document.getElementById("payperiodinputs").value;
-
 	var t = total / periods; 
 	period_total.value = t.toFixed(2);
 }
