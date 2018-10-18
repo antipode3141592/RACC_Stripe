@@ -304,11 +304,14 @@ button#confirmation_button:hover {
 
 #confirmation_popup_content {
 	background-color: #fff;
-	padding: 5px 25px 25px 25px;
+	padding: 5px 25px;
 	box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.5);
 	border: black 1px solid;
 	border-radius: 5px;
     overflow: auto;
+	max-height: 55vh;
+	line-height: 1.2rem;
+	font-size: 0.8rem;
 }
 
 #confirmation_popup_content > p {
