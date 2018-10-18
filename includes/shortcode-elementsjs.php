@@ -254,27 +254,32 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		
 		<div name="confirmation_popup" id="confirmation_popup" style="display: none">
 			<div id="confirmation_popup_content">
-			<h2>Confirmation</h2>
-			<p>Please review the details below before confirming your pledge.</p>
-			<div id="confirm_name"></div>
-			<div id="confirm_email"></div>
-			<div id="confirm_donor_address"></div>
-			<div id="confirm_artscard"></div>
-			<div id="confirm_artscard_image"></div>
-			<div id="confirm_artscard_address"></div>
-			<div id="confirm_fund_community"></div>
-			<div id="confirm_fund_education"></div>
-			<div id="confirm_fund_designated"></div>
-			<div id="confirm_fund_total"></div>
-			<div id="confirm_paymethod"></div>
-			<div id="confirm_payroll_deduction">
-				<label class="important_text" for="confirm_payroll_authorization">Check to Authorize Your Payroll Deduction Gift</label>
-				<input type="checkbox" name="confirm_payroll_authorization" id="confirm_payroll_authorization"/>
-			</div>
-			<!-- <div class="g-recaptcha" id='recaptcha_div' data-sitekey="<?php _e($stripe_options['site_key'])?>"></div> -->
-			<button type="button" id="confirmation_reset">Edit Pledge</button>
-			<button type="submit" id="stripe-submit" form="stripe-payment-form-singlepage" disabled>Confirm Pledge</button>
-			<div class="payment-error" id="payment_error_popup_div"></div>
+				<h2>Confirmation</h2>
+				<p>Please review the details below before confirming your pledge.</p>
+				<div id="personal_info">
+					<div id="confirm_name"></div>
+					<div id="confirm_email"></div>
+					<div id="confirm_donor_address"></div>
+				</div>
+				<div id="artscard_info">
+					<div id="confirm_artscard"></div>
+					<div id="confirm_artscard_image"></div>
+					<div id="confirm_artscard_address"></div>
+				</div>
+				<div id="gift_info">
+					<div id="confirm_fund_community"></div>
+					<div id="confirm_fund_education"></div>
+					<div id="confirm_fund_designated"></div>
+					<div id="confirm_fund_total"></div>
+					<div id="confirm_paymethod"></div>
+					<div id="confirm_payroll_deduction">
+						<label class="important_text" for="confirm_payroll_authorization">Check to Authorize Your Payroll Deduction Gift</label>
+						<input type="checkbox" name="confirm_payroll_authorization" id="confirm_payroll_authorization"/>
+					</div>
+				</div>
+				<button type="button" id="confirmation_reset">Edit Pledge</button>
+				<button type="submit" id="stripe-submit" form="stripe-payment-form-singlepage" disabled>Confirm Pledge</button>
+				<div class="payment-error" id="payment_error_popup_div"></div>
 			</div>
 		</div>
 		</form>
