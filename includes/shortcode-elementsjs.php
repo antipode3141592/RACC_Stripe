@@ -257,6 +257,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 				<h2>Confirmation</h2>
 				<p>Please review the details below before confirming your pledge.</p>
 				<div id="personal_info">
+					<h5>Your contact information</h5>
 					<div id="confirm_name"></div>
 					<div id="confirm_email"></div>
 					<div id="confirm_donor_address"></div>
@@ -267,6 +268,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 					<div id="confirm_artscard_address"></div>
 				</div>
 				<div id="gift_info">
+					<h5>Your gift allocation</h5>
 					<div id="confirm_fund_community"></div>
 					<div id="confirm_fund_education"></div>
 					<div id="confirm_fund_designated"></div>
@@ -277,8 +279,10 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 						<input type="checkbox" name="confirm_payroll_authorization" id="confirm_payroll_authorization"/>
 					</div>
 				</div>
-				<button type="button" id="confirmation_reset">Edit Pledge</button>
-				<button type="submit" id="stripe-submit" form="stripe-payment-form-singlepage" disabled>Confirm Pledge</button>
+				<div id="confirmation_buttons">
+					<button type="button" id="confirmation_reset">Edit Pledge</button>
+					<button type="submit" id="stripe-submit" form="stripe-payment-form-singlepage" disabled>Confirm Pledge</button>
+				</div>
 				<div class="payment-error" id="payment_error_popup_div"></div>
 			</div>
 		</div>
