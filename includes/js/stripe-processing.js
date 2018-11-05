@@ -35,7 +35,9 @@ jQuery(document).ready(function($){
 				}
 				if ($('#giftartscard').prop("checked"))
 				{
-					$('#confirm_artscard_address').html('<hr>Your Arts Card shall be gifted to: <br>' + $('#artscard_name').val() + '<br>'
+					$('#confirm_artscard_address').html('<hr>Your Arts Card shall be gifted to: <br>' + $('#artscard_first_name').val() + ' ' 
+						+ $('#artscard_last_name').val() + '<br>' 
+						+ $('#artscard_email').val() + '<br>'
 						+ $('#artscard_address_1').val() + ' ' + $('#artscard_address_2').val() + '<br>' 
 						+ $('#artscard_city').val() + ', ' + $('#artscard_state').val() + ' ' + $('#artscard_zip').val() + '<br>');
 				}else{
@@ -116,7 +118,8 @@ function artscardhide(){
 	if(jQuery('#giftartscard').prop("checked")){
 			// console.log('show gift address div');
 			jQuery('#artscard_address_input').show();
-			jQuery('#artscard_name').attr('required','required');
+			jQuery('#artscard_first_name').attr('required','required');
+			jQuery('#artscard_last_name').attr('required','required');
 			jQuery('#artscard_email').attr('required','required');
 			jQuery('#artscard_address_1').attr('required','required');
 			jQuery('#artscard_city').attr('required','required');
@@ -126,7 +129,8 @@ function artscardhide(){
 		{
 			// console.log('hide gift address div');
 			jQuery('#artscard_address_input').hide();
-			jQuery('#artscard_name').attr('required',false);
+			jQuery('#artscard_first_name').attr('required',false);
+			jQuery('#artscard_last_name').attr('required',false);
 			jQuery('#artscard_email').attr('required',false);
 			jQuery('#artscard_address_1').attr('required',false);
 			jQuery('#artscard_city').attr('required',false);

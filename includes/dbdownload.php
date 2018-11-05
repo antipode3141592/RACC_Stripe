@@ -7,7 +7,7 @@ function racc_db_download() {
 		$end_date = isset($_POST['end_date']) ? $_POST['end_date'] : null;
 
 		$results = $wpdb->get_results(
-			$wpdb->prepare('CALL sp_getdonordata(%s,%s)',$start_date. " 00:00:00", $end_date . " 23:59:59"));
+			$wpdb->prepare('CALL sp_getdonors(%s,%s)',$start_date. " 00:00:00", $end_date . " 23:59:59"));
 		if ($results){
 			$filename = 'racc_db';
 		    $date = date("YmdHis");
@@ -19,7 +19,7 @@ function racc_db_download() {
 		    header("Content-Type: text/csv; charset=utf-8");
 		    header("Content-Disposition: attachment; filename=\"" . $filename . " " . $date . ".csv\";" );
 		    header("Content-Transfer-Encoding: binary");
-		    fputcsv( $output, array('timestamp', 'donor_id', 'first_name', 'last_name', 'anon', 'artscard', 'giftartscard', 'organization', 'email', 'phone', 'community', 'education', 'designated', 'designated name', 'pledgetotal', 'paytype', 'periodtotal','periods', 'address1', 'address2', 'city', 'state', 'zipcode', 'artscard_name', 'artscard_add1', 'artscard_add2', 'artscard_city', 'artscard_state', 'artscard_zip','artscard_email', 'comment', 'browser', 'platform'));
+		    fputcsv( $output, array('timestamp', 'donor_id', 'first_name', 'last_name', 'anon', 'artscard', 'giftartscard', 'organization', 'org_page', 'email', 'phone', 'fund_amount', 'fund_name', 'pledgetotal', 'paytype', 'periodtotal','periods', 'address1', 'address2', 'city', 'state', 'zipcode', 'comment', 'browser', 'platform','Campaign', 'Appeal', 'Fund', 'Gift ID', 'Gift Type', 'Arts Card Expiry', 'Arts Card Description', 'Arts Card Name'));
 		    foreach ($results as $value) {
 		        $modified_values = array(
 		                        $value->timestamp,
@@ -29,13 +29,12 @@ function racc_db_download() {
 		                        $value->anon,	
 		                        $value->artscard,	
 		                        $value->giftartscard,	
-		                        $value->organization,	
+		                        $value->organization,
+		                        $value->org_page,	
 		                        $value->email,
 		                        $value->phone,
-		                        $value->community_fund,	
-		                        $value->education_fund,
-		                        $value->designated_fund,
-		                        $value->designated_name,	
+		                        $value->fund_amount,	
+		                        $value->fund_name,	
 		                        $value->pledgetotal,	
 		                        $value->paytype,	
 		                        $value->periodtotal,
@@ -44,18 +43,18 @@ function racc_db_download() {
 		                        $value->address2,	
 		                        $value->city,	
 		                        $value->state,	
-		                        $value->zipcode,	
-		                        $value->artscard_name,	
-		                        $value->artscard_add1,	
-		                        $value->artscard_add2,	
-		                        $value->artscard_city,	
-		                        $value->artscard_state,	
-		                        $value->artscard_zip,
-		                        $value->artscard_email,
+		                        $value->zipcode
 		                        $value->comment,
 		                        $value->browser,
-		                        $value->platform
-		        );
+		                        $value->platform,
+		                        '',
+		                        '',
+		                        '',
+		                        '',
+		                        'pledge',
+		                        '',
+		                        '',
+		                        '');
 		        fputcsv( $output, $modified_values );
 		    }
 		    exit;
