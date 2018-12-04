@@ -314,7 +314,7 @@ button#confirmation_button:hover {
 	font-size: 0.8rem;
 	display: flex;
     flex-wrap: wrap;
-    max-width: 75%;
+    max-width: 1000px;
 	justify-content: space-evenly;
 }
 
@@ -584,14 +584,18 @@ input.invalid{
 
 
 /*** Responsive Styles Tablet And Below ***/
-@media (max-width: 550px) {
+@media (max-width: 980px) {
 	#gift_allocations > div {
 		width: 100%;
 	}
 	button#confirmation_button {
 		font-size: 1rem;
 	}
+	#confirmation_popup button{
+		margin: inherit;
+	}
 	#confirmation_popup_content {
+		display: block;
 		top: 10vh;
     	left: 5vw;
     	width: 90vw;
