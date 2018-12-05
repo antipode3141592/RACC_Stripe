@@ -6,8 +6,8 @@ Description: Plugin with shortcode form for pledge payments
 Author: Sean Kirkpatrick
 Author URI: https://racc.org
 Contributors: 
-Version: 1.3
-Date of Last Revision:  11/5/2018
+Version: 1.5
+Date of Last Revision:  11/12/2018
 */
  
 /**********************************

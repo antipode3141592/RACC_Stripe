@@ -8,6 +8,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		'payperiods' => '26',		//default 26 for payperiods in a year
 		'optionalperiods' => 'no',	//'yes' or 'no', 'yes' allows donor to specify 
 		'payroll' => 'yes',			//'yes' allows selection of workplace giving option and disables cc-recur, 'no' disables workplace giving option and enables cc-recur
+		'ongoing' => 'no',
 		'dg' =>'no',				//designated giving (default off)
 		'sg' => '60.00',			//suggested gift (default $60, minimum for Arts Card)
 		'fund1name' => 'Arts Impact Fund',
@@ -92,6 +93,15 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 						<input type="radio" id="donationradio1" name="donation_frequency" value="workplace" onclick="change_frequency(this);"/>
 						<div class="control__indicator"></div>
 					</label>
+				</div>
+				<div id="workplace_ongoing_div">
+					<label class="control control--radio" for="donationradio6">Ongoing Payroll Deduction
+						<input type="radio" id="donationradio6" name="donation_frequency" value="ongoing" onclick="change_frequency(this);"/>
+						<div class="control__indicator"></div>
+					</label>
+					<div class="infopopup">i
+						<div class="popupcontent">Your payroll deductions will continue until you opt out. We will automatically send you a new pledge acknowledgment and Arts Card (if applicable) every year.</div>
+					</div>
 				</div>
 				<div>
 					<label class="control control--radio" for="donationradio2">Monthly Recurring Gift - Credit/Debit Card
@@ -241,6 +251,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		<input type="hidden" id="sc_payperiods" value="<?php _e($payperiods);?>"/>
 		<input type="hidden" name="sc_optionalperiods" id="sc_optionalperiods" value="<?php _e($optionalperiods);?>"/>
 		<input type="hidden" name="sc_payroll" id="sc_payroll" value="<?php _e($payroll);?>"/>
+		<input type="hidden" name="sc_ongoing" id="sc_ongoing" value="<?php _e($ongoing);?>"/>
 		<input type="hidden" name="sc_dg" id="sc_dg" value="<?php _e($dg);?>"/>
 		<input type="hidden" name="sc_fund1name" id="sc_fund1name" value="<?php _e($fund1name);?>"/>
 		<input type="hidden" name="sc_fund2name" id="sc_fund2name" value="<?php _e($fund2name);?>"/>

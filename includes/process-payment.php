@@ -228,6 +228,9 @@ function racc_stripe_process_payment() {
 		} elseif ($donation_frequency == "workplace"){
 			$result = racc_mailer($new_donor_id,"yes");	
 			$success = 'yes';
+		} elseif ($donation_frequency == "ongoing"){
+			$result = racc_mailer($new_donor_id,"yes");	
+			$success = 'yes';
 		} elseif ($donation_frequency == "check"){
 			$result = racc_mailer($new_donor_id,"yes");	
 			$success = 'yes';
