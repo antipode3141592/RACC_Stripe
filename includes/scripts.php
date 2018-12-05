@@ -14,7 +14,7 @@ function racc_load_stripe_scripts() {
  	
 	wp_enqueue_script('jquery');
 	wp_enqueue_script('stripe', 'https://js.stripe.com/v3/');
-	wp_enqueue_script('stripe-processing', STRIPE_BASE_URL . '/includes/js/stripe-processing.js');
+	wp_enqueue_script('stripe-processing', STRIPE_BASE_URL . '/includes/js/stripe-processing.js?v=1.7');	//var is to force js update
 	wp_enqueue_script('stripe-elements', STRIPE_BASE_URL . '/includes/js/stripe-elements.js');
 	wp_enqueue_script( 'grecaptcha', 'https://www.google.com/recaptcha/api.js' );
 	wp_enqueue_script('selector', STRIPE_BASE_URL . '/includes/js/selector.js');

@@ -1,3 +1,6 @@
+//ver 1.7
+//date of update: 11/12/2018
+
 // validate required input fields exist
 // shows confirmation div, populates values for user review  to make any changes to the text, edit the appropriate inline
 // TODO:  make this much easier to alter.  perhaps create an entry form in the admin side for the confirmation popup, results page, and emails
@@ -35,7 +38,9 @@ jQuery(document).ready(function($){
 				}
 				if ($('#giftartscard').prop("checked"))
 				{
-					$('#confirm_artscard_address').html('<hr>Your Arts Card shall be gifted to: <br>' + $('#artscard_name').val() + '<br>'
+					$('#confirm_artscard_address').html('<hr>Your Arts Card shall be gifted to: <br>' + $('#artscard_first_name').val() + ' ' 
+						+ $('#artscard_last_name').val() + '<br>' 
+						+ $('#artscard_email').val() + '<br>'
 						+ $('#artscard_address_1').val() + ' ' + $('#artscard_address_2').val() + '<br>' 
 						+ $('#artscard_city').val() + ', ' + $('#artscard_state').val() + ' ' + $('#artscard_zip').val() + '<br>');
 				}else{
@@ -49,6 +54,12 @@ jQuery(document).ready(function($){
 				$('#confirm_fund_total').html('Total Pledge: $'+ parseFloat($('#fund_total').val()).toFixed(2));
 				switch($('input[name="donation_frequency"]:checked').val())
 				{
+					case "ongoing":
+						$('#confirm_payroll_deduction').show();
+						$('#confirm_payroll_authorization').prop('checked',false);	//decheck box
+						$('#stripe-submit').attr("disabled", "disabled");	//disable sumbission for final acknowledgement
+						$('#confirm_paymethod').html('Giving Method: Ongoing Payroll Deduction');
+						break;
 					case "cc-once":
 						$('#confirm_payroll_deduction').hide();
 						$('#confirm_paymethod').html('Giving Method: One-time payment by Credit/Debit Card.');
@@ -116,7 +127,8 @@ function artscardhide(){
 	if(jQuery('#giftartscard').prop("checked")){
 			// console.log('show gift address div');
 			jQuery('#artscard_address_input').show();
-			jQuery('#artscard_name').attr('required','required');
+			jQuery('#artscard_first_name').attr('required','required');
+			jQuery('#artscard_last_name').attr('required','required');
 			jQuery('#artscard_email').attr('required','required');
 			jQuery('#artscard_address_1').attr('required','required');
 			jQuery('#artscard_city').attr('required','required');
@@ -126,7 +138,8 @@ function artscardhide(){
 		{
 			// console.log('hide gift address div');
 			jQuery('#artscard_address_input').hide();
-			jQuery('#artscard_name').attr('required',false);
+			jQuery('#artscard_first_name').attr('required',false);
+			jQuery('#artscard_last_name').attr('required',false);
 			jQuery('#artscard_email').attr('required',false);
 			jQuery('#artscard_address_1').attr('required',false);
 			jQuery('#artscard_city').attr('required',false);
@@ -137,6 +150,7 @@ function artscardhide(){
 }
 
 //show/hide payroll deduction fields on pageshow (just after on 'load')
+//each field is shown or not, based on shortcode values passed in hidden variables of form sc_[tag]
 jQuery(document).ready(function($){
 	$(window).on("pageshow",function(){		
 		//payroll options
@@ -147,12 +161,21 @@ jQuery(document).ready(function($){
 			$('#workplace_div').show();
 			jQuery('#donationradio1').click();
 		}
+		if($('#sc_ongoing').val() == 'no'){
+			$('#workplace_ongoing_div').hide();
+			jQuery('#donationradio3').click();
+		}else{		
+			$('#workplace_ongoing_div').show();
+			jQuery('#donationradio6').click();
+		}
+
 		// designated giving check
 		if($('#sc_dg').val() == 'no'){
 			$('#dg_fields').hide();
 		}else{
 			$('#dg_fields').show();
 		}
+
 		//org not set check
 		if($('#sc_organization').val() == 'None')
 		{
@@ -221,6 +244,7 @@ function change_frequency(donationradio){
 	var periodlabel = document.getElementById("periodinput_label");
 	var periodtotallabel = document.getElementById("period_total_label");
 	var payperiod_container = document.getElementById("payperiod_container");	//div that contains payperiod data
+	var fund_total_label = document.getElementById("fund_total_label");
 	switch(donationradio.value)
 	{
 		case "workplace":
@@ -239,6 +263,18 @@ function change_frequency(donationradio){
 				payperiodinputs.value = parseInt(maxperiods.value,10);
 				payperiodinputs.setAttribute('readonly','readonly');
 			}
+			fund_total_label.innerHTML = "Total Pledge";
+			break;
+		case "ongoing":
+			payperiodinputs.style.display = "block";
+			ccpaymentcontainer.style.display = "none";
+			periodlabel.style.display = "block";
+			payperiod_container.style.display = "block";
+			periodtotallabel.innerHTML = "Per Period Amount";
+			periodlabel.innerHTML = "Pay Periods per Year: " + parseInt(maxperiods.value,10);
+			payperiodinputs.value = parseInt(maxperiods.value,10);
+			payperiodinputs.setAttribute('readonly','readonly');
+			fund_total_label.innerHTML = "Annual Pledge";
 			break;
     	case "cc-recur":
 			payperiodinputs.style.display = "none";
@@ -250,6 +286,7 @@ function change_frequency(donationradio){
     		payperiodinputs.value = '12';
     		periodtotallabel.innerHTML = "Monthly Amount";
 			payperiodinputs.setAttribute('readonly','readonly');
+			fund_total_label.innerHTML = "Total Pledge";
     		break;
     	case "cc-annual":
 			payperiodinputs.style.display = "none";
@@ -258,18 +295,21 @@ function change_frequency(donationradio){
 			payperiod_container.style.display = "none";
     		payperiodinputs.value = '1';
 			payperiodinputs.setAttribute('readonly','readonly');
+			fund_total_label.innerHTML = "Total Pledge";
     		break;
 		case "check":
 			ccpaymentcontainer.style.display = "none";
 			payperiod_container.style.display = "none";
 			payperiodinputs.value = '1';
 			payperiodinputs.setAttribute('readonly','readonly');
+			fund_total_label.innerHTML = "Total Pledge";
 			break;
 		case "cc-once":
 			ccpaymentcontainer.style.display = "block";
 			payperiod_container.style.display = "none";
 			payperiodinputs.value = '1';
 			payperiodinputs.setAttribute('readonly','readonly');
+			fund_total_label.innerHTML = "Total Pledge";
 			break;
 		default:
 			console.log("change_frequency() error, default case!");

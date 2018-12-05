@@ -8,9 +8,9 @@
 	},
 	{
 		"organization": "Portland Opera",
-		"payperiods": "14",
-		"optionalperiods":"no",
-		"payroll":"no",
+		"payperiods": "26",
+		"optionalperiods":"yes",
+		"payroll":"yes",
 		"dg":"no"
 	},
 	{

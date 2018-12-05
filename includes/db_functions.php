@@ -77,6 +77,8 @@ function racc_db_install() {
   		organization varchar(50) DEFAULT NULL,
   		browser varchar(50) DEFAULT NULL,
   		platform varchar(50) DEFAULT NULL,
+  		org_page varchar(50) DEFAULT NULL,
+  		gift_to_donor_id varchar(50) DEFAULT NULL,
   		PRIMARY KEY  (id)
 		) $charset_collate;";
 	$results = dbDelta($sql);
@@ -118,7 +120,8 @@ function racc_db_install() {
 	$rows_inserted = $wpdb->query("CREATE PROCEDURE sp_getartscardaddress(IN DonorID VARCHAR(50)) select a.type, a.donor_id, a.address1, a.address2, a.city, a.state, a.zipcode, a.name from racc_addresses as a where a.donor_id = DonorID AND a.type='Arts Card'");
 	// error_log("create stored procedure sp_getartscardaddress(): " + $rows_inserted);
 
-	$rows_inserted = $wpdb->query("CREATE PROCEDURE sp_adddonor(IN FirstName VARCHAR(50), IN MiddleInitial VARCHAR(50), IN LastName VARCHAR(50), IN DonorID VARCHAR(50), IN Anon VARCHAR(10), IN ArtsCard INT(1), IN GiftArtsCard INT(1), IN Org VARCHAR(50), IN browser VARCHAR(50), IN platform VARCHAR(50)) INSERT into racc_donors (id,first_name, middle_name, last_name, donor_id,anon,artscard,giftartscard,organization,browser,platform) values (null,FirstName, MiddleInitial, LastName, DonorID,Anon,ArtsCard,GiftArtsCard,Org,browser,platform)");
+	$rows_inserted = $wpdb->query("CREATE PROCEDURE `sp_adddonor`(IN `FirstName` VARCHAR(50), IN `MiddleInitial` VARCHAR(50), IN `LastName` VARCHAR(50), IN `DonorID` VARCHAR(50), IN `Anon` VARCHAR(10), IN `ArtsCard` INT(1), IN `GiftArtsCard` INT(1), IN `Org` VARCHAR(50), IN `browser` VARCHAR(50), IN `platform` VARCHAR(50), IN `UserOrg` VARCHAR(50))
+INSERT into racc_donors (id,first_name, middle_name, last_name, donor_id,anon,artscard,giftartscard,organization,browser,platform, org_page) values (null,FirstName, MiddleInitial, LastName, DonorID,Anon,ArtsCard,GiftArtsCard,Org,browser,platform,UserOrg");
 	// error_log("create stored procedure sp_adddonor(): " + $rows_inserted);
 
 	$rows_inserted = $wpdb->query("CREATE PROCEDURE sp_addcontactinfo(IN Type VARCHAR(50), IN Address VARCHAR(50), IN DonorID VARCHAR(50)) INSERT INTO racc_contact(id,address, donor_id, type) values (null,Address, DonorID, Type)");

@@ -6,7 +6,7 @@ function racc_org_picker($atts, $content = null){
 	    $org_name = $_GET['org'];
 	    $pay_periods = isset($_GET['pp']) ? $_GET['pp'] : null;
 	    $optional_periods = isset($_GET['op']) ? $_GET['op'] : null;
-	    $payroll = isset($_GET['pr']) ? $_GET['pr'] : null;
+	    $payroll = isset($_GET['payroll']) ? $_GET['payroll'] : null;
 	    $dg = isset($_GET['dg']) ? $_GET['dg'] : null;
 
 	    extract( shortcode_atts( array(

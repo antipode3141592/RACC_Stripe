@@ -28,7 +28,7 @@ function racc_stripe_process_payment() {
 		$sc_org = isset($_POST['sc_organization']) ? sanitize_text_field($_POST['sc_organization']) : null;
 		$org = isset($_POST['donor_org_input']) ? sanitize_text_field($_POST['donor_org_input']) : null;
 		$donor_first_name = isset($_POST['donor_first_name']) ? sanitize_text_field($_POST['donor_first_name']) : null;
-		$donor_middle_name = isset($_POST['donor_middle_name']) ? sanitize_text_field($_POST['donor_middle_name']) : null;
+		// $donor_middle_name = isset($_POST['donor_middle_name']) ? sanitize_text_field($_POST['donor_middle_name']) : null;
 		$donor_last_name = isset($_POST['donor_last_name']) ? sanitize_text_field($_POST['donor_last_name']) : null;
 		$donor_phone = isset($_POST['donor_phone']) ? sanitize_text_field($_POST['donor_phone']) : null;
 		$donor_email = isset($_POST['donor_email']) ? sanitize_email($_POST['donor_email']) : null;
@@ -40,7 +40,9 @@ function racc_stripe_process_payment() {
 		$anon = isset($_POST['anon']) ? $_POST['anon'] : 'no';	//if anon is checked, set to yes, else, no
 
 		//arts card address (may be different from donor information)
-		$artscard_name = isset($_POST['artscard_name']) ? sanitize_text_field($_POST['artscard_name']) : null;
+		// $artscard_name = isset($_POST['artscard_name']) ? sanitize_text_field($_POST['artscard_name']) : null;
+		$artscard_first_name = isset($_POST['artscard_first_name']) ? sanitize_text_field($_POST['artscard_first_name']) : null;
+		$artscard_last_name = isset($_POST['artscard_last_name']) ? sanitize_text_field($_POST['artscard_last_name']) : null;
 		$artscard_email = isset($_POST['artscard_email']) ? sanitize_email($_POST['artscard_email']) : null;
 		$artscard_address_1 = isset($_POST['artscard_address_1']) ? sanitize_text_field($_POST['artscard_address_1']) : null;
 		$artscard_address_2 = isset($_POST['artscard_address_2']) ? sanitize_text_field($_POST['artscard_address_2']) : null;
@@ -50,6 +52,9 @@ function racc_stripe_process_payment() {
 		$giftartscard = isset($_POST['giftartscard']) ? $_POST['giftartscard'] : 'no';
  		
 		$new_donor_id = date('YmdHis') . rand(1,1000000) . substr($donor_first_name,0,1) . substr($donor_last_name,0,1) ;
+		if ($giftartscard){
+			$gift_donor_id = date('YmdHis') .rand(1,1000000) . substr($artscard_first_name,0,1) . substr($artscard_last_name,0,1); }
+			else { $gift_donor_id = null; }
 		// Insert data into database, using parameterized stored procedures
 		try{
 			//wpdb is the WordPress database, query() is used to run the stored procedure call created by prepare()
@@ -59,20 +64,11 @@ function racc_stripe_process_payment() {
 			if($giftartscard == 'yes'){
 				$db_giftartscard = 1;
 			}else {$db_giftartscard = 0;}
-			if ($sc_org == "None"){
-				if ($org != "None"){
-					$temp_org = $org;
-				}else{
-					$temp_org = "None";
-				}
-			}else{
-				$temp_org = $sc_org;
-			}
 			$browser = get_browser(null,false);
 
 			//store basic contact data
 			$rows_inserted = $wpdb->query(
-				$wpdb->prepare("CALL sp_adddonor(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $donor_first_name, $donor_middle_name, $donor_last_name, $new_donor_id, $anon,$db_artscard, $db_giftartscard, $temp_org, $browser->parent, $browser->platform));
+				$wpdb->prepare("CALL sp_adddonor(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $donor_first_name, '', $donor_last_name, $new_donor_id, $anon, $db_artscard, $db_giftartscard, $org, $browser->parent, $browser->platform, $sc_org, $gift_donor_id));
 			$rows_inserted = $wpdb->query(
 				$wpdb->prepare("CALL sp_addcontactinfo(%s,%s,%s)", "email", $donor_email, $new_donor_id));
 			if($donor_phone != null){
@@ -84,10 +80,12 @@ function racc_stripe_process_payment() {
 			//store Arts Card address, if qualified
 			if($giftartscard == "yes")
 			{
-				$rows_inserted = $wpdb->query(
-				$wpdb->prepare("CALL sp_addaddress(%s,%s,%s,%s,%s,%s,%s,%s)", $artscard_address_1, $artscard_address_2, $artscard_city, $artscard_state, $artscard_zip, "Arts Card",$new_donor_id, $artscard_name));
-				$rows_inserted = $wpdb->query(
-				$wpdb->prepare("CALL sp_addcontactinfo(%s,%s,%s)", "email-artscard", $artscard_email, $new_donor_id));
+			$rows_inserted = $wpdb->query(
+				$wpdb->prepare("CALL sp_adddonor(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $artscard_first_name, '', $artscard_last_name, $gift_donor_id, $anon ,$db_artscard, $db_giftartscard, $org, $browser->parent, $browser->platform,'', $new_donor_id));
+			$rows_inserted = $wpdb->query(
+				$wpdb->prepare("CALL sp_addcontactinfo(%s,%s,%s)", "email", $artscard_email, $gift_donor_id));
+			$rows_inserted = $wpdb->query(
+				$wpdb->prepare("CALL sp_addaddress(%s,%s,%s,%s,%s,%s,%s,%s)", $artscard_address_1, $artscard_address_2, $artscard_city, $artscard_state, $artscard_zip, "Arts Card",$gift_donor_id, null));
 			}
 			//store allocations greater than 0.0
 			if($fund_community > 0.0){
@@ -228,6 +226,9 @@ function racc_stripe_process_payment() {
 				error_log('Stripe Customer Create Error: '.$e->getMessage());
 			}
 		} elseif ($donation_frequency == "workplace"){
+			$result = racc_mailer($new_donor_id,"yes");	
+			$success = 'yes';
+		} elseif ($donation_frequency == "ongoing"){
 			$result = racc_mailer($new_donor_id,"yes");	
 			$success = 'yes';
 		} elseif ($donation_frequency == "check"){

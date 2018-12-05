@@ -25,8 +25,8 @@ jQuery(document).ready(function($) {
 					var optionalperiods = entry.optionalperiods;
 					var payroll = entry.payroll;
 					var dg = entry.dg;
-					var address = urls.site_url + "/springcampaign2018/?org=" + org + "&pp=" + payperiods
-						+ "&op=" + optionalperiods + "&pr=" + payroll + "&dg=" + dg;
+					var address = urls.site_url + "/artscampaign/?org=" + org + "&pp=" + payperiods
+						+ "&op=" + optionalperiods + "&payroll=" + payroll + "&dg=" + dg;
 					document.location.assign(address);
 					return false;
 				}	

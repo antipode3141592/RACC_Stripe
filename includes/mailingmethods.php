@@ -6,7 +6,7 @@ function racc_mailer($donor_id,$success="no"){
 
 	try{
 		$results = $wpdb->get_results(
-			$wpdb->prepare('CALL sp_getsingledonordata(%s)',$donor_id));
+			$wpdb->prepare('CALL sp_getresultsdata(%s)',$donor_id));
 		if ($results){
 			$timestamp = $results[0]->timestamp;
 		    $donor_first_name = $results[0]->first_name;
@@ -29,7 +29,9 @@ function racc_mailer($donor_id,$success="no"){
 		    $donor_city = $results[0]->city;
 		    $donor_state = $results[0]->state;
 		    $donor_zip = $results[0]->zipcode;
-		    $artscard_name = $results[0]->artscard_name;
+		    $artscard_first_name = $results[0]->artscard_first_name;
+		    $artscard_last_name = $results[0]->artscard_last_name;
+		    $artscard_email = $results[0]->artscard_email;
 		    $artscard_address1 = $results[0]->artscard_add1;
 		    $artscard_address2 = $results[0]->artscard_add2;
 		    $artscard_city = $results[0]->artscard_city;	
@@ -44,7 +46,7 @@ function racc_mailer($donor_id,$success="no"){
 			$message .=" leaderful";
 		}		
 		$message .= " contribution today. Your generous support helps our funded groups bring people together through shared experiences, boost our kids’ creativity and critical thinking, and ensure that a wide variety of performances and events are available to everyone in our community.</p>";
-		$message .= "<p>" . $donor_first_name . ", thanks again for helping us to bring the power and joy of the arts into our communities.</p>";
+		// $message .= "<p>" . $donor_first_name . ", thanks again for helping us to bring the power and joy of the arts into our communities.</p>";
 
 		if($anon == 'yes'){
 			$message.="<p>Your gift is marked as anonymous: we will withold your name from all publications.</p>";
@@ -53,11 +55,12 @@ function racc_mailer($donor_id,$success="no"){
 		if(($artscardqualify == 1)&&($giftartscard != 1)){	//$giftartscard can be null
 			$message.="<p>Your contribution qualifies you for The Arts Card! Watch for your new Arts Card to arrive by mail in the next couple of weeks. In the meantime, you can check out upcoming events here: <a href='https://artsimpactfund.racc.org/arts-card/'>artsimpactfund.racc.org/arts-card</a>.</p>";
 		}elseif(($artscardqualify == 1)&&($giftartscard == 1)){
-			$message.="<p>Your contribution qualifies you for The Arts Card! You have chosen to gift your Arts Card to ".$artscard_name.". We will mail them their Arts Card soon with a little note that it's a gift from you.</p>";
+			$message.="<p>Your contribution qualifies you for The Arts Card! You have chosen to gift your Arts Card to ".$artscard_first_name
+			." ".$artscard_last_name. ". We will mail them their Arts Card soon with a little note that it's a gift from you.</p>";
 		}
 
 		$message .= "<p>" . $donor_first_name . ", thanks again for bringing the power and joy of the arts into our communities through your support today.</p>";
-		$message .= "<p>Sincerely,<br>Your Arts Advocacy Team<br>503-823-2969<br><a href='mailto:artsimpactfund@racc.org'>artsimpactfund@racc.org</a>";
+		$message .= "<p>Sincerely,<br>Windy Hovey<br>Workplace Giving Coordinator<br>503-823-2969<br><a href='mailto:artsimpactfund@racc.org'>artsimpactfund@racc.org</a>";
 		
 		$message .= "<hr><br><b>Tax Receipt and Pledge Distribution</b></p>";
 
@@ -81,24 +84,26 @@ function racc_mailer($donor_id,$success="no"){
 
 		switch($paytype){
 			case "check":
-				$message.="<p>Please mail your check at your earliest convenience:<br>Regional Arts and Culture Council<br>411 NW Park Avenue<br>Suite 101"
+				$message.= "<p>Please mail your check at your earliest convenience:<br>Regional Arts and Culture Council<br>411 NW Park Avenue<br>Suite 101"
 					."<br>Portland, OR 97209</p>";
 				break;
 			case "workplace":
-				$message.="<p>Your payroll deduction of $".number_format(floatval($period_total),2)
+				$message.= "<p>Your payroll deduction of $".number_format(floatval($period_total),2)
 					." will continue for ". number_format($period_count,0,'','') ." pay periods.</p>";
 				break;
+			case "ongoing":
+				$message .= "<p>Your payroll deduction of $".number_format(floatval($period_total),2)
+					." per pay period will continue until you opt out. You may opt out by contacting your HR representative.</p>";
 			case "cc-once":
-				$message.="<p>Your payment of $". number_format($fund_total,2). " has been received, thank you!</p>";
+				$message.= "<p>Your payment of $". number_format($fund_total,2). " has been received, thank you!</p>";
 				break;
 			case "cc-recur":
-				$message.="<p>Your monthtly gift of $".number_format(floatval($period_total),2)
+				$message.= "<p>Your monthtly gift of $".number_format(floatval($period_total),2)
 						." has begun. We will send you a new acknowledgement and Arts Card (if applicable) each year. You may update or cancel your recurring gifts at any time by calling us at 503-823-2969 or e-mail us at <a href='mailto:artsimpactfund@racc.org'>artsimpactfund@racc.org</a>.</p>";
 				break;
 		}
 
 		$message .= "<p><i>The Regional Arts & Culture Council is a 501(c)(3) nonprofit organization – Tax ID #93-1059037. Your gift is tax deductible to the fullest extent of the law. This letter serves as documentation for your tax purposes, along with the following:  your check stub, personal bank record of this contribution, end-of-the-year paystub or Form W-2, or other employer-furnished document showing the amount withheld for this contribution. If you received The Arts Card, please note that this donor benefit has no cash value. If you use The Arts Card to receive complimentary tickets to events and performances, it may lessen the tax-deductibility of your gift; please consult your tax advisor.</i></p>";
-		
 
 		$headers[] = 'From: artsimpactfund@racc.org';
 		$headers[] = 'Content-type: text/html';

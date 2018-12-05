@@ -10,7 +10,8 @@ function racc_stripe_resultpage($atts, $content = null){
 	if(($donor_id) && ($success == 'yes')){
 		//get data from db
 		$results = $wpdb->get_results(
-			$wpdb->prepare('CALL sp_getsingledonordata(%s)',$donor_id));
+			// $wpdb->prepare('CALL sp_getsingledonordata(%s)',$donor_id));
+			$wpdb->prepare('CALL sp_getresultsdata(%s)',$donor_id));
 		if ($results){
 			$timestamp = $results[0]->timestamp;
 		    $donor_first_name = $results[0]->first_name;
@@ -33,7 +34,9 @@ function racc_stripe_resultpage($atts, $content = null){
 		    $donor_city = $results[0]->city;
 		    $donor_state = $results[0]->state;
 		    $donor_zip = $results[0]->zipcode;
-		    $artscard_name = $results[0]->artscard_name;
+		    $artscard_first_name = $results[0]->artscard_first_name;
+		    $artscard_last_name = $results[0]->artscard_last_name;
+		    $artscard_email = $results[0]->artscard_email;
 		    $artscard_address1 = $results[0]->artscard_add1;
 		    $artscard_address2 = $results[0]->artscard_add2;
 		    $artscard_city = $results[0]->artscard_city;	
@@ -49,7 +52,6 @@ function racc_stripe_resultpage($atts, $content = null){
 					_e("leaderful");
 				}
 				?> contribution today. Your generous support helps our funded groups bring people together through shared experiences, boost our kids’ creativity and critical thinking, and ensure that a wide variety of performances and events are available to everyone in our community.</p>
-				<p><?php _e($donor_first_name) ?>, thanks again for helping us to bring the power and joy of the arts into our communities.</p>
 
 				<p><?php _e("A donation receipt will be e-mailed to you at " . $donor_email . ".")  ?></p>
 			</div>
@@ -61,14 +63,14 @@ function racc_stripe_resultpage($atts, $content = null){
 				if(($artscardqualify == 1)&&($giftartscard != 1)){	//$giftartscard can be null
 					?><div id="artscard_div"><p>Your contribution qualifies you for The Arts Card! Watch for your new Arts Card to arrive by mail in the next couple of weeks. In the meantime, you can check out upcoming events here: <a href='https://artsimpactfund.racc.org/arts-card/'>artsimpactfund.racc.org/arts-card</a>.</p></div><?php
 				}elseif(($artscardqualify == 1)&&($giftartscard == 1)){
-					?><div id="artscard_div"><p>Your contribution qualifies you for The Arts Card! You have chosen to gift your Arts Card to <?php _e($artscard_name) ?>. We will mail them their Arts Card soon with a little note that it's a gift from you.</p></div><?php
+					?><div id="artscard_div"><p>Your contribution qualifies you for The Arts Card! You have chosen to gift your Arts Card to <?php _e($artscard_first_name . " " . $artscard_last_name) ?>. We will mail them their Arts Card soon with a little note that it's a gift from you.</p></div><?php
 				}
 
 			?>
 
 			<div id="results_main_body"><p><?php
 				$message = "<p>" . $donor_first_name . ", thanks again for bringing the power and joy of the arts into our communities through your support today.</p>";
-				$message .= "<br><p>Sincerely,<br>Your Arts Advocacy Team<br>503-823-2969<br><a href='mailto:artsimpactfund@racc.org'>artsimpactfund@racc.org</a>";
+				$message .= "<br><p>Sincerely,<br>Windy Hovey<br>Workplace Giving Coordinator<br>503-823-2969<br><a href='mailto:artsimpactfund@racc.org'>artsimpactfund@racc.org</a>";
 				$message .= "<hr><br><b>Tax Receipt and Pledge Distribution</b></p>";
 
 				$message .= "<p>Donor: " . $donor_first_name . " " . $donor_last_name;
