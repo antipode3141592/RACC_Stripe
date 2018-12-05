@@ -163,7 +163,7 @@ jQuery(document).ready(function($){
 		}
 		if($('#sc_ongoing').val() == 'no'){
 			$('#workplace_ongoing_div').hide();
-			jQuery('#donationradio3').click();
+			// jQuery('#donationradio3').click();
 		}else{		
 			$('#workplace_ongoing_div').show();
 			jQuery('#donationradio6').click();
