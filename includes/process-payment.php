@@ -64,11 +64,10 @@ function racc_stripe_process_payment() {
 			if($giftartscard == 'yes'){
 				$db_giftartscard = 1;
 			}else {$db_giftartscard = 0;}
-			$browser = get_browser(null,false);
 
 			//store basic contact data
 			$rows_inserted = $wpdb->query(
-				$wpdb->prepare("CALL sp_adddonor(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $donor_first_name, '', $donor_last_name, $new_donor_id, $anon, $db_artscard, $db_giftartscard, $org, $browser->parent, $browser->platform, $sc_org, $gift_donor_id));
+				$wpdb->prepare("CALL sp_adddonor(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $donor_first_name, '', $donor_last_name, $new_donor_id, $anon, $db_artscard, $db_giftartscard, $org, '', '', $sc_org, $gift_donor_id));
 			$rows_inserted = $wpdb->query(
 				$wpdb->prepare("CALL sp_addcontactinfo(%s,%s,%s)", "email", $donor_email, $new_donor_id));
 			if($donor_phone != null){
@@ -81,7 +80,7 @@ function racc_stripe_process_payment() {
 			if($giftartscard == "yes")
 			{
 			$rows_inserted = $wpdb->query(
-				$wpdb->prepare("CALL sp_adddonor(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $artscard_first_name, '', $artscard_last_name, $gift_donor_id, $anon ,$db_artscard, $db_giftartscard, $org, $browser->parent, $browser->platform,'', $new_donor_id));
+				$wpdb->prepare("CALL sp_adddonor(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $artscard_first_name, '', $artscard_last_name, $gift_donor_id, $anon ,$db_artscard, $db_giftartscard, $org, '', '','', $new_donor_id));
 			$rows_inserted = $wpdb->query(
 				$wpdb->prepare("CALL sp_addcontactinfo(%s,%s,%s)", "email", $artscard_email, $gift_donor_id));
 			$rows_inserted = $wpdb->query(
