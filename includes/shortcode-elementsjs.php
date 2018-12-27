@@ -191,7 +191,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 			</div>
 		</div>
 		<div id="artscard_address_input" style="display: none">
-			<h3>Arts Card Recepient</h3>
+			<h3>Arts Card Recipient</h3>
 			<div class="form-row" id="artscard_name_div">
 				<label for="artscard_name">First Name *</label>
 				<input type="text" size="50" maxlength="50" name="artscard_first_name" id="artscard_first_name" class="input_text" autocomplete="section-gift name" />
