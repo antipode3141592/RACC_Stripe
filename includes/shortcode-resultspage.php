@@ -101,6 +101,13 @@ function racc_stripe_resultpage($atts, $content = null){
 					$message.="<p>Your payroll deduction of $".number_format(floatval($period_total),2)
 						." will continue for ". number_format($period_count,0,'','') ." pay periods.</p>";
 					break;
+				case "ongoing":
+					$message .= "<p>Your payroll deduction of $".number_format(floatval($period_total),2)
+						." per pay period will continue until you opt out. You may opt out by contacting your HR representative.</p>";
+					break;
+				case "cc-once":
+					$message.= "<p>Your payment of $". number_format($fund_total,2). " has been received, thank you!</p>";
+					break;
 				case "cc-recur":
 					$message.="<p>Your monthly gift of $".number_format(floatval($period_total),2)
 							." has begun. We will send you a new acknowledgement and Arts Card (if applicable) each year. You may update or cancel your recurring gifts at any time by calling us at 503-823-2969 or e-mail us at <a href='mailto:artsimpactfund@racc.org'>artsimpactfund@racc.org</a>.</p>";

@@ -19,7 +19,7 @@ function racc_db_download() {
 		    header("Content-Type: text/csv; charset=utf-8");
 		    header("Content-Disposition: attachment; filename=\"" . $filename . " " . $date . ".csv\";" );
 		    header("Content-Transfer-Encoding: binary");
-		    fputcsv( $output, array('timestamp', 'donor_id', 'first_name', 'last_name', 'anon', 'artscard', 'giftartscard', 'organization', 'org_page', 'email', 'phone', 'fund_amount', 'fund_name', 'pledgetotal', 'paytype', 'periodtotal','periods', 'address1', 'address2', 'city', 'state', 'zipcode', 'comment', 'browser', 'platform','Campaign', 'Appeal', 'Fund', 'Gift ID', 'Gift Type', 'Arts Card Expiry', 'Arts Card Description', 'Arts Card Name'));
+		    fputcsv( $output, array('timestamp', 'donor_id', 'first_name', 'last_name', 'anon', 'artscard', 'giftartscard', 'organization', 'org_page', 'email', 'phone', 'fund_amount', 'fund_name', 'pledgetotal', 'paytype', 'periodtotal','periods', 'address1', 'address2', 'city', 'state', 'zipcode', 'artscard_name', 'artscard_add1', 'artscard_add2', 'artscard_city', 'artscard_state', 'artscard_zip','artscard_email', 'comment', 'browser', 'platform','Campaign', 'Appeal', 'Fund', 'Gift ID', 'Gift Type', 'Arts Card Expiry', 'Arts Card Description', 'Arts Card Name', 'Reciprocal', 'Relationship'));
 		    foreach ($results as $value) {
 		        $modified_values = array(
 		                        $value->timestamp,
@@ -43,7 +43,14 @@ function racc_db_download() {
 		                        $value->address2,	
 		                        $value->city,	
 		                        $value->state,	
-		                        $value->zipcode
+		                        $value->zipcode,	
+		                        $value->artscard_name,	
+		                        $value->artscard_add1,	
+		                        $value->artscard_add2,	
+		                        $value->artscard_city,	
+		                        $value->artscard_state,	
+		                        $value->artscard_zip,
+		                        $value->artscard_email,
 		                        $value->comment,
 		                        $value->browser,
 		                        $value->platform,
@@ -54,7 +61,10 @@ function racc_db_download() {
 		                        'pledge',
 		                        '',
 		                        '',
-		                        '');
+		                        '',
+		                        'Employee',
+		                        'Employer'
+		        );
 		        fputcsv( $output, $modified_values );
 		    }
 		    exit;

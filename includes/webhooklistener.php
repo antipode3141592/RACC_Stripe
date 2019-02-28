@@ -22,7 +22,7 @@ function racc_stripe_listener($atts, $content = null){
 			// grab the event information
 			$event_json = json_decode($body);
 		}catch(Exception $e){
-			error_log("webhooklistenere error: " + $e->message);
+			error_log("webhooklistener error: " + $e->message);
 		}
 		$subject = '';
 		$message = '';
@@ -39,7 +39,12 @@ function racc_stripe_listener($atts, $content = null){
 
 				// successful payment, both one time and recurring payments
 				if($event->type == 'charge.succeeded') {
-					$result = racc_mailer($customer_wp_id,"yes");	
+					if($event->invoice == null){
+						
+						$result = racc_mailer($customer_wp_id,"yes");
+					} else {
+						error_log("webhooklistener error:  charge.succeeded returned a invoice id, skipping email " + $event->invoice)
+					}
 				}
 				// failed payment
 				elseif($event->type == 'charge.failed') {
