@@ -6,7 +6,7 @@ Description: Plugin with shortcode form for pledge payments
 Author: Sean Kirkpatrick
 Author URI: https://racc.org
 Contributors: 
-Version: 1.5
+Version: 1.8
 Date of Last Revision:  11/12/2018
 */
  
@@ -50,5 +50,7 @@ if(is_admin()) {
 	include(STRIPE_BASE_DIR . '/includes/dbdownload.php');
 	include(STRIPE_BASE_DIR . '/includes/shortcode-orgpicker.php');
 	include(STRIPE_BASE_DIR . '/includes/db_functions.php');
+	include(STRIPE_BASE_DIR . '/includes/shortcode-email_editor.php');
+	include(STRIPE_BASE_DIR . '/includes/email_editor_update.php');
 }
 
