@@ -1,7 +1,7 @@
 <?php
 
 global $racc_db_version;
-$racc_db_version = '1.6';
+$racc_db_version = '1.8';
 
 function racc_db_install() {
 	global $wpdb;
@@ -30,6 +30,34 @@ function racc_db_install() {
 			error_log($value);
 		}
 	}
+
+	//// pattern for adding new tables
+	//// note that there MUST be two spaces between PRIMARY KEY and (id)
+	////   NOT "PRIMARY KEY (id)" but "PRIMARY KEY  (id)", this is a quirk of dbDeltas parser
+	// $sql = "[query here]";
+	// $results = dbDelta($sql);
+	// if ($results){
+	// 	foreach ($results as $value) {
+	// 		error_log($value);
+	// 	}
+	// }
+
+
+	//table for storing email templates
+	$sql = "CREATE TABLE racc_email_templates (
+		id int(11) NOT NULL AUTO_INCREMENT,
+		template_type varchar(50) NOT NULL,
+		email_subject varchar(100) NOT NULL,
+		email_body text NOT NULL,
+		PRIMARY KEY  (id)
+		) $charset_collate;";
+	$results = dbDelta($sql);
+	if ($results){
+		foreach ($results as $value) {
+			error_log($value);
+		}
+	}
+
 
 	$sql = "CREATE TABLE racc_donor_comments (
   		id int(11) NOT NULL AUTO_INCREMENT,
@@ -102,6 +130,16 @@ function racc_db_install() {
 			error_log($value);
 		}
 	}
+
+//pattern for adding new tables
+	// $sql = "[query here]";
+	// $results = dbDelta($sql);
+	// if ($results){
+	// 	foreach ($results as $value) {
+	// 		error_log($value);
+	// 	}
+	// }
+
 
 	add_option( 'racc_db_version', $racc_db_version );
 

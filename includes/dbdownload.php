@@ -43,7 +43,7 @@ function racc_db_download() {
 		                        $value->address2,	
 		                        $value->city,	
 		                        $value->state,	
-		                        $value->zipcode
+		                        $value->zipcode,
 		                        $value->comment,
 		                        $value->browser,
 		                        $value->platform,
