@@ -11,7 +11,7 @@ function racc_db_install() {
 	$charset_collate = $wpdb->get_charset_collate();	
 
 	$sql = "CREATE TABLE racc_donors(
-		id bigint(20) NOT NULL,
+		id bigint(20) NOT NULL AUTO_INCREMENT,
 		first_name varchar(50) NOT NULL,
 		middle_name varchar(50) DEFAULT NULL,
 		last_name varchar(50) NOT NULL,
@@ -28,11 +28,11 @@ function racc_db_install() {
   		PRIMARY KEY  (id)
 		) $charset_collate;";
 	$results = dbDelta($sql);
-	if ($results){
-		foreach ($results as $value) {
-			error_log($value);
-		}
-	}
+	// if ($results){
+	// 	foreach ($results as $value) {
+	// 		// error_log($value);
+	// 	}
+	// }
 
 	$sql = "CREATE TABLE racc_addresses(
 		type varchar(20) NOT NULL,
@@ -42,17 +42,17 @@ function racc_db_install() {
 		city varchar(50) NOT NULL,
 		state varchar(2) NOT NULL,
 		zipcode int(9) NOT NULL,
-		id bigint(20) NOT NULL,
+		id bigint(20) NOT NULL AUTO_INCREMENT,
 		timestamp datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		name varchar(100),
 		PRIMARY KEY  (id)
 		) $charset_collate;";
 	$results = dbDelta($sql);
-	if ($results){
-		foreach ($results as $value) {
-			error_log($value);
-		}
-	}
+	// if ($results){
+	// 	foreach ($results as $value) {
+	// 		// error_log($value);
+	// 	}
+	// }
 
 	//// pattern for adding new tables
 	//// note that there MUST be two spaces between PRIMARY KEY and (id)
@@ -74,11 +74,11 @@ function racc_db_install() {
 		PRIMARY KEY  (id)
 		) $charset_collate;";
 	$results = dbDelta($sql);
-	if ($results){
-		foreach ($results as $value) {
-			error_log($value);
-		}
-	}
+	// if ($results){
+	// 	foreach ($results as $value) {
+	// 		error_log($value);
+	// 	}
+	// }
 
 
 	$sql = "CREATE TABLE racc_donor_comments (
@@ -88,15 +88,15 @@ function racc_db_install() {
   		PRIMARY KEY  (id)
 		) $charset_collate;";
 	$results = dbDelta($sql);
-	if ($results){
-		foreach ($results as $value) {
-			error_log($value);
-		}
-	}
+	// if ($results){
+	// 	foreach ($results as $value) {
+	// 		error_log($value);
+	// 	}
+	// }
 
 
 	$sql = "CREATE TABLE racc_donor_allocations(
-		id bigint(20) NOT NULL,
+		id bigint(20) NOT NULL AUTO_INCREMENT,
 		fund_name varchar(100) NOT NULL,
 		fund_amount decimal(10,2) NOT NULL,
 		donor_id varchar(50) NOT NULL,
@@ -109,26 +109,26 @@ function racc_db_install() {
   		PRIMARY KEY  (id)
 		) $charset_collate;";
 	$results = dbDelta($sql);
-	if ($results){
-		foreach ($results as $value) {
-			error_log($value);
-		}
-	}
+	// if ($results){
+	// 	foreach ($results as $value) {
+	// 		error_log($value);
+	// 	}
+	// }
 
 	$sql = "CREATE TABLE racc_contact(
 		timestamp datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		id bigint(20) NOT NULL,
+		id bigint(20) NOT NULL AUTO_INCREMENT,
 		donor_id varchar(50) NOT NULL,
 		type varchar(50) NOT NULL,
 		address varchar(50) NOT NULL,
   		PRIMARY KEY  (id)
 		) $charset_collate;";
 	$results = dbDelta($sql);
-	if ($results){
-		foreach ($results as $value) {
-			error_log($value);
-		}
-	}
+	// if ($results){
+	// 	foreach ($results as $value) {
+	// 		error_log($value);
+	// 	}
+	// }
 
 	add_option( 'racc_db_version', $racc_db_version );
 

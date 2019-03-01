@@ -43,7 +43,7 @@ function racc_stripe_listener($atts, $content = null){
 						
 						$result = racc_mailer($customer_wp_id,"yes");
 					} else {
-						error_log("webhooklistener error:  charge.succeeded returned a invoice id, skipping email " + $event->invoice)
+						error_log("webhooklistener error:  charge.succeeded returned a invoice id, skipping email " + $event->invoice);
 					}
 				}
 				// failed payment
