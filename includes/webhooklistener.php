@@ -7,8 +7,12 @@ function racc_stripe_listener($atts, $content = null){
 		global $wpdb;
 		//load the stripe libraries (newest Stripe library has init.php script that loads everything in the correct order
 		require_once(STRIPE_BASE_DIR . '/init.php');
+
+		$sig_header = $_SERVER["HTTP_STRIPE_SIGNATURE"];	//grab signing signature
+		$endpoint_secret = "whsec_ZIbhMsk52njFhYrfHod7Fl0GYTy2rUfz";	//TODO: move to settings page
+
 		//check for test mode
-		if(isset($stripe_options['test_mode']) && $stripe_options['test_mode']) {
+		if(isset($stripe_options['test_mode']) && $stripe_options['test_mode']=="test")  {
 			$secret_key = $stripe_options['test_secret_key'];
 		} else {
 			$secret_key = $stripe_options['live_secret_key'];
@@ -30,73 +34,57 @@ function racc_stripe_listener($atts, $content = null){
 		// re-retrieving helps prevent attacks with fabricated event ids
 		if(isset($event_json->id)) {
 			//if real event, respond with 2xx HTTP status code
-			$event_id = $event_json->id;
+			// $event_id = $event_json->id;
+			// $event = $event_json;
+			error_log(json_encode($event_json, JSON_PRETTY_PRINT));
 			// to verify this is a real event, we re-retrieve the event from Stripe 
 			try{
-				$event = \Stripe\Event::retrieve($event_id);
+				$event = \Stripe\Webhook::constructEvent($body, $sig_header, $endpoint_secret);
+				// $event = \Stripe\Event::retrieve($event_id);
 				$customer = \Stripe\Customer::retrieve($event->data->object->customer);
 				$customer_wp_id = $customer->metadata->id_token;
+				// error_log($customer);
+				// error_log($customer_wp_id);
 
 				// successful payment, both one time and recurring payments
-				if($event->type == 'charge.succeeded') {
-					if($event->invoice == null){
-						
-						$result = racc_mailer($customer_wp_id,"yes");
+				if(isset($event) && ($event->type == 'charge.succeeded')) {
+					$invoice = isset($event->data->object->invoice) ? $event->data->object->invoice : null;
+					if($invoice == null) {
+						// error_log("charge succeeded webhook");
+						$result = racc_mailer_2($customer_wp_id,"yes", "cc-once");
 					} else {
-						error_log("webhooklistener error:  charge.succeeded returned a invoice id, skipping email " + $event->invoice);
+						error_log("webhooklistener error:  charge.succeeded returned a invoice id, skipping email " + $invoice);
 					}
+				}
+				//
+				elseif($event->type == 'customer.subscription.created'){
+					$period = $event->data->object->plan->interval;
+					switch ($period){
+						case 'month':
+							// error_log("month!");
+							$result = racc_mailer_2($customer_wp_id, "yes", "cc-recur");
+							break;
+						case 'year':
+							// error_log("annual!?!?!");
+							$result = racc_mailer_2($customer_wp_id, "yes", "cc-annual");
+							break;
+						default:
+							error_log("default -  no known interval/period type: " . $period);
+					}
+					// error_log($period);
 				}
 				// failed payment
 				elseif($event->type == 'charge.failed') {
-					$result = racc_mailer($customer_wp_id,"no");
+					// error_log($event->type);
+					$result = racc_mailer_2($customer_wp_id,"no", "charge-failed");
 				}
 				else{
 					error_log("No handler for this event type: " . $event->type);
 				}
-			} catch(\Stripe\Error\Card $e) {
-				//decline error
-				$body = $e->getJsonBody();
-				$err = $body['error'];
-  				$error_message = $err['message'];
-  				error_log("Error Type: " + $err['type']);
-  				error_log("Error Message: " + $err['message']);
-			} catch (\Stripe\Error\RateLimit $e) {
-			  // Too many requests made to the API too quickly
-				$body = $e->getJsonBody();
-				$err = $body['error'];
-  				$error_message = $err['message'];
-  				error_log("Error Type: " + $err['type']);
-  				error_log("Error Message: " + $err['message']);
-			} catch (\Stripe\Error\InvalidRequest $e) {
-			  // Invalid parameters were supplied to Stripe's API
-				$body = $e->getJsonBody();
-				$err = $body['error'];
-  				$error_message = $err['message'];
-  				error_log("Error Type: " + $err['type']);
-  				error_log("Error Message: " + $err['message']);
-			} catch (\Stripe\Error\Authentication $e) {
-			  // Authentication with Stripe's API failed
-			  // (maybe you changed API keys recently)
-				$body = $e->getJsonBody();
-				$err = $body['error'];
-  				$error_message = $err['message'];
-  				error_log("Error Type: " + $err['type']);
-  				error_log("Error Message: " + $err['message']);
-			} catch (\Stripe\Error\ApiConnection $e) {
-			  // Network communication with Stripe failed
-				$body = $e->getJsonBody();
-				$err = $body['error'];
-  				$error_message = $err['message'];
-  				error_log("Error Type: " + $err['type']);
-  				error_log("Error Message: " + $err['message']);
 			} catch (\Stripe\Error\Base $e) {
 			  // Display a very generic error to the user, and maybe send
 			  // yourself an email
-				$body = $e->getJsonBody();
-				$err = $body['error'];
-  				$error_message = $err['message'];
-  				error_log("Error Type: " + $err['type']);
-  				error_log("Error Message: " + $err['message']);
+				error_log($e->getMessage());
 			}catch(Exception $e){
 				error_log("webhooklistener error: " + $e->message);
 			}

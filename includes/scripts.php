@@ -6,7 +6,7 @@ function racc_load_stripe_scripts() {
 	global $racc_db_version;
  
 	// check to see if we are in test mode
-	if(isset($stripe_options['test_mode']) && $stripe_options['test_mode']) {
+	if(isset($stripe_options['test_mode']) && $stripe_options['test_mode'] == "test") {
 		$publishable = $stripe_options['test_publishable_key'];
 	} else {
 		$publishable = $stripe_options['live_publishable_key'];
@@ -19,6 +19,7 @@ function racc_load_stripe_scripts() {
 	wp_enqueue_script( 'grecaptcha', 'https://www.google.com/recaptcha/api.js' );
 	wp_enqueue_script('selector', STRIPE_BASE_URL . '/includes/js/selector.js');
 	wp_enqueue_script('results', STRIPE_BASE_URL . '/includes/js/results.js');
+	wp_enqueue_script('email_editor_preview', STRIPE_BASE_URL . '/includes/js/email_editor_preview.js');
 	wp_localize_script('stripe-processing', 'stripe_vars', array(
 			'publishable_key' => $publishable,
 		)

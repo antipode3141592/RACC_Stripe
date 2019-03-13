@@ -52,6 +52,9 @@ function racc_stripe_process_payment() {
 		$giftartscard = isset($_POST['giftartscard']) ? $_POST['giftartscard'] : 'no';
  		
 		$new_donor_id = date('YmdHis') . rand(1,1000000) . substr($donor_first_name,0,1) . substr($donor_last_name,0,1) ;
+
+		// error_log($donation_frequency);
+
 		if ($giftartscard){
 			$gift_donor_id = date('YmdHis') .rand(1,1000000) . substr($artscard_first_name,0,1) . substr($artscard_last_name,0,1); }
 			else { $gift_donor_id = null; }
@@ -110,7 +113,7 @@ function racc_stripe_process_payment() {
 
  		if (($donation_frequency == "cc-once") or ($donation_frequency == "cc-recur") or ($donation_frequency == "cc-annual")){
 			//check for test mode
-			if(isset($stripe_options['test_mode']) && $stripe_options['test_mode']) {
+			if(isset($stripe_options['test_mode']) && $stripe_options['test_mode'] == "test") {
 				$secret_key = $stripe_options['test_secret_key'];
 				$product_id = 'prod_CmGEdHms0uIcOx';
 			} else {
@@ -169,47 +172,47 @@ function racc_stripe_process_payment() {
 					);
 					$success = 'yes';
 				}
-			} catch(\Stripe\Error\Card $e) {
-				//decline error
-				$success = 'no';
-				$body = $e->getJsonBody();
-				$err = $body['error'];
-  				$error_message = $err['message'];
-  				error_log("Error Type: " + $err['type']);
-  				error_log("Error Message: " + $err['message']);
-			} catch (\Stripe\Error\RateLimit $e) {
-			  // Too many requests made to the API too quickly
-				$success = 'no';
-				$body = $e->getJsonBody();
-				$err = $body['error'];
-  				$error_message = $err['message'];
-  				error_log("Error Type: " + $err['type']);
-  				error_log("Error Message: " + $err['message']);
-			} catch (\Stripe\Error\InvalidRequest $e) {
-			  // Invalid parameters were supplied to Stripe's API
-				$success = 'no';
-				$body = $e->getJsonBody();
-				$err = $body['error'];
-  				$error_message = $err['message'];
-  				error_log("Error Type: " + $err['type']);
-  				error_log("Error Message: " + $err['message']);
-			} catch (\Stripe\Error\Authentication $e) {
-			  // Authentication with Stripe's API failed
-			  // (maybe you changed API keys recently)
-				$success = 'no';
-				$body = $e->getJsonBody();
-				$err = $body['error'];
-  				$error_message = $err['message'];
-  				error_log("Error Type: " + $err['type']);
-  				error_log("Error Message: " + $err['message']);
-			} catch (\Stripe\Error\ApiConnection $e) {
-			  // Network communication with Stripe failed
-				$success = 'no';
-				$body = $e->getJsonBody();
-				$err = $body['error'];
-  				$error_message = $err['message'];
-  				error_log("Error Type: " + $err['type']);
-  				error_log("Error Message: " + $err['message']);
+			// } catch(\Stripe\Error\Card $e) {
+			// 	//decline error
+			// 	$success = 'no';
+			// 	$body = $e->getJsonBody();
+			// 	$err = $body['error'];
+  	// 			$error_message = $err['message'];
+  	// 			error_log("Error Type: " + $err['type']);
+  	// 			error_log("Error Message: " + $err['message']);
+			// } catch (\Stripe\Error\RateLimit $e) {
+			//   // Too many requests made to the API too quickly
+			// 	$success = 'no';
+			// 	$body = $e->getJsonBody();
+			// 	$err = $body['error'];
+  	// 			$error_message = $err['message'];
+  	// 			error_log("Error Type: " + $err['type']);
+  	// 			error_log("Error Message: " + $err['message']);
+			// } catch (\Stripe\Error\InvalidRequest $e) {
+			//   // Invalid parameters were supplied to Stripe's API
+			// 	$success = 'no';
+			// 	$body = $e->getJsonBody();
+			// 	$err = $body['error'];
+  	// 			$error_message = $err['message'];
+  	// 			error_log("Error Type: " + $err['type']);
+  	// 			error_log("Error Message: " + $err['message']);
+			// } catch (\Stripe\Error\Authentication $e) {
+			//   // Authentication with Stripe's API failed
+			//   // (maybe you changed API keys recently)
+			// 	$success = 'no';
+			// 	$body = $e->getJsonBody();
+			// 	$err = $body['error'];
+  	// 			$error_message = $err['message'];
+  	// 			error_log("Error Type: " + $err['type']);
+  	// 			error_log("Error Message: " + $err['message']);
+			// } catch (\Stripe\Error\ApiConnection $e) {
+			//   // Network communication with Stripe failed
+			// 	$success = 'no';
+			// 	$body = $e->getJsonBody();
+			// 	$err = $body['error'];
+  	// 			$error_message = $err['message'];
+  	// 			error_log("Error Type: " + $err['type']);
+  	// 			error_log("Error Message: " + $err['message']);
 			} catch (\Stripe\Error\Base $e) {
 			  // Display a very generic error to the user, and maybe send
 			  // yourself an email
@@ -225,13 +228,14 @@ function racc_stripe_process_payment() {
 				error_log('Stripe Customer Create Error: '.$e->getMessage());
 			}
 		} elseif ($donation_frequency == "workplace"){
-			$result = racc_mailer($new_donor_id,"yes");	
+			$result = racc_mailer_2($new_donor_id,"yes", $donation_frequency);	
 			$success = 'yes';
 		} elseif ($donation_frequency == "ongoing"){
-			$result = racc_mailer($new_donor_id,"yes");	
+			$result = racc_mailer_2($new_donor_id,"yes", $donation_frequency);	
 			$success = 'yes';
 		} elseif ($donation_frequency == "check"){
-			$result = racc_mailer($new_donor_id,"yes");	
+			error_log($donation_frequency);
+			$result = racc_mailer_2($new_donor_id,"yes", $donation_frequency);	
 			$success = 'yes';
 		}
 		
@@ -243,4 +247,11 @@ function racc_stripe_process_payment() {
 	}	
 }
 add_action('init', 'racc_stripe_process_payment',1,0);
+
+
+//return the title case (first letter of each word is uppercase) of $input
+function title_case($input){
+	return ucfirst(strtolower($input));
+}
+
 ?>

@@ -14,22 +14,16 @@ function RACC_stripe_render_options_page() {
 		<form id="stripe_settings_form" method="post" action="options.php">
  
 			<?php settings_fields('stripe_settings_group'); ?>
- 
+			<h3 class="title">API Keys</h3>
 			<table class="form-table">
 				<tbody>
 					<tr valign="top">	
 						<th scope="row" valign="top">Test Mode</th>
 						<td>
-							<input id="stripe_settings[test_mode]" name="stripe_settings[test_mode]" type="checkbox" value="1" <?php checked(1, $stripe_options['test_mode']); ?> />
+							<input id="stripe_settings[test_mode]" name="stripe_settings[test_mode]" type="checkbox" value="test" <?php checked("test", $stripe_options['test_mode']); ?> />
 							<label class="description" for="stripe_settings[test_mode]">Check this to use the plugin in test mode.</label>
 						</td>
 					</tr>
-				</tbody>
-			</table>	
- 
-			<h3 class="title">API Keys</h3>
-			<table class="form-table">
-				<tbody>
 					<tr valign="top">	
 						<th scope="row" valign="top">Live Secret</th>
 						<td>
@@ -56,20 +50,6 @@ function RACC_stripe_render_options_page() {
 						<td>
 							<input id="stripe_settings[test_publishable_key]" name="stripe_settings[test_publishable_key]" class="regular-text" type="text" value="<?php echo $stripe_options['test_publishable_key']; ?>"/>
 							<label class="description" for="stripe_settings[test_publishable_key]">Paste your test publishable key.</label>
-						</td>
-					</tr>
-					<tr valign="top">	
-						<th scope="row" valign="top">reCaptcha Site Key</th>
-						<td>
-							<input id="stripe_settings[site_key]" name="stripe_settings[site_key]" type="text" class="regular-text" value="<?php echo $stripe_options['site_key']; ?>"/>
-							<label class="description" for="stripe_settings[site_key]">Paste your site key.</label>
-						</td>
-					</tr>
-					<tr valign="top">	
-						<th scope="row" valign="top">reCaptcha Secret Key</th>
-						<td>
-							<input id="stripe_settings[secret_key]" name="stripe_settings[secret_key]" class="regular-text" type="text" value="<?php echo $stripe_options['secret_key']; ?>"/>
-							<label class="description" for="stripe_settings[secret_key]">Paste your test secret key.</label>
 						</td>
 					</tr>
 				</tbody>

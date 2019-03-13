@@ -1,7 +1,7 @@
 <?php
 
 global $racc_db_version;
-$racc_db_version = '2.0';
+$racc_db_version = '2.3';	//updated 3/6/2019
 
 function racc_db_install() {
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -70,9 +70,17 @@ function racc_db_install() {
 		id int(11) NOT NULL AUTO_INCREMENT,
 		template_type varchar(50) NOT NULL,
 		email_subject varchar(100) NOT NULL,
-		email_body text NOT NULL,
+		email_body_id int(11) NOT NULL,
+		response_type varchar(50) NOT NULL,
 		PRIMARY KEY  (id)
 		) $charset_collate;";
+	$results = dbDelta($sql);
+
+	$sql ="CREATE TABLE racc_email_body (
+		id int(11) NOT NULL AUTO_INCREMENT,
+		email_body text NOT NULL,
+		PRIMARY KEY  (id)
+		) $charset_collate";
 	$results = dbDelta($sql);
 	// if ($results){
 	// 	foreach ($results as $value) {
@@ -130,8 +138,6 @@ function racc_db_install() {
 	// 	}
 	// }
 
-	add_option( 'racc_db_version', $racc_db_version );
-
 	$rows_inserted = $wpdb->query("CREATE PROCEDURE sp_getdonordata(IN StartDate DATETIME, IN EndDate DATETIME) select a.timestamp, a.donor_id, a.first_name, a.last_name, a.anon, a.artscard, a.giftartscard, a.organization, b.address as 'email', j.address as 'phone', d.fund_amount as 'community_fund', e.fund_amount as 'education_fund', g.fund_amount as 'designated_fund', g.fund_name as 'designated_name',d.pledgetotal, d.paytype, d.periodtotal, d.period_count, c.address1, c.address2, c.city, c.state, c.zipcode, f.name as 'artscard_name', f.address1 as 'artscard_add1', f.address2 as 'artscard_add2', f.city as 'artscard_city', f.state as 'artscard_state', f.zipcode as 'artscard_zip', k.address as 'artscard_email', h.comment, a.browser, a.platform from racc_donors as a left join racc_contact as b on (a.donor_id = b.donor_id AND b.type = 'email') left join racc_contact as j on (a.donor_id = j.donor_id AND j.type = 'phone') left join racc_contact as k on (k.donor_id = a.donor_id and k.type = 'email-artscard') left join racc_addresses as c on a.donor_id = c.donor_id left join racc_donor_allocations as d on (a.donor_id = d.donor_id AND d.fund_type = 'community') left join racc_donor_allocations as e on (a.donor_id = e.donor_id AND e.fund_type = 'education') left join racc_donor_allocations as g on (a.donor_id = g.donor_id AND g.fund_type = 'designated') left join racc_addresses as f on (a.donor_id = f.donor_id AND f.type='Arts Card') left join racc_donor_comments as h on a.donor_id = h.donor_id WHERE a.timestamp BETWEEN StartDate AND EndDate GROUP by a.donor_id");
 	// error_log("create stored procedure sp_getdonordata(): " + $rows_inserted);
 
@@ -163,19 +169,31 @@ function racc_db_install() {
 	// error_log("create stored procedure sp_addaddress(): " + $rows_inserted);
 
 	$rows_inserted = $wpdb->query("CREATE PROCEDURE sp_getresultsdata(IN DonorID VARCHAR(50)) select a.timestamp, a.donor_id, a.first_name, a.last_name, a.anon, a.artscard, a.giftartscard, a.organization, b.address as 'email', d.fund_amount as 'community_fund', e.fund_amount as 'education_fund', g.fund_amount as 'designated_fund', g.fund_name as 'designated_name',k.pledgetotal, k.paytype, k.periodtotal, k.period_count, c.address1, c.address2, c.city, c.state, c.zipcode, h.first_name as 'artscard_first_name', h.last_name as 'artscard_last_name', j.address as 'artscard_email', f.address1 as 'artscard_add1', f.address2 as 'artscard_add2', f.city as 'artscard_city', f.state as 'artscard_state', f.zipcode as 'artscard_zip', a.browser, a.platform from racc_donors as a left join racc_contact as b on (a.donor_id = b.donor_id AND b.type = 'email') left join racc_addresses as c on a.donor_id = c.donor_id left join racc_donor_allocations as d on (a.donor_id = d.donor_id AND d.fund_type = 'community') left join racc_donor_allocations as e on (a.donor_id = e.donor_id AND e.fund_type = 'education') left join racc_donor_allocations as g on (a.donor_id = g.donor_id AND g.fund_type = 'designated') left join racc_donors as h on (h.donor_id = a.gift_to_donor_id) left join racc_addresses as f on (a.gift_to_donor_id = f.donor_id) left join racc_contact as j on (j.donor_id = a.gift_to_donor_id and j.type = 'email') left join racc_donor_allocations as k on a.donor_id = k.donor_id WHERE a.donor_id = DonorID");
-	// error_log("create stored procedure sp_getresultsdata(): " + $rows_inserted);
 
 	$rows_inserted = $wpdb->query("CREATE PROCEDURE sp_getdonors(IN startdate DATETIME, IN enddate DATETIME) select a.timestamp, a.donor_id, a.first_name, a.last_name, a.anon, a.artscard, a.giftartscard, a.organization, a.org_page, b.address as 'email', j.address as 'phone', d.fund_amount, d.fund_name ,d.pledgetotal, d.paytype, d.periodtotal, d.period_count, c.address1, c.address2, c.city, c.state, c.zipcode, f.name as 'artscard_name', f.address1 as 'artscard_add1', f.address2 as 'artscard_add2', f.city as 'artscard_city', f.state as 'artscard_state', f.zipcode as 'artscard_zip', k.address as 'artscard_email', h.comment, a.browser, a.platform from racc_donors as a left join racc_contact as b on (a.donor_id = b.donor_id AND b.type = 'email') left join racc_contact as j on (a.donor_id = j.donor_id AND j.type = 'phone') left join racc_contact as k on (k.donor_id = a.donor_id and k.type = 'email-artscard') left join racc_addresses as c on a.donor_id = c.donor_id left join racc_donor_allocations as d on (a.donor_id = d.donor_id) left join racc_addresses as f on (a.donor_id = f.donor_id AND f.type='Arts Card') left join racc_donor_comments as h on a.donor_id = h.donor_id WHERE a.timestamp BETWEEN StartDate AND EndDate ORDER by a.donor_id");
-	// error_log("create stored procedure sp_getdonors(): " + $rows_inserted);
+
+	$rows_inserted = $wpdb->query("CREATE PROCEDURE sp_getemailtemplate(IN Response VARCHAR(50)) SELECT a.email_subject, b.email_body FROM racc_email_templates as a join racc_email_body as b on a.email_body_id = b.id  WHERE a.response_type=Response");
+
+	$rows_inserted = $wpdb->query("CREATE PROCEDURE sp_getemailtemplates(IN TemplateType VARCHAR(50)) SELECT a.id, a.template_type, a.email_subject, a.response_type, a.email_body_id, b.email_body FROM racc_email_templates as a join racc_email_body as b on a.email_body_id = b.id WHERE a.template_type=TemplateType");
+
+	$rows_inserted = $wpdb->query("CREATE PROCEDURE sp_updateemailbody(IN BodyText TEXT, IN BodyID INT(11)) UPDATE racc_email_body SET email_body=BodyText WHERE id=BodyID");
+
+	$rows_inserted = $wpdb->query("CREATE PROCEDURE sp_updateemailsubject(IN SubjectText VARCHAR(100), IN TemplateType VARCHAR(50), IN TemplateID INT(11)) UPDATE racc_email_templates SET email_subject=SubjectText WHERE template_type=TemplateType AND id=TemplateID");
+
+	update_option( 'racc_db_version', $racc_db_version );
 }
 
 function racc_update_db_check(){
 	global $racc_db_version;
-	if (get_site_option('racc_db_version') != $racc_db_version){
+	if (get_site_option('racc_db_version') < $racc_db_version){
+		error_log("Installing.... code DB Version = " . $racc_db_version . "; site DB version = " . get_site_option('racc_db_version'));
 		racc_db_install();
+	}else{
+		error_log("skipping db updates, installed RACC DB Version: " . get_site_option('racc_db_version'));
 	}
 }
 add_action('plugins_loaded', 'racc_update_db_check');
+
 
 //register database config functions
 register_activation_hook( __FILE__, 'racc_db_install' );
