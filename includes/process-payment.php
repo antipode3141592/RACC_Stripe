@@ -172,47 +172,17 @@ function racc_stripe_process_payment() {
 					);
 					$success = 'yes';
 				}
-			// } catch(\Stripe\Error\Card $e) {
-			// 	//decline error
-			// 	$success = 'no';
-			// 	$body = $e->getJsonBody();
-			// 	$err = $body['error'];
-  	// 			$error_message = $err['message'];
-  	// 			error_log("Error Type: " + $err['type']);
-  	// 			error_log("Error Message: " + $err['message']);
-			// } catch (\Stripe\Error\RateLimit $e) {
-			//   // Too many requests made to the API too quickly
-			// 	$success = 'no';
-			// 	$body = $e->getJsonBody();
-			// 	$err = $body['error'];
-  	// 			$error_message = $err['message'];
-  	// 			error_log("Error Type: " + $err['type']);
-  	// 			error_log("Error Message: " + $err['message']);
-			// } catch (\Stripe\Error\InvalidRequest $e) {
-			//   // Invalid parameters were supplied to Stripe's API
-			// 	$success = 'no';
-			// 	$body = $e->getJsonBody();
-			// 	$err = $body['error'];
-  	// 			$error_message = $err['message'];
-  	// 			error_log("Error Type: " + $err['type']);
-  	// 			error_log("Error Message: " + $err['message']);
-			// } catch (\Stripe\Error\Authentication $e) {
-			//   // Authentication with Stripe's API failed
-			//   // (maybe you changed API keys recently)
-			// 	$success = 'no';
-			// 	$body = $e->getJsonBody();
-			// 	$err = $body['error'];
-  	// 			$error_message = $err['message'];
-  	// 			error_log("Error Type: " + $err['type']);
-  	// 			error_log("Error Message: " + $err['message']);
-			// } catch (\Stripe\Error\ApiConnection $e) {
-			//   // Network communication with Stripe failed
-			// 	$success = 'no';
-			// 	$body = $e->getJsonBody();
-			// 	$err = $body['error'];
-  	// 			$error_message = $err['message'];
-  	// 			error_log("Error Type: " + $err['type']);
-  	// 			error_log("Error Message: " + $err['message']);
+			} catch(\Stripe\Error\Card $e) {
+				//decline error
+				$success = 'no';
+				$body = $e->getJsonBody();
+				$err = $body['error']; 
+  				$error_message = $err['message'];
+  				error_log("Error Type: " + $err['type']);
+  				error_log("Error Message: " + $err['message']);
+  				error_log('Code is: ' . $err['code']);
+  				error_log('Param is: ' . $err['param']);
+  				error_log('HTTP Status: '. $e->getHttpStatus());
 			} catch (\Stripe\Error\Base $e) {
 			  // Display a very generic error to the user, and maybe send
 			  // yourself an email
@@ -241,7 +211,7 @@ function racc_stripe_process_payment() {
 		
 		wp_safe_redirect(esc_url_raw(add_query_arg(array(
 			'success' => $success,
-			//'error_message' => $error_message,
+			'error_message' => $error_message,
 			'id' => $new_donor_id
 		), $redirect))); exit;
 	}	

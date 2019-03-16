@@ -25,7 +25,7 @@ function racc_stripe_email_editor_page($atts, $content = null){
 
 	?>
 	<div id='emaileditorforms'>
-		<form method="post" id=racc_email_template_selector_form" name="racc_email_template_selector_form">
+		<form method="post" id="racc_email_template_selector_form" name="racc_email_template_selector_form">
 			<h1>Email Template Selector</h1>
 			<label for="racc_email_selector">Template</label>
 			<select id="racc_email_selector" name="racc_email_selector">
@@ -33,7 +33,12 @@ function racc_stripe_email_editor_page($atts, $content = null){
 				<?php
 					$template_types = $wpdb->get_results("SELECT DISTINCT id, template_type from racc_email_templates");
 					foreach($template_types as $template){
-						_e('<option value="' .$template->template_type.'">'.$template->template_type.'</option>');
+
+						_e('<option value="' .$template->template_type . '"');
+						if ($template->template_type == $template_type){
+							_e(' selected="selected" ');
+						}
+						_e('>'.$template->template_type.'</option>');
 					}
 				?>
 			</select>

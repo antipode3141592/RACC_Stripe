@@ -132,6 +132,174 @@ function racc_mailer($donor_id,$success="no"){
 
 // //mail function that populates tokens in a text stream (search and replace all {{[token.name]}} with [token.value])
 function racc_mailer_2($donor_id,$success="no", $donation_frequency){
+	$results = get_donor_info($donor_id);
+	$message = $results[0];
+	$subject = $results[1];
+	$donor_email = $results[2];
+	$headers[] = 'From: artsimpactfund@racc.org';
+	// $headers[] = 'From: testing@wfadev.pairsite.com';
+	$headers[] = 'Content-type: text/html';
+	if ($success == 'no'){
+		//for errors, email us
+		$result = wp_mail('artsimpactfund@racc.org',$subject, $message, $headers);
+	} else {
+		//for all other errors, email the donor and us
+		$result = wp_mail(sanitize_email($donor_email),$subject, $message, $headers);	
+		$result = wp_mail('artsimpactfund@racc.org',$subject, $message, $headers);	
+	}
+	return $result;
+	// }
+	// catch(Exception $e){
+	// 	error_log("mailingmethods.php error: " + $e->getException());
+	// 	return false;
+	// }
+}
+
+function racc_email_piping($_message, $_subject, $_pipe_vars){
+	// error_log("beginning of racc_email_piping()");
+	$booleans = array(
+		array("==", "equ"),
+		array("!=", "notequ"),
+		array(">=", "greequ"),
+		array("<=", "lessequ"),
+		array("<", "less"),
+		array(">", "gre")
+	);
+
+	$results = racc_email_piping_if($_pipe_vars, $booleans, $_message, $_subject);
+	// error_log("after call to racc_email_piping_if()");
+	$message = $results[0];
+	$subject = $results[1];
+
+	//replace the piping variables in both the $message and $subject
+	foreach ($_pipe_vars as $pv) {
+		$message = str_replace($pv[0], $pv[1], $message);	
+		$subject = str_replace($pv[0], $pv[1], $subject);
+	}
+	// error_log("end of racc_email_piping()");
+	return array($message, $subject);
+}
+
+function racc_email_piping_if($pipe_vars, $booleans, $message, $subject){
+	$ifstrings = array("{{if}}","{{/if}}");
+	// error_log("beginning of racc_email_piping_if()");
+
+	$pos_start = strpos($message, $ifstrings[0]);
+	$pos_end = strpos($message, $ifstrings[1], $pos_start);
+
+	if ($pos_start === false) {
+		//if the {{if}} tag is not found, return
+		error_log("if string not found! exiting racc_email_piping_if() function");
+		return array($message,$subject);
+	} else {
+		if ($pos_end !== false){
+			$fullstring = substr($message, $pos_start, abs($pos_end + strlen($ifstrings[1])-$pos_start));
+			$_pos_start = strpos($fullstring, "[");
+			$_pos_end = strpos($fullstring, "]");
+			$controlstr = substr($fullstring, $_pos_start + 1, abs($_pos_end - 1 - $_pos_start));
+			$conditionalstr = substr($fullstring, $_pos_end + 1,strlen($fullstring) - 1 - strlen($ifstrings[1]) - $_pos_end);
+			$bool_type = null;
+			//get comparitor info
+			foreach ($booleans as $_bool) {
+				$pos_start_bool = strpos($controlstr, $_bool[0]);
+				if ($pos_start_bool !== false){
+					$bool_type = $_bool[1];
+					$arg_left = substr($controlstr, 0, $pos_start_bool);
+					$arg_right = substr($controlstr, $pos_start_bool + strlen($_bool[0]), strlen($controlstr));
+					break;	//stop foreach after positive result is found
+				}
+			}
+
+			//--------------------------------------------
+			//condition those arguments:
+			$_arg_left = $arg_left;
+			//replace piping variables in lefthand argument
+			foreach ($pipe_vars as $pv) {
+				$_arg_left = str_replace($pv[0], $pv[1], $_arg_left);
+			}
+			$_arg_right = null;
+			$numeric = null;
+
+			if (is_numeric($_arg_left) && is_numeric($_arg_right)){
+				//both arguments are numeric
+				$numeric = true;
+			}elseif (!is_numeric($_arg_left) && !is_numeric($_arg_right)){
+				$numeric = false;
+			}else{
+				error_log("arguments are mixed, skipping evaluation");
+			}
+			if($numeric){
+				$_arg_right = $arg_right;	
+			} else {
+				$_arg_right = str_replace("\"", "", $arg_right);	
+			}
+			//--------------------------------------------
+
+			if (isset($bool_type)){
+				switch($bool_type){
+					case $booleans[0][1]:
+						
+						if ($_arg_left == $_arg_right){
+							$message = str_replace($fullstring, $conditionalstr, $message);
+						} else {
+							// error_log("equality operator didn't find equality");
+							$message = str_replace($fullstring, "", $message);
+						}
+						break;
+					case $booleans[1][1]:
+						if ($_arg_left != $_arg_right){
+							$message = str_replace($fullstring, $conditionalstr, $message);
+						} else {
+							// error_log("inequality operator didn't find inequality");
+							$message = str_replace($fullstring, "", $message);
+						}
+						break;
+					case $booleans[2][1]:
+						if (floatval($_arg_left) >= floatval($_arg_right)){
+							$message = str_replace($fullstring, $conditionalstr, $message);
+						} else {
+							// error_log("right < left");
+							$message = str_replace($fullstring, "", $message);
+						}
+						break;
+					case $booleans[3][1]:
+						if (floatval($_arg_left) <= floatval($_arg_right)){
+							$message = str_replace($fullstring, $conditionalstr, $message);
+						} else {
+							// error_log("left > right");
+							$message = str_replace($fullstring, "", $message);
+						}
+						break;
+					case $booleans[4][1]:
+						if (floatval($_arg_left) < floatval($_arg_right)){
+							$message = str_replace($fullstring, $conditionalstr, $message);
+						} else {
+							// error_log("right <= left");
+							$message = str_replace($fullstring, "", $message);
+						}
+						break;
+					case $booleans[5][1]:
+						if (floatval($_arg_left) > floatval($_arg_right)){
+							$message = str_replace($fullstring, $conditionalstr, $message);
+						} else {
+							// error_log("right >= left");
+							$message = str_replace($fullstring, "", $message);
+						}
+						break;
+					default:
+						error_log("no known boolean type");
+				}
+			}
+		} else {
+			error_log("missing end if {{/if}} placeholder, skipping");
+			return array($message, $subject);
+		}
+		//recurse it!
+		return racc_email_piping_if($pipe_vars, $booleans, $message, $subject);
+	}
+}
+
+function get_donor_info($donor_id){
 	global $stripe_options;
 	global $wpdb;
 	try{
@@ -170,7 +338,7 @@ function racc_mailer_2($donor_id,$success="no", $donation_frequency){
 		} else {
 			exit();
 		}
-
+		error_log("Sending E-Mail to ". $donor_email);
 		$artscard_qual_and_gift = null;
 		$artscard_qual_no_gift = null;
 		if ($artscardqualify && $giftartscard) {
@@ -188,7 +356,7 @@ function racc_mailer_2($donor_id,$success="no", $donation_frequency){
 		$template_body = '';
 
 		$results = $wpdb->get_results(
-			$wpdb->prepare("CALL sp_getemailtemplate(%s)",$donation_frequency));
+			$wpdb->prepare("CALL sp_getemailtemplate(%s)",$paytype));
 		if($results){
 			foreach ($results as $result) {
 				$template_subject = stripcslashes($result->email_subject);
@@ -231,184 +399,13 @@ function racc_mailer_2($donor_id,$success="no", $donation_frequency){
 		//initialize message and subject to defaults in database
 		// error_log("email body, pre piping: " . $template_body);
 		$results = racc_email_piping($template_body, $template_subject, $pipe_vars);
-		$message = $results[0];
-		$subject = $results[1];
-		// error_log("email body, post-piping: " .$message);
-
-		// $headers[] = 'From: artsimpactfund@racc.org';
-		$headers[] = 'From: testing@wfadev.pairsite.com';
-		$headers[] = 'Content-type: text/html';
-
-		//donor e-mail
-		$result = wp_mail(sanitize_email($donor_email),$subject, $message, $headers);
-		return $result;
+		// $message = $results[0];
+		// $subject = $results[1];
+		return array($results[0], $results[1], $donor_email);
 	}
 	catch(Exception $e){
 		error_log("mailingmethods.php error: " + $e->getException());
 		return false;
-	}
-}
-
-function racc_email_piping($_message, $_subject, $_pipe_vars){
-	// error_log("beginning of racc_email_piping()");
-	$booleans = array(
-		array("==", "equ"),
-		array("!=", "notequ"),
-		array(">=", "greequ"),
-		array("<=", "lessequ"),
-		array("<", "less"),
-		array(">", "gre")
-	);
-
-	$results = racc_email_piping_if($_pipe_vars, $booleans, $_message, $_subject);
-	// error_log("after call to racc_email_piping_if()");
-	$message = $results[0];
-	$subject = $results[1];
-
-	//replace the piping variables in both the $message and $subject
-	foreach ($_pipe_vars as $pv) {
-		$message = str_replace($pv[0], $pv[1], $message);	
-		$subject = str_replace($pv[0], $pv[1], $subject);
-	}
-	// error_log("end of racc_email_piping()");
-	return array($message, $subject);
-}
-
-function racc_email_piping_if($pipe_vars, $booleans, $message, $subject){
-	$ifstrings = array("{{if}}","{{/if}}");
-	// error_log("beginning of racc_email_piping_if()");
-
-	$pos_start = strpos($message, $ifstrings[0]);
-	$pos_end = strpos($message, $ifstrings[1], $pos_start);
-
-	if ($pos_start === false) {
-		//if the {{if}} tag is not found, return
-		error_log("if string not found! exiting racc_email_piping_if() function");
-		return array($message,$subject);
-	} else {
-		if ($pos_end !== false){
-			// error_log("if string found!  pos_start = " . $pos_start . ", pos_end = " . $pos_end);
-			$fullstring = substr($message, $pos_start, abs($pos_end + strlen($ifstrings[1])-$pos_start));
-			// error_log("fullstring: " . $fullstring);
-			$_pos_start = strpos($fullstring, "[");
-			$_pos_end = strpos($fullstring, "]");
-			$controlstr = substr($fullstring, $_pos_start + 1, abs($_pos_end - 1 - $_pos_start));
-			$conditionalstr = substr($fullstring, $_pos_end + 1,strlen($fullstring) - 1 - strlen($ifstrings[1]) - $_pos_end);
-			// error_log("control string: ". $controlstr);
-			// error_log("conditional string to display: ". $conditionalstr);
-			$bool_type = null;
-			//get comparitor info
-			foreach ($booleans as $_bool) {
-				$pos_start_bool = strpos($controlstr, $_bool[0]);
-				if ($pos_start_bool !== false){
-					$bool_type = $_bool[1];
-					$arg_left = substr($controlstr, 0, $pos_start_bool);
-					$arg_right = substr($controlstr, $pos_start_bool + strlen($_bool[0]), strlen($controlstr));
-					// error_log("boolean type: " .$bool_type);
-					// error_log("left argument: ".$arg_left."; right argument: ".$arg_right."; booltype: ".$bool_type);
-					break;	//stop foreach after positive result is found
-				}
-			}
-
-			//--------------------------------------------
-			//condition those arguments:
-
-			$_arg_left = $arg_left;
-			//replace piping variables in lefthand argument
-			foreach ($pipe_vars as $pv) {
-				// error_log("pv[0] = " . $pv[0] . "; pv[1] = " . $pv[1] . "; arg_left = " . $arg_left);
-				$_arg_left = str_replace($pv[0], $pv[1], $_arg_left);
-			}
-			// $_arg_left = str_replace("$", "", $_arg_left);
-			// error_log("left argument: ".$_arg_left."; right argument: ".$arg_right."; booltype: ".$bool_type);
-			$_arg_right = null;
-			$numeric = null;
-
-			if (is_numeric($_arg_left) && is_numeric($_arg_right)){
-				//both arguments are numeric
-				$numeric = true;
-			}elseif (!is_numeric($_arg_left) && !is_numeric($_arg_right)){
-				$numeric = false;
-			}else{
-				error_log("arguments are mixed, skipping evaluation");
-			}
-			// if((substr($arg_right,0,1) == "\"") && (substr($arg_right, strlen($arg_right), 1) == "\"")){
-			if($numeric){
-				$_arg_right = $arg_right;	
-			} else {
-				$_arg_right = str_replace("\"", "", $arg_right);	
-			}
-			//--------------------------------------------
-			// error_log("after conditioning => left argument: ".$_arg_left."; right argument: ".$_arg_right);
-
-			if (isset($bool_type)){
-				switch($bool_type){
-					case $booleans[0][1]:
-						
-						if ($_arg_left == $_arg_right){
-							// error_log("equality found, replacing string: " . $conditionalstr);
-							$message = str_replace($fullstring, $conditionalstr, $message);
-						} else {
-							error_log("equality operator didn't find equality");
-							$message = str_replace($fullstring, "", $message);
-						}
-						break;
-					case $booleans[1][1]:
-						if ($_arg_left != $_arg_right){
-							// error_log("inequality found, replacing string: " . $conditionalstr);
-							$message = str_replace($fullstring, $conditionalstr, $message);
-						} else {
-							error_log("inequality operator didn't find inequality");
-							$message = str_replace($fullstring, "", $message);
-						}
-						break;
-					case $booleans[2][1]:
-						if (floatval($_arg_left) >= floatval($_arg_right)){
-							// error_log("left >= right, replacing string: " . $conditionalstr);
-							$message = str_replace($fullstring, $conditionalstr, $message);
-						} else {
-							error_log("right < left");
-							$message = str_replace($fullstring, "", $message);
-						}
-						break;
-					case $booleans[3][1]:
-						if (floatval($_arg_left) <= floatval($_arg_right)){
-							// error_log("left <= right, replacing string: " . $conditionalstr);
-							$message = str_replace($fullstring, $conditionalstr, $message);
-						} else {
-							error_log("left > right");
-							$message = str_replace($fullstring, "", $message);
-						}
-						break;
-					case $booleans[4][1]:
-						if (floatval($_arg_left) < floatval($_arg_right)){
-							// error_log("left < right, replacing string: " . $conditionalstr);
-							$message = str_replace($fullstring, $conditionalstr, $message);
-						} else {
-							error_log("right <= left");
-							$message = str_replace($fullstring, "", $message);
-						}
-						break;
-					case $booleans[5][1]:
-						// error_log("switch statement => left argument: ".$_arg_left."; right argument: ".$_arg_right);
-						if (floatval($_arg_left) > floatval($_arg_right)){
-							// error_log("left > right, replacing string: " . $conditionalstr);
-							$message = str_replace($fullstring, $conditionalstr, $message);
-						} else {
-							error_log("right >= left");
-							$message = str_replace($fullstring, "", $message);
-						}
-						break;
-					default:
-						error_log("no known boolean type");
-				}
-			}
-		} else {
-			error_log("missing end if {{/if}} placeholder, skipping");
-			return array($message, $subject);
-		}
-		//recurse it!
-		return racc_email_piping_if($pipe_vars, $booleans, $message, $subject);
 	}
 }
 ?>

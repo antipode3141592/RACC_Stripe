@@ -1,7 +1,7 @@
 <?php
 
 global $racc_db_version;
-$racc_db_version = '2.3';	//updated 3/6/2019
+$racc_db_version = '2.4';	//updated 3/7/2019
 
 function racc_db_install() {
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );

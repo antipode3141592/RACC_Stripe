@@ -52,6 +52,20 @@ function RACC_stripe_render_options_page() {
 							<label class="description" for="stripe_settings[test_publishable_key]">Paste your test publishable key.</label>
 						</td>
 					</tr>
+					<tr valign="top">	
+						<th scope="row" valign="top">Test Endpoint Secret</th>
+						<td>
+							<input id="stripe_settings[test_endpoint_key]" name="stripe_settings[test_endpoint_key]" class="regular-text" type="text" value="<?php echo $stripe_options['test_endpoint_key']; ?>"/>
+							<label class="description" for="stripe_settings[test_endpoint_key]">Paste your test publishable key.</label>
+						</td>
+					</tr>
+					<tr valign="top">	
+						<th scope="row" valign="top">Live Endpoint Secret</th>
+						<td>
+							<input id="stripe_settings[live_endpoint_key]" name="stripe_settings[live_endpoint_key]" class="regular-text" type="text" value="<?php echo $stripe_options['live_endpoint_key']; ?>"/>
+							<label class="description" for="stripe_settings[live_endpoint_key]">Paste your live publishable key.</label>
+						</td>
+					</tr>
 				</tbody>
 			</table>
  
