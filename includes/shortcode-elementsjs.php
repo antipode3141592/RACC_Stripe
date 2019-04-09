@@ -72,6 +72,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 					<label for="donor_org_input">Employer</label>
 					<input type="text" name="donor_org_input" id="donor_org_input" maxlength="50" class="input_text" autocomplete="off">
 				</span>
+				<input type="text" name="donor_website_input" id="donor_website_input" class="input_text" autocomplete="off"/>
 			</div>
 			<div class="form-row">
 				<span id="anon-section">	
@@ -290,10 +291,15 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 						<input type="checkbox" name="confirm_payroll_authorization" id="confirm_payroll_authorization"/>
 					</div>
 				</div>
+				<div id="captcha_div">
+					<label for="captcha_input">What is two plus two?</label>
+					<input type="text" id="captcha_input" name="captcha_input"></input>
+				</div>
 				<div id="confirmation_buttons">
 					<button type="button" id="confirmation_reset">Edit Pledge</button>
 					<button type="submit" id="stripe-submit" form="stripe-payment-form-singlepage" disabled>Confirm Pledge</button>
 				</div>
+				
 				<div class="payment-error" id="payment_error_popup_div"></div>
 			</div>
 		</div>

@@ -43,8 +43,9 @@ function racc_stripe_listener($atts, $content = null){
 				// $event = \Stripe\Event::retrieve($event_id);
 				$customer = \Stripe\Customer::retrieve($event->data->object->customer);
 				$customer_wp_id = $customer->metadata->id_token;
+				error_log(json_encode($event, JSON_PRETTY_PRINT));
 				error_log(json_encode($customer, JSON_PRETTY_PRINT));
-				error_log($customer_wp_id);
+				error_log("customer id: " . $customer_wp_id);
 
 				// successful payment, both one time and recurring payments
 				if(isset($event) && ($event->type == 'charge.succeeded')) {

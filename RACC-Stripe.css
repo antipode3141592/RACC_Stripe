@@ -9,6 +9,10 @@
 
 }
 
+#donor_website_input {
+	display: none;
+}
+
 #stripe-payment-form-singlepage > div:not(#payment_error_div):not(#confirmation_popup) {
 	transition: background-color .25s;
 	transition-timing-function: ease-in-out;

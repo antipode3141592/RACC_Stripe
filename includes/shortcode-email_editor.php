@@ -76,3 +76,64 @@ function racc_stripe_email_editor_page($atts, $content = null){
 	return ob_get_clean();
 }
 add_shortcode('racc_email_editor', 'racc_stripe_email_editor_page');
+
+function racc_stripe_email_preview($atts, $content = null){
+	global $wpdb;
+	$template_type = isset($_GET['template_type']) ? $_GET['template_type'] : "ack_cc_once";
+	$results = $wpdb->get_results(
+		$wpdb->prepare("CALL sp_getemailtemplates(%s)", $template_type));
+	if ($results){
+		foreach ($results as $result) {
+			$db_id = $result->id;
+			$db_template_type = $result->template_type;
+			$db_email_subject = $result->email_subject;
+			$db_email_body = $result->email_body;
+			$db_response_type = $result->response_type;
+			$db_email_body_id = $result->email_body_id;
+		}
+	}else{
+		//no results 
+	}
+	
+	//[example id, anon, arts card not gift, arts card gifted]
+	$exampledata = array(
+		array(1, "yes", 0, 1),
+		array(2, "yes", 1, 0),
+		array(3, "yes", 0, 0),
+		array(4, "no", 0, 1),
+		array(5, "no", 1, 0),
+		array(6, "no", 0, 0)
+	);
+
+	ob_start();	//start output buffer
+
+	?>
+	<div id='email_template_preview_div'>
+		<form method="post" id="racc_email_preview_selector" name="racc_email_preview_selector">
+			<h1>Case selector</h1>
+			<label for="example_data_selector">Sample Set</label>
+			<select id="example_data_selector" name="example_data_selector" autocomplete="off">
+				<option value="1">Anon, Arts Card (gifted)</option>
+				<option value="2">Anon, Arts Card (not gifted)</option>
+				<option value="3">Anon, No Arts Card</option>
+				<option value="4">Non Anon, Arts Card (gifted)</option>
+				<option value="5">Non Anon, Arts Card (not gifted)</option>
+				<option value="6">Non Anon, No Arts Card</option>
+			</select>
+			<input type="hidden" name="template_type" value="<?php _e($template_type); ?>" /> 
+			<input type="hidden" name="action" value="email_template_preview"/>
+			<input type="hidden" name="action_referrer" value="<?php _e(get_permalink()); ?>"/>
+			<input type="submit" value="Select"/>
+		</form>
+		<div>
+			<label for="email_subject">Subject</label>
+			<textarea id="email_subject" name="email_subject"></textarea>
+			<label for="email_body_input">Body</label>
+			<textarea id="email_body" name="email_body"></textarea>
+		</div>
+	</div>
+
+	<?php
+	return ob_get_clean();
+}
+add_shortcode('racc_email_preview', 'racc_stripe_email_preview');
