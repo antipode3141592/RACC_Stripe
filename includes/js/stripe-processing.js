@@ -96,6 +96,17 @@ jQuery(document).ready(function($){
 });
 
 jQuery(document).ready(function($){
+	$('#captcha_input').change(function(event){
+		if ($('#captcha_input').val())
+		{
+			$('#stripe-submit').attr("disabled",false);
+		}else{
+			$('#stripe-submit').attr("disabled","disabled");
+		}
+	});
+});
+
+jQuery(document).ready(function($){
 	$('#confirm_payroll_authorization').click(function(event){
 		if ($('#confirm_payroll_authorization').prop("checked"))
 		{

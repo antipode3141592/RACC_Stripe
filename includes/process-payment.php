@@ -27,26 +27,26 @@ function racc_stripe_process_payment() {
 		//donor information
 		$sc_org = isset($_POST['sc_organization']) ? sanitize_text_field($_POST['sc_organization']) : null;
 		$org = isset($_POST['donor_org_input']) ? sanitize_text_field($_POST['donor_org_input']) : null;
-		$donor_first_name = isset($_POST['donor_first_name']) ? sanitize_text_field($_POST['donor_first_name']) : null;
+		$donor_first_name = isset($_POST['donor_first_name']) ? title_case(sanitize_text_field($_POST['donor_first_name'])) : null;
 		// $donor_middle_name = isset($_POST['donor_middle_name']) ? sanitize_text_field($_POST['donor_middle_name']) : null;
-		$donor_last_name = isset($_POST['donor_last_name']) ? sanitize_text_field($_POST['donor_last_name']) : null;
+		$donor_last_name = isset($_POST['donor_last_name']) ? title_case(sanitize_text_field($_POST['donor_last_name'])) : null;
 		$donor_phone = isset($_POST['donor_phone']) ? sanitize_text_field($_POST['donor_phone']) : null;
 		$donor_email = isset($_POST['donor_email']) ? sanitize_email($_POST['donor_email']) : null;
 		$donor_address_1 = isset($_POST['donor_address_1']) ? sanitize_text_field($_POST['donor_address_1']) : null;
 		$donor_address_2 = isset($_POST['donor_address_2']) ? sanitize_text_field($_POST['donor_address_2']) : null;
-		$donor_city = isset($_POST['donor_city']) ? sanitize_text_field($_POST['donor_city']) : null;
+		$donor_city = isset($_POST['donor_city']) ? title_case(sanitize_text_field($_POST['donor_city'])) : null;
 		$donor_state = isset($_POST['donor_state']) ? sanitize_text_field($_POST['donor_state']) : null;
 		$donor_zip = isset($_POST['donor_zip']) ? sanitize_text_field($_POST['donor_zip']) : null;
 		$anon = isset($_POST['anon']) ? $_POST['anon'] : 'no';	//if anon is checked, set to yes, else, no
 
 		//arts card address (may be different from donor information)
 		// $artscard_name = isset($_POST['artscard_name']) ? sanitize_text_field($_POST['artscard_name']) : null;
-		$artscard_first_name = isset($_POST['artscard_first_name']) ? sanitize_text_field($_POST['artscard_first_name']) : null;
-		$artscard_last_name = isset($_POST['artscard_last_name']) ? sanitize_text_field($_POST['artscard_last_name']) : null;
+		$artscard_first_name = isset($_POST['artscard_first_name']) ? title_case(sanitize_text_field($_POST['artscard_first_name'])) : null;
+		$artscard_last_name = isset($_POST['artscard_last_name']) ? title_case(sanitize_text_field($_POST['artscard_last_name'])) : null;
 		$artscard_email = isset($_POST['artscard_email']) ? sanitize_email($_POST['artscard_email']) : null;
 		$artscard_address_1 = isset($_POST['artscard_address_1']) ? sanitize_text_field($_POST['artscard_address_1']) : null;
 		$artscard_address_2 = isset($_POST['artscard_address_2']) ? sanitize_text_field($_POST['artscard_address_2']) : null;
-		$artscard_city = isset($_POST['artscard_city']) ? sanitize_text_field($_POST['artscard_city']) : null;
+		$artscard_city = isset($_POST['artscard_city']) ? title_case(sanitize_text_field($_POST['artscard_city'])) : null;
 		$artscard_state = isset($_POST['artscard_state']) ? sanitize_text_field($_POST['artscard_state']) : null;
 		$artscard_zip = isset($_POST['artscard_zip']) ? sanitize_text_field($_POST['artscard_zip']) : null;
 		$giftartscard = isset($_POST['giftartscard']) ? $_POST['giftartscard'] : 'no';
@@ -112,107 +112,112 @@ function racc_stripe_process_payment() {
 		}catch(Exception $e){
 			error_log("process-payment, database calls error: " + $e->getMessage());
 		}
-		if (($captcha_field =='') && ((strtolower($user_captcha_field) == "four") or (strtolower($user_captcha_field) == "4"))){
-	 		if (($donation_frequency == "cc-once") or ($donation_frequency == "cc-recur") or ($donation_frequency == "cc-annual")){
-				//check for test mode
-				if(isset($stripe_options['test_mode']) && $stripe_options['test_mode'] == "test") {
-					$secret_key = $stripe_options['test_secret_key'];
-					$product_id = 'prod_CmGEdHms0uIcOx';
-				} else {
-					$secret_key = $stripe_options['live_secret_key'];
-					$product_id = 'prod_CuHVCy1RGoijo1';
-				}
-				//NOTE: latest Stripe API adds namespaces, so be sure to use the proper format for calling classes
-				\Stripe\Stripe::setApiKey($secret_key);
-				\Stripe\Stripe::setAppInfo("RACC_Stripe");
-				//for both cc/debit cases, create a customer
-				try{
-					$customer = \Stripe\Customer::create(array(	//NOTE: function call was Stripe_Customer in prev Stripe API
-							'source' => $token,
-							'email' => strip_tags($donor_email),
-							'metadata' => array(
-								'id_token' => strip_tags($new_donor_id))
-						)
-					);	
-					//determine if one-time or recurring
-					if (($donation_frequency == "cc-recur") or ($donation_frequency == "cc-annual")) {
-						//Process recurring payment
-						if ($donation_frequency == "cc-recur"){
-							$plan = \Stripe\Plan::create(array(
-								'amount' => number_format(floatval($period_total)*100,0,'.',''),
-								'interval' => 'month',
-								'product' => $product_id,
-								'currency' => 'usd',
-								)
-							);
-						}
-						else{
-							$plan = \Stripe\Plan::create(array(
-								'amount' => number_format(floatval($amount),0,'.',''),
-								'interval' => 'year',
-								'product' => $product_id,
-								'currency' => 'usd',
-								)
-							);
-						}
-						$subscription = \Stripe\Subscription::create(array(
-							'customer' => $customer->id,
-							'items' => array(
-								array('plan' => $plan->id))
-							)
-						);
-						$success = 'yes';
-					} elseif ($donation_frequency == "cc-once") {
-						//process one-time payment
-						//attempt to charge the customer's card
-						$charge = \Stripe\Charge::create(array(	//NOTE: function call was Stripe_Charge in prev Stripe API
-								'amount' => $amount,
-								'currency' => 'usd',
-								'statement_descriptor' => 'RACC Arts Impact Gift',
-								'customer' => $customer->id,
-							)
-						);
-						$success = 'yes';
+		if ($captcha_field =='') {
+			if ((strtolower($user_captcha_field) == "four") or (strtolower($user_captcha_field) == "4")){
+		 		if (($donation_frequency == "cc-once") or ($donation_frequency == "cc-recur") or ($donation_frequency == "cc-annual")){
+					//check for test mode
+					if(isset($stripe_options['test_mode']) && $stripe_options['test_mode'] == "test") {
+						$secret_key = $stripe_options['test_secret_key'];
+						$product_id = 'prod_CmGEdHms0uIcOx';
+					} else {
+						$secret_key = $stripe_options['live_secret_key'];
+						$product_id = 'prod_CuHVCy1RGoijo1';
 					}
-				} catch(\Stripe\Error\Card $e) {
-					//decline error
-					$success = 'no';
-					$body = $e->getJsonBody();
-					$err = $body['error']; 
-	  				$error_message = $err['message'];
-	  				error_log("Error Type: " + $err['type']);
-	  				error_log("Error Message: " + $err['message']);
-	  				error_log('Code is: ' . $err['code']);
-	  				error_log('Param is: ' . $err['param']);
-	  				error_log('HTTP Status: '. $e->getHttpStatus());
-				} catch (\Stripe\Error\Base $e) {
-				  // Display a very generic error to the user, and maybe send
-				  // yourself an email
-					$success = 'no';
-					$body = $e->getJsonBody();
-					$err = $body['error'];
-	  				$error_message = $err['message'];
-	  				error_log("Error Type: " + $err['type']);
-	  				error_log("Error Message: " + $err['message']);
-				} catch (Exception $e) {
-					$success = 'no';
-					$error_message = $e->getMessage();
-					error_log('Stripe Customer Create Error: '.$e->getMessage());
+					//NOTE: latest Stripe API adds namespaces, so be sure to use the proper format for calling classes
+					\Stripe\Stripe::setApiKey($secret_key);
+					\Stripe\Stripe::setAppInfo("RACC_Stripe");
+					//for both cc/debit cases, create a customer
+					try{
+						$customer = \Stripe\Customer::create(array(	//NOTE: function call was Stripe_Customer in prev Stripe API
+								'source' => $token,
+								'email' => strip_tags($donor_email),
+								'metadata' => array(
+									'id_token' => strip_tags($new_donor_id))
+							)
+						);	
+						//determine if one-time or recurring
+						if (($donation_frequency == "cc-recur") or ($donation_frequency == "cc-annual")) {
+							//Process recurring payment
+							if ($donation_frequency == "cc-recur"){
+								$plan = \Stripe\Plan::create(array(
+									'amount' => number_format(floatval($period_total)*100,0,'.',''),
+									'interval' => 'month',
+									'product' => $product_id,
+									'currency' => 'usd',
+									)
+								);
+							}
+							else{
+								$plan = \Stripe\Plan::create(array(
+									'amount' => number_format(floatval($amount),0,'.',''),
+									'interval' => 'year',
+									'product' => $product_id,
+									'currency' => 'usd',
+									)
+								);
+							}
+							$subscription = \Stripe\Subscription::create(array(
+								'customer' => $customer->id,
+								'items' => array(
+									array('plan' => $plan->id))
+								)
+							);
+							$success = 'yes';
+						} elseif ($donation_frequency == "cc-once") {
+							//process one-time payment
+							//attempt to charge the customer's card
+							$charge = \Stripe\Charge::create(array(	//NOTE: function call was Stripe_Charge in prev Stripe API
+									'amount' => $amount,
+									'currency' => 'usd',
+									'statement_descriptor' => 'RACC Arts Impact Gift',
+									'customer' => $customer->id,
+								)
+							);
+							$success = 'yes';
+						}
+					} catch(\Stripe\Error\Card $e) {
+						//decline error
+						$success = 'no';
+						$body = $e->getJsonBody();
+						$err = $body['error']; 
+		  				$error_message = $err['message'];
+		  				error_log("Error Type: " + $err['type']);
+		  				error_log("Error Message: " + $err['message']);
+		  				error_log('Code is: ' . $err['code']);
+		  				error_log('Param is: ' . $err['param']);
+		  				error_log('HTTP Status: '. $e->getHttpStatus());
+					} catch (\Stripe\Error\Base $e) {
+					  // Display a very generic error to the user, and maybe send
+					  // yourself an email
+						$success = 'no';
+						$body = $e->getJsonBody();
+						$err = $body['error'];
+		  				$error_message = $err['message'];
+		  				error_log("Error Type: " + $err['type']);
+		  				error_log("Error Message: " + $err['message']);
+					} catch (Exception $e) {
+						$success = 'no';
+						$error_message = $e->getMessage();
+						error_log('Stripe Customer Create Error: '.$e->getMessage());
+					}
+				} elseif ($donation_frequency == "workplace"){
+					$result = racc_mailer_2($new_donor_id,"yes", $donation_frequency);	
+					$success = 'yes';
+				} elseif ($donation_frequency == "ongoing"){
+					$result = racc_mailer_2($new_donor_id,"yes", $donation_frequency);	
+					$success = 'yes';
+				} elseif ($donation_frequency == "check"){
+					error_log($donation_frequency);
+					$result = racc_mailer_2($new_donor_id,"yes", $donation_frequency);	
+					$success = 'yes';
 				}
-			} elseif ($donation_frequency == "workplace"){
-				$result = racc_mailer_2($new_donor_id,"yes", $donation_frequency);	
-				$success = 'yes';
-			} elseif ($donation_frequency == "ongoing"){
-				$result = racc_mailer_2($new_donor_id,"yes", $donation_frequency);	
-				$success = 'yes';
-			} elseif ($donation_frequency == "check"){
-				error_log($donation_frequency);
-				$result = racc_mailer_2($new_donor_id,"yes", $donation_frequency);	
-				$success = 'yes';
+			} else {
+				$success = 'no';
+				$error_message = 'Human verification failed!';
 			}
 		}else{
 			$success = 'no';
-			$error_message = 'There was an unknown payment error';
+			$error_message = 'There was an unknown payment error.';
 		}
 		
 		wp_safe_redirect(esc_url_raw(add_query_arg(array(

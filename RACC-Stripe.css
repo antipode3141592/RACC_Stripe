@@ -5,10 +5,6 @@
 	color: #14afaf;
 }
 
-#stripe-payment-form-singlepage {
-
-}
-
 #donor_website_input {
 	display: none;
 }
@@ -40,6 +36,8 @@
 	padding: 15px;
 	margin: auto;
 }
+
+
 
 #stripe-payment-form-singlepage h1 {
 	font-size: 2rem;
@@ -95,7 +93,11 @@
 	display: block;
 	font-size: 0.8rem;
 	margin-bottom: -5px;
-	}
+}	
+
+label[for=captcha_input]{
+	font-weight: bold;
+}
 
 #stripe-payment-form-singlepage input[type=text], #stripe-payment-form-singlepage input[type=email] {
 	width: 100%;

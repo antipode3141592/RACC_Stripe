@@ -292,7 +292,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 					</div>
 				</div>
 				<div id="captcha_div">
-					<label for="captcha_input">What is two plus two?</label>
+					<label for="captcha_input" id="captcha_input_label">Are you human?  Prove it!  What is two plus two?</label>
 					<input type="text" id="captcha_input" name="captcha_input"></input>
 				</div>
 				<div id="confirmation_buttons">

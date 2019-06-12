@@ -1,19 +1,5 @@
 [
 	{
-		"organization": "Portland Center Stage at The Armory",
-		"payperiods": "26",
-		"optionalperiods":"yes",
-		"payroll":"no",
-		"dg":"no"
-	},
-	{
-		"organization": "Portland Opera",
-		"payperiods": "26",
-		"optionalperiods":"yes",
-		"payroll":"yes",
-		"dg":"no"
-	},
-	{
 		"organization": "Bag&Baggage Productions",
 		"payperiods": "1",
 		"optionalperiods":"no",
@@ -24,7 +10,7 @@
 		"organization": "Broadway Rose Theatre Company",
 		"payperiods": "24",
 		"optionalperiods":"yes",
-		"payroll":"no",
+		"payroll":"yes",
 		"dg":"no"
 	},
 	{
@@ -52,7 +38,7 @@
 		"organization": "Oregon Ballet Theatre",
 		"payperiods": "24",
 		"optionalperiods":"yes",
-		"payroll":"no",
+		"payroll":"yes",
 		"dg":"no"
 	},
 	{
@@ -66,7 +52,7 @@
 		"organization": "Young Audiences of Oregon & SW Washington",
 		"payperiods": "24",
 		"optionalperiods":"yes",
-		"payroll":"no",
+		"payroll":"yes",
 		"dg":"no"
 	},
 	{
@@ -225,9 +211,9 @@
 	},
 	{
 		"organization": "Oregon Children's Theatre ",
-		"payperiods": "1",
-		"optionalperiods":"no",
-		"payroll":"no",
+		"payperiods": "24",
+		"optionalperiods":"yes",
+		"payroll":"yes",
 		"dg":"no"
 	},
 	{
@@ -267,9 +253,9 @@
 	},
 	{
 		"organization": "Portland Art Museum & Northwest Film Center",
-		"payperiods": "1",
+		"payperiods": "24",
 		"optionalperiods":"no",
-		"payroll":"no",
+		"payroll":"yes",
 		"dg":"no"
 	},
 	{
@@ -277,6 +263,13 @@
 		"payperiods": "1",
 		"optionalperiods":"no",
 		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Portland Center Stage at The Armory",
+		"payperiods": "26",
+		"optionalperiods":"yes",
+		"payroll":"yes",
 		"dg":"no"
 	},
 	{
@@ -291,6 +284,13 @@
 		"payperiods": "1",
 		"optionalperiods":"no",
 		"payroll":"no",
+		"dg":"no"
+	},
+	{
+		"organization": "Portland Opera",
+		"payperiods": "26",
+		"optionalperiods":"yes",
+		"payroll":"yes",
 		"dg":"no"
 	},
 	{
@@ -339,7 +339,7 @@
 		"organization": "The Portland Ballet",
 		"payperiods": "24",
 		"optionalperiods":"yes",
-		"payroll":"no",
+		"payroll":"yes",
 		"dg":"no"
 	},
 	{

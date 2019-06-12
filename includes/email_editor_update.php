@@ -33,4 +33,19 @@ function racc_stripe_email_template_selection(){
 }
 add_action('init', 'racc_stripe_email_template_selection');
 
+
+function racc_stripe_email_preview_selection(){
+	if(isset($_POST['action']) && $_POST['action'] == 'email_template_preview'){
+		$redirect = isset($_POST['action_referrer']) ? $_POST['action_referrer'] : null;
+		$template_type = isset($_POST['template_type']) ? $_POST['template_type'] : null;
+		$test_data = isset($_POST['example_data_selector']) ? $_POST['example_data_selector'] : null;
+		// example_data_selector
+
+		
+
+		wp_safe_redirect(esc_url_raw(add_query_arg(array('template_type' => $template_type),$redirect)));
+		exit;
+	}
+}
+add_action('init', 'racc_stripe_email_preview_selection');
 ?>
