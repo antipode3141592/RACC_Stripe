@@ -5,6 +5,8 @@ function racc_mailer_2($donor_id,$success="no", $donation_frequency){
 	$message = $results[0];
 	$subject = $results[1];
 	$donor_email = $results[2];
+	$donor_comment = "Comment: ".$results[3]."<br>";
+	$donor_phone = "Phone: ".$results[4]."<br>";
 	$headers[] = 'From: artsimpactfund@racc.org';
 	$altaddresses = 'whovey@racc.org, isterry@racc.org, skirkpatrick@racc.org';
 	// $headers[] = 'From: testing@wfadev.pairsite.com';
@@ -15,7 +17,7 @@ function racc_mailer_2($donor_id,$success="no", $donation_frequency){
 	} else {
 		//for all other errors, email the donor and us
 		$result = wp_mail(sanitize_email($donor_email),$subject, $message, $headers);	
-		$result = wp_mail($altaddresses, $subject, $message, $headers);	
+		$result = wp_mail($altaddresses, $subject, $donor_comment.$donor_phone.$message, $headers);	
 	}
 	return $result;
 }
@@ -200,6 +202,7 @@ function get_donor_info($donor_id){
 		    $artscard_city = $results[0]->artscard_city;	
 		    $artscard_state = $results[0]->artscard_state;	
 		    $artscard_zip = $results[0]->artscard_zip;
+		    $donor_phone = $results[0]->phone;
 		} else {
 			exit();
 		}
@@ -264,9 +267,15 @@ function get_donor_info($donor_id){
 		//initialize message and subject to defaults in database
 		// error_log("email body, pre piping: " . $template_body);
 		$results = racc_email_piping($template_body, $template_subject, $pipe_vars);
+		$results2 = $wpdb->get_results(
+			$wpdb->prepare('CALL sp_getcomment(%s)',$donor_id));
+		$donor_comment = "";
+		if ($results2){
+			$donor_comment = $results2[0]->comment;
+		}
 		// $message = $results[0];
 		// $subject = $results[1];
-		return array($results[0], $results[1], $donor_email);
+		return array($results[0], $results[1], $donor_email, $donor_comment, $donor_phone);
 	}
 	catch(Exception $e){
 		error_log("mailingmethods.php error: " + $e->getException());
