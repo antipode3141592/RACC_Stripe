@@ -12,7 +12,7 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 		'dg' =>'no',				//designated giving (default off)
 		'sg' => '60.00',			//suggested gift (default $60, minimum for Arts Card)
 		'fund1name' => 'Arts Impact Fund',
-		'fund2name' => 'Arts Education Fund',
+		'fund2name' => 'Right Brain Initiative',
 		'fund1enable' => 'yes',
 		'fund2enable' => 'no',
 		'fund1desc' => 'Your donation to the Arts Impact Fund benefits regional nonprofit arts and culture organizations that strengthen our communities through arts education, performances and events, and outreach programs.  Employee donations expand RACC&#39;s grantmaking to organizations that demonstrate community impact, fiscal responsibility, and equitable access to arts and culture.'
@@ -151,9 +151,9 @@ function racc_stripe_payment_form_elementsjs($atts, $content = null) {
 					</div>
 
 					<div class="form-row" id="div_fund2">
-						<label for="fund_education" id="fund2label">Arts Education Fund</label>
+						<label for="fund_education" id="fund2label">Right Brain Initiative</label>
 						<div class="infopopup">i
-							<div id="fund_education_description" class="popupcontent">Distributed to 40+ arts and culture organizations (many GOS groups) that provide substantial arts education opportunities for students and teachers throughout our region.</div>
+							<div id="fund_education_description" class="popupcontent">Help Right Brain bring more arts and creativity into classrooms in 2020. Your contribution supports another year of empowering teachers to use the arts to transform education for thousands of students across the Portland metro region.</div>
 						</div>
 						<input type="number" name="fund_education" id="fund_education" class="racc_fund" value='0.00' step="1.00" min="0" autocomplete="off" onchange="fund_sum();"/>
 					</div>
